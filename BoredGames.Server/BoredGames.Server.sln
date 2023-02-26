@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoredGames.Server.API", "BoredGames.Server.API\BoredGames.Server.API.csproj", "{39DD79AF-C0C7-4E50-9E3C-31C0B0EC0104}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoredGames.Server.Domain", "BoredGames.Server.Domain\BoredGames.Server.Domain.csproj", "{C00A3E89-50A7-450F-B0BC-4103DBDDF812}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39DD79AF-C0C7-4E50-9E3C-31C0B0EC0104}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39DD79AF-C0C7-4E50-9E3C-31C0B0EC0104}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39DD79AF-C0C7-4E50-9E3C-31C0B0EC0104}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39DD79AF-C0C7-4E50-9E3C-31C0B0EC0104}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C00A3E89-50A7-450F-B0BC-4103DBDDF812}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C00A3E89-50A7-450F-B0BC-4103DBDDF812}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C00A3E89-50A7-450F-B0BC-4103DBDDF812}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C00A3E89-50A7-450F-B0BC-4103DBDDF812}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

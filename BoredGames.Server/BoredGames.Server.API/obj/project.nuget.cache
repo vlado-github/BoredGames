@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "bazVYBJyQa+MvJx4pHLMa0m+EGzFg4LGOJqt3v2SVYI5KBT3xel1icPnYOopc/VjUdXJ9IGGwlBDYPctEJ+8jQ==",
+  "success": true,
+  "projectFilePath": "/Users/vladimirmarinkovic/Documents/GitHub/BoredGames/BoredGames.Server/BoredGames.Server.API/BoredGames.Server.API.csproj",
+  "expectedPackageFiles": [
+    "/Users/vladimirmarinkovic/.nuget/packages/microsoft.extensions.apidescription.server/3.0.0/microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "/Users/vladimirmarinkovic/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
+    "/Users/vladimirmarinkovic/.nuget/packages/swashbuckle.aspnetcore/6.2.3/swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
+    "/Users/vladimirmarinkovic/.nuget/packages/swashbuckle.aspnetcore.swagger/6.2.3/swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
+    "/Users/vladimirmarinkovic/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.2.3/swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "/Users/vladimirmarinkovic/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.2.3/swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}

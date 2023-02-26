@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "ZNXc6095hQ7/Tq21j0kWZZzqKozHiqPiBaMk9opg1gc=",
+  "Source": "BoredGames.Server.API",
+  "BasePath": "_content/BoredGames.Server.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
