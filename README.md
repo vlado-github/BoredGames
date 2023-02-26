@@ -1,2 +1,4 @@
 # BoredGames
-BoredGames platform for playing and creating custom board games. 
+BoredGames platform for playing and creating custom board games.
+
+## TODO
