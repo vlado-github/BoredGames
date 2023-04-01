@@ -1,4 +1,8 @@
 # BoredGames
-BoredGames platform for playing and creating custom board games.
+BoredGames platform for creating custom board games.
 
-## TODO
+## BoredGames.Server
+Backend server for handling queueing, game state and players actions. 
+
+## BoredGames.Client
+TBD   
