@@ -31,5 +31,4 @@ public class PlayerGrain : Grain, IPlayerGrain
         var state = await gameGrain.AddPlayerToGame(this.GetPrimaryKey());
         return state;
     }
-    
 }
