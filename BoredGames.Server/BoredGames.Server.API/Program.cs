@@ -1,5 +1,4 @@
 using System.Net;
-using Orleans.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseOrleans((context, siloBuilder) =>
