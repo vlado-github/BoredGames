@@ -5,13 +5,8 @@ namespace BoredGames.Server.Domain.Grains;
 
 public class PlayerGrain : Grain, IPlayerGrain
 {
-    private int _numberOfWins;
-    private int _numberOfLoses;
-
     public override Task OnActivateAsync(CancellationToken token)
     {
-        _numberOfWins = 0;
-        _numberOfLoses = 0;
         return base.OnActivateAsync(token);
     }
 

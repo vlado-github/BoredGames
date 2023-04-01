@@ -6,7 +6,7 @@ namespace BoredGames.Server.Domain.Grains;
 
 public class GameGrain : Grain, IGameGrain
 {
-    public List<Guid> _playersIds;
+    private List<Guid> _playersIds;
     private GameState _gameState;
     private Guid _winnerId;
 
