@@ -39,6 +39,10 @@ public class RockPaperSissorsRuleEngine : IGameRuleEngine
 
     public IList<Guid> GetWinners()
     {
+        if (!_gameStats.Any())
+        {
+            return new List<Guid>();
+        }
         return _gameStats.Where(gs => gs.Value == _requiredNumberOfWins)
             .Select(gs => gs.Key)
             .ToList();
