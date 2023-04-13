@@ -12,7 +12,6 @@ public class GameGrain : Grain, IGameGrain
 {
     private List<Guid> _playersIds;
     private GameState _gameState;
-    private IList<Guid> _winners;
     private IGameRuleEngine _gameRuleEngine;
 
     public override Task OnActivateAsync(CancellationToken token)

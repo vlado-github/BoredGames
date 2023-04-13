@@ -1,7 +1,7 @@
 using Orleans;
 using Xunit.Gherkin.Quick;
 
-namespace BoredGames.Server.Tests.BDD.Base;
+namespace BoredGames.Server.Tests.Base;
 
 public class BDDDefinitionsBase : Feature
 {
