@@ -1,7 +1,7 @@
 using BoredGames.Server.Common.Enums;
 using Orleans;
 
-namespace BoredGames.Server.Domain.Grains;
+namespace BoredGames.Server.Domain.Grains.Base;
 
 public interface IPlayerGrain : IGrainWithGuidKey
 {

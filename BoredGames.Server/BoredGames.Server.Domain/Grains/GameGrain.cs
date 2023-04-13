@@ -3,6 +3,7 @@ using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.RockPaperSissors;
+using BoredGames.Server.Domain.Grains.Base;
 using Orleans;
 
 namespace BoredGames.Server.Domain.Grains;

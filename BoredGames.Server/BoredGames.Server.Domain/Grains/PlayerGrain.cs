@@ -1,4 +1,5 @@
 using BoredGames.Server.Common.Enums;
+using BoredGames.Server.Domain.Grains.Base;
 using Orleans;
 
 namespace BoredGames.Server.Domain.Grains;
