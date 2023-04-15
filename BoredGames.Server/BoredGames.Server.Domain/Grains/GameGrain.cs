@@ -3,6 +3,7 @@ using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.RockPaperSissors;
+using BoredGames.Server.Domain.Grains.Base;
 using Orleans;
 
 namespace BoredGames.Server.Domain.Grains;
@@ -11,7 +12,6 @@ public class GameGrain : Grain, IGameGrain
 {
     private List<Guid> _playersIds;
     private GameState _gameState;
-    private IList<Guid> _winners;
     private IGameRuleEngine _gameRuleEngine;
 
     public override Task OnActivateAsync(CancellationToken token)
@@ -47,6 +47,7 @@ public class GameGrain : Grain, IGameGrain
     public Task<GameState> MakeMove(MakeMoveCommand command)
     {
         var result = _gameRuleEngine.Handle(command);
+        _gameState = result;
         return Task.FromResult(result);
     }
 
@@ -54,5 +55,10 @@ public class GameGrain : Grain, IGameGrain
     {
         var result = _gameRuleEngine.GetWinners();
         return Task.FromResult(result);
+    }
+
+    public Task<GameState> GetState()
+    {
+        return Task.FromResult(_gameState);
     }
 }

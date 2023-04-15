@@ -1,6 +1,6 @@
 using BoredGames.Server.Common.Enums;
 
-namespace BoredGames.Server.API.Models;
+namespace BoredGames.Server.API.Views;
 
 public class GameViewModel
 {

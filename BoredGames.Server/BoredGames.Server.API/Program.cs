@@ -1,18 +1,12 @@
-using System.Net;
+using BoredGames.Server.API.Extensions;
+using BoredGames.Server.API.Models;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseOrleans((context, siloBuilder) =>
-{
-    // In order to support multiple hosts forming a cluster, they must listen on different ports.
-    // Use the --InstanceId X option to launch subsequent hosts.
-    var instanceId = context.Configuration.GetValue<int>("InstanceId");
-    var port = 11_111;
-    siloBuilder.UseLocalhostClustering(
-        siloPort: port + instanceId,
-        gatewayPort: 30000 + instanceId,
-        primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, port));
-    
-});
+builder.Host.SetupOrleans();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(MakeMoveValidator));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -32,3 +26,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+// In order to enable tests to run a test instance of a host
+namespace BoredGames.Server.API
+{
+    public partial class Program { }
+}
