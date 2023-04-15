@@ -1,3 +1,4 @@
+using BoredGames.Server.API;
 using Orleans;
 using Xunit.Gherkin.Quick;
 

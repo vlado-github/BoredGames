@@ -1,11 +1,14 @@
 using BoredGames.Server.API.Extensions;
 using BoredGames.Server.API.Models;
+using BoredGames.Server.API.Views;
+using BoredGames.Server.Common.Enums;
+using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Grains.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoredGames.Server.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/game")]
     [ApiController]
     public class GameController : ControllerBase
     {
@@ -17,7 +20,7 @@ namespace BoredGames.Server.API.Controllers
         }
         
         [HttpPost]
-        public async Task<Guid> CreateGame()
+        public async Task<Guid> Create()
         {
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
@@ -25,17 +28,52 @@ namespace BoredGames.Server.API.Controllers
             return gameId;
         }
 
-        [HttpPut]
-        public async Task<GameViewModel> Join(Guid gameId)
+        [HttpPut("join")]
+        public async Task<GameViewModel> Join(JoinGame request)
         {
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
-            var state = await player.JoinGame(gameId);
+            var state = await player.JoinGame(request.GameId);
+            return new GameViewModel
+            {
+                Id = request.GameId,
+                State = state
+            };
+        }
+
+        [HttpPost("makemove")]
+        public async Task<GameViewModel> MakeMove(MakeMove request)
+        {
+            var game = _grainFactory.GetGrain<IGameGrain>(request.GameId);
+            var state = await game.MakeMove(new MakeMoveCommand
+            {
+                ActionType = request.ActionType,
+                PlayerId = this.GetPlayerId()
+            });
+            return new GameViewModel
+            {
+                Id = request.GameId,
+                State = state
+            };
+        }
+
+        [HttpGet("state/{gameId:guid}")]
+        public async Task<GameViewModel> GetState(Guid gameId)
+        {
+            var game = _grainFactory.GetGrain<IGameGrain>(gameId);
+            var state = await game.GetState();
             return new GameViewModel
             {
                 Id = gameId,
                 State = state
             };
+        }
+        
+        [HttpGet("winners/{gameId:guid}")]
+        public async Task<List<Guid>> GetWinners(Guid gameId)
+        {
+            var game = _grainFactory.GetGrain<IGameGrain>(gameId);
+            return (await game.GetWinners()).ToList();
         }
     }
 }

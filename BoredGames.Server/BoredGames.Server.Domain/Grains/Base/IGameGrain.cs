@@ -9,4 +9,5 @@ public interface IGameGrain : IGrainWithGuidKey
     Task<GameState> AddPlayerToGame(Guid playerId);
     Task<GameState> MakeMove(MakeMoveCommand command);
     Task<IList<Guid>> GetWinners();
+    Task<GameState> GetState();
 }

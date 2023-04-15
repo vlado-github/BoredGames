@@ -47,6 +47,7 @@ public class GameGrain : Grain, IGameGrain
     public Task<GameState> MakeMove(MakeMoveCommand command)
     {
         var result = _gameRuleEngine.Handle(command);
+        _gameState = result;
         return Task.FromResult(result);
     }
 
@@ -54,5 +55,10 @@ public class GameGrain : Grain, IGameGrain
     {
         var result = _gameRuleEngine.GetWinners();
         return Task.FromResult(result);
+    }
+
+    public Task<GameState> GetState()
+    {
+        return Task.FromResult(_gameState);
     }
 }
