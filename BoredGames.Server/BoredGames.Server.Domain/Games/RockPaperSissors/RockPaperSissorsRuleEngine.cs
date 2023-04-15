@@ -8,7 +8,7 @@ public class RockPaperSissorsRuleEngine : IGameRuleEngine
 {
     public static readonly string RockAction = "rock";
     public static readonly string PaperAction = "paper";
-    public static readonly string SissorsAction = "sissors";
+    public static readonly string ScissorsAction = "scissors";
     
     public static readonly int MinimumRequiredNumberOfWins = 1;
     public static readonly int MinimumRequiredNumberOfPlayers = 2;
@@ -54,7 +54,7 @@ public class RockPaperSissorsRuleEngine : IGameRuleEngine
         {
             var remainingCommands = new List<MakeMoveCommand>(_movesStack);
             remainingCommands.Remove(move);
-            if (CheckRule(move.ActionType, remainingCommands))
+            if (CheckRule(move.ActionType, remainingCommands) == GameResult.Win)
             {
                 int currentNumberOfWins = 0;
                 _gameStats.TryGetValue(move.PlayerId, out currentNumberOfWins);
@@ -69,31 +69,43 @@ public class RockPaperSissorsRuleEngine : IGameRuleEngine
         return GameState.InPlay;
     }
 
-    private bool CheckRule(string actionType, IList<MakeMoveCommand> remainingCommands)
+    private GameResult CheckRule(string actionType, IList<MakeMoveCommand> remainingCommands)
     {
         if (actionType == RockAction)
         {
             if (remainingCommands.Any(m => m.ActionType == PaperAction))
             {
-                return false;
+                return GameResult.Lose;
             }
-            return true;
+            if (remainingCommands.All(x => x.ActionType == RockAction))
+            {
+                return GameResult.Draw;
+            }
+            return GameResult.Win;
         }
         else if (actionType == PaperAction)
         {
-            if (remainingCommands.Any(m => m.ActionType == SissorsAction))
+            if (remainingCommands.Any(m => m.ActionType == ScissorsAction))
             {
-                return false;
+                return GameResult.Lose;
             }
-            return true;
+            if (remainingCommands.All(x => x.ActionType == PaperAction))
+            {
+                return GameResult.Draw;
+            }
+            return GameResult.Win;
         }
-        else //Sissors
+        else //Scissors
         {
             if (remainingCommands.Any(m => m.ActionType == RockAction))
             {
-                return false;
+                return GameResult.Lose;
             }
-            return true;
+            if (remainingCommands.All(x => x.ActionType == ScissorsAction))
+            {
+                return GameResult.Draw;
+            }
+            return GameResult.Win;
         }
     }
 }
