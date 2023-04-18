@@ -1,4 +1,5 @@
 using BoredGames.Server.API.Extensions;
+using BoredGames.Server.API.Filters;
 using BoredGames.Server.API.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
