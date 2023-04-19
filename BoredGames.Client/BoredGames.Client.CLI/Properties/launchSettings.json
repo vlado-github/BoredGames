@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "local": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENV": "Local",
+        "BORED_GAMES_API_KEY": "BoredGames"
+      }
+    }
+  }
+}
