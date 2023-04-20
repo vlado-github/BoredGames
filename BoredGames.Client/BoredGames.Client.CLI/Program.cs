@@ -13,7 +13,7 @@ class Program
         ConfigureServices(services);
         var serviceProvider = services.BuildServiceProvider();
         
-        var executor =serviceProvider.GetRequiredService<IExecutor>();
+        var executor = serviceProvider.GetRequiredService<IExecutor>();
         executor.Execute();
     }
 

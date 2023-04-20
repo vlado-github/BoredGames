@@ -4,17 +4,18 @@ namespace BoredGames.Server.API.Extensions;
 
 public static class ControllerBaseExtensions
 {
-    private static readonly string CookieKey = "boredGames.playerId";
+    private static readonly string HeaderKey = "boredgames.playerid";
     
     public static Guid GetPlayerId(this ControllerBase controller)
     {
-        if (controller.Request.Cookies[CookieKey] is { Length: > 0 } idCookie)
+        var playerId = controller.Request.Headers[HeaderKey];
+        if (!string.IsNullOrEmpty(playerId))
         {
-            return Guid.Parse(idCookie);
+            return Guid.Parse(playerId);
         }
 
         var guid = Guid.NewGuid();
-        controller.Response.Cookies.Append(CookieKey, guid.ToString());
+        controller.Response.Headers.Append(HeaderKey, guid.ToString());
         return guid;
     }
 }

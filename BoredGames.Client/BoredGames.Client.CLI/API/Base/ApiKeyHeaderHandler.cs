@@ -15,7 +15,8 @@ public class ApiKeyHeaderHandler : DelegatingHandler
         CancellationToken cancellationToken)
     {
         request.Headers.Authorization = 
-            new AuthenticationHeaderValue(_settings.HeaderName, _settings.HeaderValue);
+            new AuthenticationHeaderValue(_settings.HeaderApiKeyName, _settings.HeaderApiKeyValue);
+        request.Headers.Add(_settings.HeaderPlayerIdName, _settings.HeaderPlayerIdValue);
         return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
 }

@@ -59,7 +59,7 @@ namespace BoredGames.Server.API.Controllers
             };
         }
 
-        [HttpGet("state/{gameId:guid}")]
+        [HttpGet("{gameId:guid}/state")]
         public async Task<GameViewModel> GetState(Guid gameId)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(gameId);
@@ -71,7 +71,7 @@ namespace BoredGames.Server.API.Controllers
             };
         }
         
-        [HttpGet("winners/{gameId:guid}")]
+        [HttpGet("{gameId:guid}/winners")]
         public async Task<List<Guid>> GetWinners(Guid gameId)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(gameId);

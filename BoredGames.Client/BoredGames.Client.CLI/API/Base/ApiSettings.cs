@@ -12,6 +12,8 @@ public class ApiSettings
     }
 
     public string BaseUrl => _configSection[nameof(BaseUrl)];
-    public string HeaderName => "X-BORED-GAMES-API-KEY";
-    public string HeaderValue => Environment.GetEnvironmentVariable("BORED_GAMES_API_KEY");
+    public string HeaderApiKeyName => "X-BORED-GAMES-API-KEY";
+    public string HeaderApiKeyValue => Environment.GetEnvironmentVariable("BORED_GAMES_API_KEY");
+    public string HeaderPlayerIdName => "boredgames.playerid";
+    public string HeaderPlayerIdValue => Guid.NewGuid().ToString();
 }
