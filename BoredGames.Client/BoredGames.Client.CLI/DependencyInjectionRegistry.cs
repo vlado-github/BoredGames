@@ -27,9 +27,9 @@ public static class DependencyInjectionRegistry
                 httpStatusCodesWorthRetrying.Contains(r.StatusCode))
             .WaitAndRetryAsync(new[]
             {
+                TimeSpan.FromSeconds(3), 
                 TimeSpan.FromSeconds(5), 
                 TimeSpan.FromSeconds(10), 
-                TimeSpan.FromSeconds(30), 
             });
 
         services.AddRefitClient<IBoredGamesApi>()

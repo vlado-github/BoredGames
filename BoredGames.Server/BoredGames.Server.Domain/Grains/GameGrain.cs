@@ -33,8 +33,11 @@ public class GameGrain : Grain, IGameGrain
         {
             throw new ActionValidationException("Player can't joined during play.");
         }
-        
-        _playersIds.Add(playerId);
+
+        if (!_playersIds.Contains(playerId))
+        {
+            _playersIds.Add(playerId);
+        }
 
         if (_gameState is GameState.AwaitingPlayers && _playersIds.Count == 2)
         {

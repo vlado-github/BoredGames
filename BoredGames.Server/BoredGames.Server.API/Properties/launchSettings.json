@@ -32,7 +32,7 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7075;http://localhost:5208",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_ENVIRONMENT": "Local",
         "BORED_GAMES_API_KEY": "BoredGames"
       }
     },

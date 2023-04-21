@@ -37,7 +37,15 @@ public class Executor : IExecutor
                 var input = Console.ReadLine();
                 if (input == "create")
                 {
-                    gameId = await _boredGamesApi.CreateGame();
+                    try
+                    {
+                        gameId = await _boredGamesApi.CreateGame();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.ReadLine();
+                    }
+
                     Console.WriteLine($"GameID: {gameId}");
                 }
                 else if (input == "join")

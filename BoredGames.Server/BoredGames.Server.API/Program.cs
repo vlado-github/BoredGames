@@ -11,18 +11,15 @@ builder.Services.AddValidatorsFromAssemblyContaining(typeof(MakeMoveValidator));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCustomCors();
 
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = string.Empty;
-});
+app.UseCors(CorsPolicyExtensions.CorsPolicyName);
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

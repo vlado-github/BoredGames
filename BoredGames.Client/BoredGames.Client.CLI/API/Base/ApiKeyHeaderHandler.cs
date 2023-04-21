@@ -14,9 +14,8 @@ public class ApiKeyHeaderHandler : DelegatingHandler
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        request.Headers.Authorization = 
-            new AuthenticationHeaderValue(_settings.HeaderApiKeyName, _settings.HeaderApiKeyValue);
+        request.Headers.Add(_settings.HeaderApiKeyName, _settings.HeaderApiKeyValue);
         request.Headers.Add(_settings.HeaderPlayerIdName, _settings.HeaderPlayerIdValue);
-        return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        return await base.SendAsync(request, cancellationToken);
     }
 }

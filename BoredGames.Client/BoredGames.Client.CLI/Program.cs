@@ -7,14 +7,14 @@ namespace BoredGames.Client.CLI;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         var services = new ServiceCollection();
         ConfigureServices(services);
         var serviceProvider = services.BuildServiceProvider();
         
         var executor = serviceProvider.GetRequiredService<IExecutor>();
-        executor.Execute();
+        await executor.Execute();
     }
 
     private static void ConfigureServices(IServiceCollection services)
