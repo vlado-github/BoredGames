@@ -9,6 +9,11 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        Console.CancelKeyPress += delegate(object? sender, ConsoleCancelEventArgs e) 
+        {
+            e.Cancel = true;
+        };
+        
         var services = new ServiceCollection();
         ConfigureServices(services);
         var serviceProvider = services.BuildServiceProvider();

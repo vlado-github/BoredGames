@@ -33,36 +33,34 @@ public class Executor : IExecutor
 
             while (!joined)
             {
-                Console.WriteLine("Type command (e.g. create, join):");
+                Console.WriteLine("Type command (e.g. create, join, exit):");
+                Console.Write(">");
                 var input = Console.ReadLine();
                 if (input == "create")
                 {
-                    try
-                    {
-                        gameId = await _boredGamesApi.CreateGame();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.ReadLine();
-                    }
-
-                    Console.WriteLine($"GameID: {gameId}");
+                    gameId = await _boredGamesApi.CreateGame();
+                    joined = true;
+                    gameState = await _boredGamesApi.GetGameState(gameId.ToString());
+                    Console.WriteLine($"*** Server ***: GameID: {gameId}");
                 }
                 else if (input == "join")
                 {
-                    if (!gameId.HasValue)
+                    Console.Write(">>> Enter Game ID:");
+                    var gameIdInput = Console.ReadLine();
+                    if (string.IsNullOrEmpty(gameIdInput))
                     {
-                        Console.WriteLine("You have to create a game before joining.");
+                        Console.WriteLine("You have to enter Game ID to join.");
                     }
-
+                    gameId = new Guid(gameIdInput);
                     gameState = await _boredGamesApi.Join(new JoinGameRequest()
                     {
                         GameId = gameId.Value
                     });
-                    if (gameState.State == GameStateEnum.AwaitingPlayers)
-                    {
-                        joined = true;
-                    }
+                    joined = true;
+                }
+                else if (input == "exit")
+                {
+                    return;
                 }
                 else
                 {
@@ -76,20 +74,35 @@ public class Executor : IExecutor
                 return;
             }
 
+            var iteration = 0;
             while (gameState.State != GameStateEnum.Finished)
             {
                 gameState = await _boredGamesApi.GetGameState(gameId.ToString());
+                Thread.Sleep(2000);
                 if (gameState.State == GameStateEnum.AwaitingPlayers)
                 {
-                    waitingToJoinMessage += ".";
-                    Console.WriteLine(waitingToJoinMessage);
+                    if (iteration == 0)
+                    {
+                        Console.Write(waitingToJoinMessage);
+                        iteration++;
+                    }
+                    else
+                    {
+                        Console.Write(".");
+                    }
                 }
                 else if (gameState.State == GameStateEnum.InPlay)
                 {
-                    if (string.IsNullOrEmpty(actionType))
+                    if (!string.IsNullOrEmpty(actionType))
                     {
-                        waitingForMoveMessage += ".";
-                        Console.WriteLine(waitingForMoveMessage);
+                        if (iteration == 1)
+                        {
+                            Console.Write(waitingForMoveMessage);
+                        }
+                        else
+                        {
+                            Console.Write(".");
+                        }
                     }
                     else
                     {
@@ -114,10 +127,7 @@ public class Executor : IExecutor
 
                         if (!string.IsNullOrEmpty(actionType))
                         {
-                            gameState = await _boredGamesApi.MakeMove(new MakeMoveRequest()
-                            {
-                                ActionType = actionType
-                            });
+                            gameState = await _boredGamesApi.MakeMove(new MakeMoveRequest(gameId.Value, actionType));
                         }
                     }
                 }
