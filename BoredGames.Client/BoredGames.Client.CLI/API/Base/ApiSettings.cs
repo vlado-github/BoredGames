@@ -9,11 +9,12 @@ public class ApiSettings
     public ApiSettings(IConfigurationSection configSection)
     {
         _configSection = configSection;
+        HeaderPlayerIdValue = Guid.NewGuid().ToString();
     }
 
     public string BaseUrl => _configSection[nameof(BaseUrl)];
     public string HeaderApiKeyName => "X-BORED-GAMES-API-KEY";
     public string HeaderApiKeyValue => Environment.GetEnvironmentVariable("BORED_GAMES_API_KEY");
-    public string HeaderPlayerIdName => "boredgames.playerid";
-    public string HeaderPlayerIdValue => Guid.NewGuid().ToString();
+    public string HeaderPlayerIdName => "X-BORED-GAMES-PLAYER-ID";
+    public string HeaderPlayerIdValue { get; private set; }
 }

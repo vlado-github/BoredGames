@@ -25,10 +25,16 @@ public class Executor : IExecutor
             var actionType = string.Empty;
             GameStateResponse? gameState = null;
             var waitingToJoinMessage = "Waiting for players to join...";
+            var isWaitingToJoinMessagePrinted = false;
             var waitingForMoveMessage = "Waiting for other players to make a move...";
-
-            Console.WriteLine("Welcome to BoredGames!");
-            Console.WriteLine("-----------------------");
+            var isWaitingForMoveMessagePrinted = false;
+            
+            using (var reader = new StreamReader("asset-title.txt"))
+            {
+                var title = await reader.ReadToEndAsync();
+                Console.WriteLine(title);
+            }
+            Console.WriteLine("-----------------------------------------------");
             Console.WriteLine($"Your PlayerID: {_settings.HeaderPlayerIdValue}");
 
             while (!joined)
@@ -41,7 +47,7 @@ public class Executor : IExecutor
                     gameId = await _boredGamesApi.CreateGame();
                     joined = true;
                     gameState = await _boredGamesApi.GetGameState(gameId.ToString());
-                    Console.WriteLine($"*** Server ***: GameID: {gameId}");
+                    Console.WriteLine($"<<< GameID: {gameId}");
                 }
                 else if (input == "join")
                 {
@@ -74,20 +80,19 @@ public class Executor : IExecutor
                 return;
             }
 
-            var iteration = 0;
             while (gameState.State != GameStateEnum.Finished)
             {
                 gameState = await _boredGamesApi.GetGameState(gameId.ToString());
-                Thread.Sleep(2000);
                 if (gameState.State == GameStateEnum.AwaitingPlayers)
                 {
-                    if (iteration == 0)
+                    if (!isWaitingToJoinMessagePrinted)
                     {
                         Console.Write(waitingToJoinMessage);
-                        iteration++;
+                        isWaitingToJoinMessagePrinted = true;
                     }
                     else
                     {
+                        Thread.Sleep(2000);
                         Console.Write(".");
                     }
                 }
@@ -95,17 +100,20 @@ public class Executor : IExecutor
                 {
                     if (!string.IsNullOrEmpty(actionType))
                     {
-                        if (iteration == 1)
+                        if (!isWaitingForMoveMessagePrinted)
                         {
                             Console.Write(waitingForMoveMessage);
+                            isWaitingForMoveMessagePrinted = true;
                         }
                         else
                         {
+                            Thread.Sleep(2000);
                             Console.Write(".");
                         }
                     }
                     else
                     {
+                        Console.WriteLine(string.Empty);
                         Console.WriteLine("Choose your action [R]ock/[P]aper/[S]cissors:");
                         var action = Console.ReadLine();
                         if (action.Equals("R", StringComparison.InvariantCultureIgnoreCase))
@@ -136,12 +144,18 @@ public class Executor : IExecutor
             var winners = await _boredGamesApi.GetGameWinners(gameId.ToString());
             if (winners.Contains(Guid.Parse(_settings.HeaderPlayerIdValue)))
             {
+                Console.WriteLine(string.Empty);
+                Console.WriteLine("**********");
                 Console.WriteLine("YOU WON!");
+                Console.WriteLine("**********");
             }
             else
             {
+                Console.WriteLine(string.Empty);
+                Console.WriteLine("**********");
                 var endMessage = $"You lost! Winners: {string.Join(",", winners)}";
                 Console.WriteLine(endMessage);
+                Console.WriteLine("**********");
             }
         }
         catch (Exception ex)

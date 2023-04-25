@@ -62,7 +62,7 @@ public class RockPaperSissorsRuleEngine : IGameRuleEngine
             }
         }
         
-        if (_gameStats.Any(gs => gs.Value == _requiredNumberOfPlayers))
+        if (_gameStats.Any(gs => gs.Value == _requiredNumberOfWins))
         {
             return GameState.Finished;
         }

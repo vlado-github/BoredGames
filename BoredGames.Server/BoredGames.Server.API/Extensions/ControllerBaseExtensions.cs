@@ -4,7 +4,7 @@ namespace BoredGames.Server.API.Extensions;
 
 public static class ControllerBaseExtensions
 {
-    private static readonly string HeaderKey = "boredgames.playerid";
+    private static readonly string HeaderKey = "X-BORED-GAMES-PLAYER-ID";
     
     public static Guid GetPlayerId(this ControllerBase controller)
     {
