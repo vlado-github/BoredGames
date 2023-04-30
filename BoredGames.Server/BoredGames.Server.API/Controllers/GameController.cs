@@ -4,7 +4,6 @@ using BoredGames.Server.API.Models;
 using BoredGames.Server.API.Views;
 using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Grains.Base;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoredGames.Server.API.Controllers
@@ -21,12 +20,16 @@ namespace BoredGames.Server.API.Controllers
             _grainFactory = grainFactory;
         }
         
-        [HttpPost]
-        public async Task<Guid> Create()
+        [HttpPost("create")]
+        public async Task<Guid> Create(CreateGame request)
         {
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
-            var gameId = await player.CreateGame();
+            var gameId = await player.CreateGame(new CreateGameCommand
+            {
+                NumberOfPlayers = request.NumberOfPlayers,
+                NumberOfWins = request.NumberOfWins
+            });
             return gameId;
         }
 

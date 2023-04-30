@@ -13,8 +13,8 @@ public interface IBoredGamesApi
     [Get("/api/game/{gameId}/winners")]
     Task<List<Guid>> GetGameWinners([AliasAs("gameId")] string gameId);
 
-    [Post("/api/game")]
-    Task<Guid> CreateGame();
+    [Post("/api/game/create")]
+    Task<Guid> CreateGame([Body] CreateGameRequest request);
 
     [Post("/api/game/makemove")]
     Task<GameStateResponse> MakeMove([Body] MakeMoveRequest request);

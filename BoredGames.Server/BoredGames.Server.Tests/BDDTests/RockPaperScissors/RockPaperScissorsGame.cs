@@ -29,7 +29,12 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     public async Task GivenTheGameIsCreated()
     {
         var player01 = _grainFactory.GetGrain<IPlayerGrain>(_player01);
-        _gameId = await player01.CreateGame();
+        var command = new CreateGameCommand
+        {
+            NumberOfPlayers = 2,
+            NumberOfWins = 1,
+        };
+        _gameId = await player01.CreateGame(command);
     }
 
     [And("Second player joined")]

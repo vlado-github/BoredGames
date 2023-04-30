@@ -2,7 +2,7 @@
 using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Games.Base;
-using BoredGames.Server.Domain.Games.RockPaperSissors;
+using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Grains.Base;
 using Orleans;
 
@@ -12,14 +12,23 @@ public class GameGrain : Grain, IGameGrain
 {
     private List<Guid> _playersIds;
     private GameState _gameState;
-    private IGameRuleEngine _gameRuleEngine;
+    private IGameRuleEngine<RockPaperScissorsSettings> _gameRuleEngine;
 
     public override Task OnActivateAsync(CancellationToken token)
     {
         _playersIds = new List<Guid>();
         _gameState = GameState.AwaitingPlayers;
-        _gameRuleEngine = new RockPaperSissorsRuleEngine(1, 2);
+        _gameRuleEngine = new RockPaperScissorsRuleEngine();
         return base.OnActivateAsync(token);
+    }
+
+    public void Setup(CreateGameCommand command)
+    {
+        _gameRuleEngine.Setup(new RockPaperScissorsSettings
+        {
+            RequiredNumberOfPlayers = command.NumberOfPlayers,
+            RequiredNumberOfWins = command.NumberOfWins
+        });
     }
 
     public Task<GameState> AddPlayerToGame(Guid playerId)

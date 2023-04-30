@@ -1,35 +1,36 @@
 using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Games.Base;
+using BoredGames.Server.Domain.Games.Entities;
 
-namespace BoredGames.Server.Domain.Games.RockPaperSissors;
+namespace BoredGames.Server.Domain.Games.RockPaperScissors;
 
-public class RockPaperSissorsRuleEngine : IGameRuleEngine
+public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSettings>
 {
     public static readonly string RockAction = "rock";
     public static readonly string PaperAction = "paper";
     public static readonly string ScissorsAction = "scissors";
-    
-    public static readonly int MinimumRequiredNumberOfWins = 1;
-    public static readonly int MinimumRequiredNumberOfPlayers = 2;
-    
-    private IList<MakeMoveCommand> _movesStack;
-    private int _requiredNumberOfWins;
-    private int _requiredNumberOfPlayers;
-    private IDictionary<Guid, int> _gameStats;
 
-    public RockPaperSissorsRuleEngine(int? numberOfWins, int? numberOfPlayers)
+    private Rounds _rounds;
+    private RockPaperScissorsSettings _settings;
+    private Statistic _stats;
+
+    public RockPaperScissorsRuleEngine()
     {
-        _movesStack = new List<MakeMoveCommand>();
-        _gameStats = new Dictionary<Guid, int>();
-        _requiredNumberOfWins = numberOfWins ?? MinimumRequiredNumberOfWins;
-        _requiredNumberOfPlayers = numberOfPlayers ?? MinimumRequiredNumberOfPlayers;
+        Setup(RockPaperScissorsSettings.Default);
+    }
+
+    public void Setup(RockPaperScissorsSettings settings)
+    {
+        _settings = settings;
+        _rounds = new Rounds(_settings.RequiredNumberOfWins);
+        _stats = new Statistic(_settings.RequiredNumberOfWins);
     }
 
     public GameState Handle(MakeMoveCommand command)
     {
-        _movesStack.Add(command);
-        if (_movesStack.Count == _requiredNumberOfPlayers)
+        _rounds.Current.AddMove(command);
+        if (_rounds.Current.GetMoves().Count == _settings.RequiredNumberOfPlayers)
         {
             return ResolveResult();
         }
@@ -39,30 +40,24 @@ public class RockPaperSissorsRuleEngine : IGameRuleEngine
 
     public IList<Guid> GetWinners()
     {
-        if (!_gameStats.Any())
-        {
-            return new List<Guid>();
-        }
-        return _gameStats.Where(gs => gs.Value == _requiredNumberOfWins)
-            .Select(gs => gs.Key)
-            .ToList();
+        return _stats.GetWinners();
     }
 
     private GameState ResolveResult()
     {
-        foreach (var move in _movesStack)
+        foreach (var move in _rounds.Current.GetMoves())
         {
-            var remainingCommands = new List<MakeMoveCommand>(_movesStack);
+            var remainingCommands = new List<MakeMoveCommand>(_rounds.Current.GetMoves());
             remainingCommands.Remove(move);
             if (CheckRule(move.ActionType, remainingCommands) == GameResult.Win)
             {
-                int currentNumberOfWins = 0;
-                _gameStats.TryGetValue(move.PlayerId, out currentNumberOfWins);
-                _gameStats.Add(move.PlayerId, ++currentNumberOfWins);
+                _stats.AddWin(move.PlayerId);
             }
         }
         
-        if (_gameStats.Any(gs => gs.Value == _requiredNumberOfWins))
+        _rounds.Next();
+        
+        if (_rounds.AreFinished())
         {
             return GameState.Finished;
         }

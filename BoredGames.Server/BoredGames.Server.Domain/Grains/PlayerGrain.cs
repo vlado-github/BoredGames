@@ -1,4 +1,5 @@
 using BoredGames.Server.Common.Enums;
+using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Grains.Base;
 using Orleans;
 
@@ -11,11 +12,12 @@ public class PlayerGrain : Grain, IPlayerGrain
         return base.OnActivateAsync(token);
     }
 
-    public async Task<Guid> CreateGame()
+    public async Task<Guid> CreateGame(CreateGameCommand command)
     {
         var gameId = Guid.NewGuid();
         var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId);
-
+        gameGrain.Setup(command);
+        
         var playerId = this.GetPrimaryKey();
         await gameGrain.AddPlayerToGame(playerId);
         return gameId;
