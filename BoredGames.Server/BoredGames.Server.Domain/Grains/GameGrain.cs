@@ -9,30 +9,38 @@ using Orleans;
 
 namespace BoredGames.Server.Domain.Grains;
 
-public class GameGrain : Grain, IGameGrain
+public class GameGrain<T> : Grain, IGameGrain<T>
+    where T : GameSettingsBase
 {
     private List<Guid> _playersIds;
     private GameState _gameState;
-    private IGameRuleEngine<RockPaperScissorsSettings> _gameRuleEngine;
+    private IGameRuleEngine<T> _gameRuleEngine;
 
     public override Task OnActivateAsync(CancellationToken token)
     {
         _playersIds = new List<Guid>();
         _gameState = GameState.AwaitingPlayers;
-        _gameRuleEngine = new RockPaperScissorsRuleEngine();
         return base.OnActivateAsync(token);
     }
 
     public void Setup(CreateGameCommand command)
     {
-        _gameRuleEngine.Setup(new RockPaperScissorsSettings
+        switch (command.Title)
         {
-            RequiredNumberOfPlayers = command.NumberOfPlayers,
-            RequiredNumberOfWins = command.NumberOfWins
-        });
+            case GameTitle.RockPaperScissors:
+            {
+                _gameRuleEngine = 
+                    (IGameRuleEngine<T>) GameRuleEngineFactory.GetInstance<RockPaperScissorsSettings>(command);
+                break;
+            }
+            default:
+            {
+                throw new NotImplementedException($"Game {command.Title} doesn't exist.");
+            }
+        }
     }
 
-    public Task<GameState> AddPlayerToGame(Guid playerId)
+    public Task<GameDefinition> AddPlayerToGame(Guid playerId)
     {
         if (_gameState is GameState.Finished)
         {
@@ -49,12 +57,23 @@ public class GameGrain : Grain, IGameGrain
             _playersIds.Add(playerId);
         }
 
-        if (_gameState is GameState.AwaitingPlayers && _playersIds.Count == 2)
+        if (_gameState is GameState.AwaitingPlayers 
+            && _playersIds.Count == _gameRuleEngine.GetSettings().RequiredNumberOfPlayers)
         {
             _gameState = GameState.InPlay;
         }
 
-        return Task.FromResult(_gameState);
+        var settings = _gameRuleEngine.GetSettings();
+        var result = new GameDefinition
+        {
+            GameId = this.GetPrimaryKey(),
+            State = _gameState,
+            RequiredNumberOfPlayers = settings.RequiredNumberOfPlayers,
+            RequiredNumberOfWins = settings.RequiredNumberOfWins,
+            Description = settings.Description
+        };
+
+        return Task.FromResult(result);
     }
 
     public Task<GameState> MakeMove(MakeMoveCommand command)

@@ -1,9 +1,11 @@
 using BoredGames.Server.API.Extensions;
 using BoredGames.Server.API.Filters;
 using BoredGames.Server.API.Models;
-using BoredGames.Server.API.Views;
+using BoredGames.Server.API.ViewModels;
 using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Grains.Base;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoredGames.Server.API.Controllers
@@ -21,41 +23,42 @@ namespace BoredGames.Server.API.Controllers
         }
         
         [HttpPost("create")]
-        public async Task<Guid> Create(CreateGame request)
+        public async Task<GameDefinitionViewModel> Create(CreateGame request)
         {
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
-            var gameId = await player.CreateGame(new CreateGameCommand
+            var gameDefinition = await player.CreateGame(new CreateGameCommand
             {
+                Title = request.GameTitle,
                 NumberOfPlayers = request.NumberOfPlayers,
-                NumberOfWins = request.NumberOfWins
+                NumberOfWins = request.NumberOfWins,
+                Description = request.Description
             });
-            return gameId;
+            return gameDefinition.Adapt<GameDefinitionViewModel>();
         }
 
         [HttpPut("join")]
-        public async Task<GameViewModel> Join(JoinGame request)
+        public async Task<GameDefinitionViewModel> Join(JoinGame request)
         {
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
-            var state = await player.JoinGame(request.GameId);
-            return new GameViewModel
+            var gameDefinition = await player.JoinGame(new JoinGameCommand()
             {
-                Id = request.GameId,
-                State = state
-            };
+                GameId = request.GameId
+            });
+            return gameDefinition.Adapt<GameDefinitionViewModel>();
         }
 
         [HttpPost("makemove")]
-        public async Task<GameViewModel> MakeMove(MakeMove request)
+        public async Task<GameStateViewModel> MakeMove(MakeMove request)
         {
-            var game = _grainFactory.GetGrain<IGameGrain>(request.GameId);
+            var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(request.GameId);
             var state = await game.MakeMove(new MakeMoveCommand
             {
                 ActionType = request.ActionType,
                 PlayerId = this.GetPlayerId()
             });
-            return new GameViewModel
+            return new GameStateViewModel
             {
                 Id = request.GameId,
                 State = state
@@ -63,22 +66,34 @@ namespace BoredGames.Server.API.Controllers
         }
 
         [HttpGet("{gameId:guid}/state")]
-        public async Task<GameViewModel> GetState(Guid gameId)
+        public async Task<GameStateViewModel> GetState(Guid gameId)
         {
-            var game = _grainFactory.GetGrain<IGameGrain>(gameId);
+            var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(gameId);
             var state = await game.GetState();
-            return new GameViewModel
+            return new GameStateViewModel
             {
                 Id = gameId,
                 State = state
             };
         }
         
-        [HttpGet("{gameId:guid}/score")]
-        public async Task<List<Guid>> GetScore(Guid gameId)
+        [HttpGet("{gameId:guid}/winners")]
+        public async Task<List<Guid>> GetWinners(Guid gameId)
         {
-            var game = _grainFactory.GetGrain<IGameGrain>(gameId);
+            var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(gameId);
             return (await game.GetWinners()).ToList();
+        }
+        
+        [HttpGet("{gameId:guid}/score")]
+        public async Task<GameScoreViewModel> GetScore(Guid gameId)
+        {
+            var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(gameId);
+            var score = await game.GetScore();
+            var playerStats = score.Adapt<IList<PlayerStatsViewModel>>();
+            return new GameScoreViewModel()
+            {
+                PlayerScores = playerStats
+            };
         }
     }
 }

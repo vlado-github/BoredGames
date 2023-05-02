@@ -1,13 +1,12 @@
+using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Domain.Commands.Base;
 using Orleans;
 
 namespace BoredGames.Server.Domain.Commands;
 
 [GenerateSerializer]
-public class MakeMoveCommand : CommandBase
+public class JoinGameCommand : CommandBase
 {
     [Id(0)]
-    public Guid PlayerId { get; set; }
-    [Id(1)]
-    public string ActionType { get; set; }
+    public Guid GameId { get; set; }
 }

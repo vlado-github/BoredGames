@@ -1,15 +1,16 @@
 using System.Collections;
 using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Entities;
 using Orleans;
 
 namespace BoredGames.Server.Domain.Grains.Base;
 
-public interface IGameGrain : IGrainWithGuidKey
+public interface IGameGrain<T> : IGrainWithGuidKey where T: GameSettingsBase
 {
     void Setup(CreateGameCommand command);
-    Task<GameState> AddPlayerToGame(Guid playerId);
+    Task<GameDefinition> AddPlayerToGame(Guid playerId);
     Task<GameState> MakeMove(MakeMoveCommand command);
     Task<IList<Guid>> GetWinners();
     Task<GameState> GetState();

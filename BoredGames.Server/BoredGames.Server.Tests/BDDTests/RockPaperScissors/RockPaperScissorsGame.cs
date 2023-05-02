@@ -1,4 +1,6 @@
+using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Grains.Base;
 using BoredGames.Server.Tests.Base;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,23 +33,28 @@ public class RockPaperScissorsGame : BddDefinitionsBase
         var player01 = _grainFactory.GetGrain<IPlayerGrain>(_player01);
         var command = new CreateGameCommand
         {
+            Title = GameTitle.RockPaperScissors,
             NumberOfPlayers = 2,
             NumberOfWins = 1,
         };
-        _gameId = await player01.CreateGame(command);
+        var gameDefinition = await player01.CreateGame(command);
+        _gameId = gameDefinition.GameId;
     }
 
     [And("Second player joined")]
     public async Task GivenTheSecondPlayerJoinedTheGame()
     {
         var player02 = _grainFactory.GetGrain<IPlayerGrain>(_player02);
-        await player02.JoinGame(_gameId);
+        await player02.JoinGame(new JoinGameCommand
+        {
+            GameId = _gameId
+        });
     }
     
     [And(@"Player ""(.+)"" made a move ""(.+)""")]
     public async Task GivenPlayerMadeMove(string playerId, string actionType)
     {
-        var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
+        var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(_gameId);
         await game.MakeMove(new MakeMoveCommand()
         {
             ActionType = actionType,
@@ -58,7 +65,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     [When(@"Player ""(.+)"" makes a move ""(.+)""")]
     public async Task WhenPlayerMakesMove(string playerId, string actionType)
     {
-        var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
+        var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(_gameId);
         await game.MakeMove(new MakeMoveCommand()
         {
             ActionType = actionType,
@@ -69,7 +76,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     [Then(@"Winner is player ""(.+)""")]
     public async Task ThenWinnerShouldBePlayer(string playerId)
     {
-        var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
+        var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(_gameId);
         var winners = await game.GetWinners();
         Assert.Single(winners);
         Assert.Equal(winners.Single(), new Guid(playerId));
@@ -78,7 +85,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     [Then("Game is a draw")]
     public async Task ThenGameIsDraw()
     {
-        var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
+        var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(_gameId);
         var winners = await game.GetWinners();
         Assert.Empty(winners);
     }

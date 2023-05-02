@@ -1,5 +1,6 @@
-using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.Entities;
+using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Grains.Base;
 using Orleans;
 
@@ -12,21 +13,21 @@ public class PlayerGrain : Grain, IPlayerGrain
         return base.OnActivateAsync(token);
     }
 
-    public async Task<Guid> CreateGame(CreateGameCommand command)
+    public async Task<GameDefinition> CreateGame(CreateGameCommand command)
     {
         var gameId = Guid.NewGuid();
-        var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId);
+        var gameGrain = GrainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(gameId);
         gameGrain.Setup(command);
         
         var playerId = this.GetPrimaryKey();
-        await gameGrain.AddPlayerToGame(playerId);
-        return gameId;
+        var gameDefinition = await gameGrain.AddPlayerToGame(playerId);
+        return gameDefinition;
     }
 
-    public async Task<GameState> JoinGame(Guid gameId)
+    public async Task<GameDefinition> JoinGame(JoinGameCommand command)
     {
-        var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId);
-        var state = await gameGrain.AddPlayerToGame(this.GetPrimaryKey());
-        return state;
+        var gameGrain = GrainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(command.GameId);
+        var gameDefinition = await gameGrain.AddPlayerToGame(this.GetPrimaryKey());
+        return gameDefinition;
     }
 }

@@ -5,23 +5,23 @@ public class Statistic
     public Statistic(Guid playerId)
     {
         PlayerId = playerId;
-        RoundWins = new Dictionary<int, string>();
-        RoundLosses = new Dictionary<int, string>();
+        RoundWins = new List<Hand>();
+        RoundLosses = new List<Hand>();
     }
 
     public void AddWin(int roundNumber, string actionType)
     {
-        RoundWins.Add(roundNumber, actionType);
+        RoundWins.Add(new Hand(roundNumber, actionType));
     }
     
     public void AddLoss(int roundNumber, string actionType)
     {
-        RoundLosses.Add(roundNumber, actionType);
+        RoundLosses.Add(new Hand(roundNumber, actionType));
     }
     
     public Guid PlayerId { get; private set; }
-    private  IDictionary<int, string> RoundWins { get; set; }
-    private IDictionary<int, string> RoundLosses { get; set; }
+    public  IList<Hand> RoundWins { get; private set; }
+    public IList<Hand> RoundLosses { get; private set; }
     public int NumberOfWins => RoundWins.Count;
     public int NumberOfLoses => RoundLosses.Count;
 }

@@ -1,5 +1,6 @@
 using BoredGames.Server.API.Extensions;
 using BoredGames.Server.API.Filters;
+using BoredGames.Server.API.Mappings;
 using BoredGames.Server.API.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -12,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCustomCors();
+builder.Services.RegisterMappings();
 
 var app = builder.Build();
 if (!app.Environment.IsProduction())

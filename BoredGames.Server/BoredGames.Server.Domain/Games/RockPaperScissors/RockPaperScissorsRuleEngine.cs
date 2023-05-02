@@ -49,6 +49,11 @@ public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSett
         return _score.GetWinners();
     }
 
+    public RockPaperScissorsSettings GetSettings()
+    {
+        return _settings;
+    }
+
     private GameState ResolveResult()
     {
         foreach (var move in _rounds.Current.GetMoves())

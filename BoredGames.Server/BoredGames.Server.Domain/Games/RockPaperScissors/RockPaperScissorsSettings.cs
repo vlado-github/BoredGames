@@ -10,9 +10,10 @@ public class RockPaperScissorsSettings : GameSettingsBase
     public static readonly RockPaperScissorsSettings Default = new RockPaperScissorsSettings();
 
     public RockPaperScissorsSettings(int? requiredNumberOfPlayers = null, 
-        int? requiredNumberOfWins = null)
+        int? requiredNumberOfWins = null, string? description = null)
     {
         RequiredNumberOfPlayers = requiredNumberOfPlayers ?? MinimumRequiredNumberOfPlayers;
         RequiredNumberOfWins = requiredNumberOfWins ?? MinimumRequiredNumberOfWins;
+        Description = description ?? string.Empty;
     }
 }
