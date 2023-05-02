@@ -74,8 +74,8 @@ namespace BoredGames.Server.API.Controllers
             };
         }
         
-        [HttpGet("{gameId:guid}/winners")]
-        public async Task<List<Guid>> GetWinners(Guid gameId)
+        [HttpGet("{gameId:guid}/score")]
+        public async Task<List<Guid>> GetScore(Guid gameId)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(gameId);
             return (await game.GetWinners()).ToList();

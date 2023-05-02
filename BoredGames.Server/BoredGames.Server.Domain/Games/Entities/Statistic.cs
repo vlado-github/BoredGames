@@ -2,26 +2,26 @@ namespace BoredGames.Server.Domain.Games.Entities;
 
 public class Statistic
 {
-    private readonly int _requiredNumberOfWins;
-    private readonly IDictionary<Guid, int> _playerWins;
-
-    public Statistic(int requiredNumberOfWins)
+    public Statistic(Guid playerId)
     {
-        _requiredNumberOfWins = requiredNumberOfWins;
-        _playerWins = new Dictionary<Guid, int>();
+        PlayerId = playerId;
+        RoundWins = new Dictionary<int, string>();
+        RoundLosses = new Dictionary<int, string>();
     }
 
-    public void AddWin(Guid playerId)
+    public void AddWin(int roundNumber, string actionType)
     {
-        _playerWins.TryGetValue(playerId, out var currentNumberOfWins);
-        _playerWins.Add(playerId, ++currentNumberOfWins);
+        RoundWins.Add(roundNumber, actionType);
     }
-
-    public IList<Guid> GetWinners()
+    
+    public void AddLoss(int roundNumber, string actionType)
     {
-        return _playerWins
-            .Where(x => x.Value == _requiredNumberOfWins)
-            .Select(x => x.Key)
-            .ToList();
+        RoundLosses.Add(roundNumber, actionType);
     }
+    
+    public Guid PlayerId { get; private set; }
+    private  IDictionary<int, string> RoundWins { get; set; }
+    private IDictionary<int, string> RoundLosses { get; set; }
+    public int NumberOfWins => RoundWins.Count;
+    public int NumberOfLoses => RoundLosses.Count;
 }

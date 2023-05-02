@@ -9,4 +9,5 @@ public interface IGameRuleEngine<T> where T : GameSettingsBase
     void Setup(T settings);
     GameState Handle(MakeMoveCommand command);
     IList<Guid> GetWinners();
+    IList<Statistic> GetScore();
 }

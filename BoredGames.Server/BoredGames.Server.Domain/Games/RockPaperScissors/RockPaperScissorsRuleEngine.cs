@@ -7,13 +7,14 @@ namespace BoredGames.Server.Domain.Games.RockPaperScissors;
 
 public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSettings>
 {
+    //todo: refactor to move to SmartEnum
     public static readonly string RockAction = "rock";
     public static readonly string PaperAction = "paper";
     public static readonly string ScissorsAction = "scissors";
 
     private Rounds _rounds;
     private RockPaperScissorsSettings _settings;
-    private Statistic _stats;
+    private Score _score;
 
     public RockPaperScissorsRuleEngine()
     {
@@ -24,7 +25,7 @@ public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSett
     {
         _settings = settings;
         _rounds = new Rounds(_settings.RequiredNumberOfWins);
-        _stats = new Statistic(_settings.RequiredNumberOfWins);
+        _score = new Score(_settings.RequiredNumberOfWins);
     }
 
     public GameState Handle(MakeMoveCommand command)
@@ -37,10 +38,15 @@ public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSett
 
         return GameState.InPlay;
     }
+    
+    public IList<Statistic> GetScore()
+    {
+        return _score.GetScore();
+    }
 
     public IList<Guid> GetWinners()
     {
-        return _stats.GetWinners();
+        return _score.GetWinners();
     }
 
     private GameState ResolveResult()
@@ -51,7 +57,11 @@ public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSett
             remainingCommands.Remove(move);
             if (CheckRule(move.ActionType, remainingCommands) == GameResult.Win)
             {
-                _stats.AddWin(move.PlayerId);
+                _score.AddWin(move.PlayerId, _rounds.Current.Number, move.ActionType);
+            }
+            else
+            {
+                _score.AddLoss(move.PlayerId, _rounds.Current.Number, move.ActionType);
             }
         }
         
@@ -70,7 +80,7 @@ public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSett
         {
             if (remainingCommands.Any(m => m.ActionType == PaperAction))
             {
-                return GameResult.Lose;
+                return GameResult.Loss;
             }
             if (remainingCommands.All(x => x.ActionType == RockAction))
             {
@@ -82,7 +92,7 @@ public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSett
         {
             if (remainingCommands.Any(m => m.ActionType == ScissorsAction))
             {
-                return GameResult.Lose;
+                return GameResult.Loss;
             }
             if (remainingCommands.All(x => x.ActionType == PaperAction))
             {
@@ -94,7 +104,7 @@ public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSett
         {
             if (remainingCommands.Any(m => m.ActionType == RockAction))
             {
-                return GameResult.Lose;
+                return GameResult.Loss;
             }
             if (remainingCommands.All(x => x.ActionType == ScissorsAction))
             {

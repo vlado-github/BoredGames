@@ -2,6 +2,7 @@
 using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Games.Base;
+using BoredGames.Server.Domain.Games.Entities;
 using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Grains.Base;
 using Orleans;
@@ -60,6 +61,12 @@ public class GameGrain : Grain, IGameGrain
     {
         var result = _gameRuleEngine.Handle(command);
         _gameState = result;
+        return Task.FromResult(result);
+    }
+
+    public Task<IList<Statistic>> GetScore()
+    {
+        var result = _gameRuleEngine.GetScore();
         return Task.FromResult(result);
     }
 
