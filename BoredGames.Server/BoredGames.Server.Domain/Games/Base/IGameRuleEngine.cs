@@ -4,11 +4,10 @@ using BoredGames.Server.Domain.Games.Entities;
 
 namespace BoredGames.Server.Domain.Games.Base;
 
-public interface IGameRuleEngine<T> where T : GameSettingsBase
+public interface IGameRuleEngine
 {
-    void Setup(T settings);
     GameState Handle(MakeMoveCommand command);
     IList<Guid> GetWinners();
     IList<Statistic> GetScore();
-    T GetSettings();
+    GameSettingsBase GetSettings();
 }

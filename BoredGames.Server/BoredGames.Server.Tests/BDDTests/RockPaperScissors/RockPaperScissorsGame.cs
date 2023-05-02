@@ -54,7 +54,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     [And(@"Player ""(.+)"" made a move ""(.+)""")]
     public async Task GivenPlayerMadeMove(string playerId, string actionType)
     {
-        var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(_gameId);
+        var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
         await game.MakeMove(new MakeMoveCommand()
         {
             ActionType = actionType,
@@ -65,7 +65,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     [When(@"Player ""(.+)"" makes a move ""(.+)""")]
     public async Task WhenPlayerMakesMove(string playerId, string actionType)
     {
-        var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(_gameId);
+        var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
         await game.MakeMove(new MakeMoveCommand()
         {
             ActionType = actionType,
@@ -76,7 +76,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     [Then(@"Winner is player ""(.+)""")]
     public async Task ThenWinnerShouldBePlayer(string playerId)
     {
-        var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(_gameId);
+        var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
         var winners = await game.GetWinners();
         Assert.Single(winners);
         Assert.Equal(winners.Single(), new Guid(playerId));
@@ -85,7 +85,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     [Then("Game is a draw")]
     public async Task ThenGameIsDraw()
     {
-        var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(_gameId);
+        var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
         var winners = await game.GetWinners();
         Assert.Empty(winners);
     }

@@ -3,7 +3,6 @@ using BoredGames.Server.API.Filters;
 using BoredGames.Server.API.Models;
 using BoredGames.Server.API.ViewModels;
 using BoredGames.Server.Domain.Commands;
-using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Grains.Base;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +51,7 @@ namespace BoredGames.Server.API.Controllers
         [HttpPost("makemove")]
         public async Task<GameStateViewModel> MakeMove(MakeMove request)
         {
-            var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(request.GameId);
+            var game = _grainFactory.GetGrain<IGameGrain>(request.GameId);
             var state = await game.MakeMove(new MakeMoveCommand
             {
                 ActionType = request.ActionType,
@@ -68,7 +67,7 @@ namespace BoredGames.Server.API.Controllers
         [HttpGet("{gameId:guid}/state")]
         public async Task<GameStateViewModel> GetState(Guid gameId)
         {
-            var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(gameId);
+            var game = _grainFactory.GetGrain<IGameGrain>(gameId);
             var state = await game.GetState();
             return new GameStateViewModel
             {
@@ -80,14 +79,14 @@ namespace BoredGames.Server.API.Controllers
         [HttpGet("{gameId:guid}/winners")]
         public async Task<List<Guid>> GetWinners(Guid gameId)
         {
-            var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(gameId);
+            var game = _grainFactory.GetGrain<IGameGrain>(gameId);
             return (await game.GetWinners()).ToList();
         }
         
         [HttpGet("{gameId:guid}/score")]
         public async Task<GameScoreViewModel> GetScore(Guid gameId)
         {
-            var game = _grainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(gameId);
+            var game = _grainFactory.GetGrain<IGameGrain>(gameId);
             var score = await game.GetScore();
             var playerStats = score.Adapt<IList<PlayerStatsViewModel>>();
             return new GameScoreViewModel()

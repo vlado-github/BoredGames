@@ -7,7 +7,7 @@ namespace BoredGames.Server.Domain.Games.Base;
 
 public static class GameRuleEngineFactory
 {
-    public static IGameRuleEngine<T> GetInstance<T>(CreateGameCommand command) where T : GameSettingsBase
+    public static IGameRuleEngine GetInstance(CreateGameCommand command)
     {
         switch (command.Title)
         {
@@ -18,7 +18,7 @@ public static class GameRuleEngineFactory
                     requiredNumberOfPlayers: command.NumberOfPlayers,
                     requiredNumberOfWins: command.NumberOfWins,
                     description: command.Description));
-                return (IGameRuleEngine<T>)ruleEngine;
+                return ruleEngine;
             }
             default:
             {

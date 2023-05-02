@@ -7,7 +7,7 @@ using Orleans;
 
 namespace BoredGames.Server.Domain.Grains.Base;
 
-public interface IGameGrain<T> : IGrainWithGuidKey where T: GameSettingsBase
+public interface IGameGrain : IGrainWithGuidKey
 {
     void Setup(CreateGameCommand command);
     Task<GameDefinition> AddPlayerToGame(Guid playerId);

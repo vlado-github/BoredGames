@@ -16,7 +16,7 @@ public class PlayerGrain : Grain, IPlayerGrain
     public async Task<GameDefinition> CreateGame(CreateGameCommand command)
     {
         var gameId = Guid.NewGuid();
-        var gameGrain = GrainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(gameId);
+        var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId);
         gameGrain.Setup(command);
         
         var playerId = this.GetPrimaryKey();
@@ -26,7 +26,7 @@ public class PlayerGrain : Grain, IPlayerGrain
 
     public async Task<GameDefinition> JoinGame(JoinGameCommand command)
     {
-        var gameGrain = GrainFactory.GetGrain<IGameGrain<RockPaperScissorsSettings>>(command.GameId);
+        var gameGrain = GrainFactory.GetGrain<IGameGrain>(command.GameId);
         var gameDefinition = await gameGrain.AddPlayerToGame(this.GetPrimaryKey());
         return gameDefinition;
     }

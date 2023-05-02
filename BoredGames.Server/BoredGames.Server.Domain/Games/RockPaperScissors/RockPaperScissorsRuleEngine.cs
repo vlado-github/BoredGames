@@ -5,27 +5,16 @@ using BoredGames.Server.Domain.Games.Entities;
 
 namespace BoredGames.Server.Domain.Games.RockPaperScissors;
 
-public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSettings>
+public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsSettings>, IGameRuleEngine
 {
     //todo: refactor to move to SmartEnum
     public static readonly string RockAction = "rock";
     public static readonly string PaperAction = "paper";
     public static readonly string ScissorsAction = "scissors";
 
-    private Rounds _rounds;
-    private RockPaperScissorsSettings _settings;
-    private Score _score;
-
     public RockPaperScissorsRuleEngine()
     {
         Setup(RockPaperScissorsSettings.Default);
-    }
-
-    public void Setup(RockPaperScissorsSettings settings)
-    {
-        _settings = settings;
-        _rounds = new Rounds(_settings.RequiredNumberOfWins);
-        _score = new Score(_settings.RequiredNumberOfWins);
     }
 
     public GameState Handle(MakeMoveCommand command)
@@ -49,7 +38,7 @@ public class RockPaperScissorsRuleEngine : IGameRuleEngine<RockPaperScissorsSett
         return _score.GetWinners();
     }
 
-    public RockPaperScissorsSettings GetSettings()
+    public GameSettingsBase GetSettings()
     {
         return _settings;
     }

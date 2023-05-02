@@ -9,12 +9,11 @@ using Orleans;
 
 namespace BoredGames.Server.Domain.Grains;
 
-public class GameGrain<T> : Grain, IGameGrain<T>
-    where T : GameSettingsBase
+public class GameGrain : Grain, IGameGrain
 {
     private List<Guid> _playersIds;
     private GameState _gameState;
-    private IGameRuleEngine<T> _gameRuleEngine;
+    private IGameRuleEngine _gameRuleEngine;
 
     public override Task OnActivateAsync(CancellationToken token)
     {
@@ -29,8 +28,7 @@ public class GameGrain<T> : Grain, IGameGrain<T>
         {
             case GameTitle.RockPaperScissors:
             {
-                _gameRuleEngine = 
-                    (IGameRuleEngine<T>) GameRuleEngineFactory.GetInstance<RockPaperScissorsSettings>(command);
+                _gameRuleEngine = GameRuleEngineFactory.GetInstance(command);
                 break;
             }
             default:
