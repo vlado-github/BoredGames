@@ -5,8 +5,9 @@ namespace BoredGames.Client.CLI.Runtime;
 public class ExecutionState
 {
     public bool Joined { get; set; }
+    public GameDefinitionResponse GameDefinition { get; set; }
     public GameStateResponse GameState { get; set; }
-    public Guid GameId { get; set; }
+    public GameScoreResponse GameScore { get; set; }
     public string ActionType { get; set; }
     public string WaitingToJoinMessage { get; set; } = "Waiting for players to join...";
     public bool IsWaitingToJoinMessagePrinted { get; set; } = false;

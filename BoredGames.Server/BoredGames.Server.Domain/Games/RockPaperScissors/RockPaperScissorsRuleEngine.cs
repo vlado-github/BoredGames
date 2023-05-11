@@ -5,7 +5,7 @@ using BoredGames.Server.Domain.Games.Entities;
 
 namespace BoredGames.Server.Domain.Games.RockPaperScissors;
 
-public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsSettings>, IGameRuleEngine
+public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfiguration>
 {
     //todo: refactor to move to SmartEnum
     public static readonly string RockAction = "rock";
@@ -14,10 +14,10 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsSetti
 
     public RockPaperScissorsRuleEngine()
     {
-        Setup(RockPaperScissorsSettings.Default);
+        Setup(RockPaperScissorsConfiguration.Default);
     }
 
-    public GameState Handle(MakeMoveCommand command)
+    public override GameState Handle(MakeMoveCommand command)
     {
         _rounds.Current.AddMove(command);
         if (_rounds.Current.GetMoves().Count == _settings.RequiredNumberOfPlayers)
@@ -28,17 +28,17 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsSetti
         return GameState.InPlay;
     }
     
-    public IList<Statistic> GetScore()
+    public override GameScore GetScore()
     {
-        return _score.GetScore();
+        return _gameScore;
     }
 
-    public IList<Guid> GetWinners()
+    public override IList<Guid> GetWinners()
     {
-        return _score.GetWinners();
+        return _gameScore.GetWinners();
     }
 
-    public GameSettingsBase GetSettings()
+    public override RockPaperScissorsConfiguration GetConfiguration()
     {
         return _settings;
     }
@@ -51,11 +51,11 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsSetti
             remainingCommands.Remove(move);
             if (CheckRule(move.ActionType, remainingCommands) == GameResult.Win)
             {
-                _score.AddWin(move.PlayerId, _rounds.Current.Number, move.ActionType);
+                _gameScore.AddWin(move.PlayerId, _rounds.Current.Number, move.ActionType);
             }
             else
             {
-                _score.AddLoss(move.PlayerId, _rounds.Current.Number, move.ActionType);
+                _gameScore.AddLoss(move.PlayerId, _rounds.Current.Number, move.ActionType);
             }
         }
         

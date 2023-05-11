@@ -8,6 +8,6 @@ public interface IGameRuleEngine
 {
     GameState Handle(MakeMoveCommand command);
     IList<Guid> GetWinners();
-    IList<Statistic> GetScore();
-    GameSettingsBase GetSettings();
+    GameScore GetScore();
+    GameConfigurationBase GetConfiguration();
 }

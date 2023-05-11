@@ -13,9 +13,26 @@ public class PlayHandler
         _boredGamesApi = boredGamesApi;
     }
 
+    public void PrintGameScore(GameScoreResponse score)
+    {
+        if (score != null)
+        {
+            foreach (var playerScore in score.PlayerScores)
+            {
+                Console.WriteLine($">>> {playerScore.PlayerId} " +
+                                  $"Win/Loss: {playerScore.RoundWins.Count() / playerScore.RoundLosses.Count()}");
+            }
+        }
+    }
+
     public async Task<ExecutionState> Handle(ExecutionState executionState)
     {
-        executionState.GameState = await _boredGamesApi.GetGameState(executionState.GameId.ToString());
+        if (executionState.GameScore != null)
+        {
+            Console.WriteLine($">>> Round {executionState.GameScore.CurrentRound}/{executionState.GameScore.RequiredNumberOfWins}");
+        }
+        
+        executionState.GameState = await _boredGamesApi.GetGameState(executionState.GameDefinition.GameId.ToString());
         if (executionState.GameState.State == GameStateEnum.AwaitingPlayers)
         {
             if (!executionState.IsWaitingToJoinMessagePrinted)
@@ -29,8 +46,9 @@ public class PlayHandler
                 Console.Write(".");
             }
         }
-        else if (executionState.GameState.State == GameStateEnum.InPlay)
+        else if (executionState.GameDefinition.State == GameStateEnum.InPlay)
         {
+            PrintGameScore(executionState.GameScore);
             if (!string.IsNullOrEmpty(executionState.ActionType))
             {
                 if (!executionState.IsWaitingForMoveMessagePrinted)
@@ -69,7 +87,10 @@ public class PlayHandler
                 if (!string.IsNullOrEmpty(executionState.ActionType))
                 {
                     executionState.GameState = await _boredGamesApi.MakeMove(
-                        new MakeMoveRequest(executionState.GameId, executionState.ActionType));
+                        new MakeMoveRequest(executionState.GameDefinition.GameId, executionState.ActionType));
+                    executionState.GameScore = await _boredGamesApi.GetGameScore(
+                        executionState.GameDefinition.GameId.ToString());
+                    PrintGameScore(executionState.GameScore);
                 }
             }
         }

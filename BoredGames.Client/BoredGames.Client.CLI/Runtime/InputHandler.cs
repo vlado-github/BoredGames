@@ -20,18 +20,25 @@ public class InputHandler
         var input = Console.ReadLine();
         if (input == "create")
         {
+            Console.Write(">>> Choose game title (e.g. 0,1,2...):");
+            var gameTitle = Console.ReadLine();
+            var gameTitleId = string.IsNullOrEmpty(gameTitle) ? 0 : int.Parse(gameTitle);
             Console.Write(">>> Number of players:");
             var numOfPlayers = Console.ReadLine();
             Console.Write(">>> Number of wins:");
             var numOfWins = Console.ReadLine();
-            result.GameId = await _boredGamesApi.CreateGame(new CreateGameRequest
+            Console.Write(">>> Bet description:");
+            var description = Console.ReadLine();
+            result.GameDefinition = await _boredGamesApi.CreateGame(new CreateGameRequest
             {
+                GameTitle = gameTitleId,
                 NumberOfPlayers = Int32.Parse(numOfPlayers),
-                NumberOfWins = Int32.Parse(numOfWins)
+                NumberOfWins = Int32.Parse(numOfWins),
+                Description = description
             });
             result.Joined = true;
-            result.GameState = await _boredGamesApi.GetGameState(result.GameId.ToString());
-            Console.WriteLine($"<<< GameID: {result.GameId}");
+            result.GameState = await _boredGamesApi.GetGameState(result.GameDefinition.GameId.ToString());
+            Console.WriteLine($"<<< GameID: {result.GameDefinition.GameId}");
         }
         else if (input == "join")
         {
@@ -41,10 +48,10 @@ public class InputHandler
             {
                 Console.WriteLine("You have to enter Game ID to join.");
             }
-            result.GameId = new Guid(gameIdInput);
-            result.GameState = await _boredGamesApi.Join(new JoinGameRequest()
+            var gameId = new Guid(gameIdInput);
+            result.GameDefinition = await _boredGamesApi.Join(new JoinGameRequest()
             {
-                GameId = result.GameId
+                GameId = gameId
             });
             result.Joined = true;
         }

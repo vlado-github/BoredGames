@@ -1,4 +1,5 @@
 using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Entities;
 using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Grains.Base;
@@ -18,7 +19,7 @@ public class PlayerGrain : Grain, IPlayerGrain
         var gameId = Guid.NewGuid();
         var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId);
         gameGrain.Setup(command);
-        
+
         var playerId = this.GetPrimaryKey();
         var gameDefinition = await gameGrain.AddPlayerToGame(playerId);
         return gameDefinition;

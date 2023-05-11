@@ -1,8 +1,8 @@
 namespace BoredGames.Server.Domain.Games.Entities;
 
-public class Statistic
+public class PlayerStatistic
 {
-    public Statistic(Guid playerId)
+    public PlayerStatistic(Guid playerId)
     {
         PlayerId = playerId;
         RoundWins = new List<Hand>();

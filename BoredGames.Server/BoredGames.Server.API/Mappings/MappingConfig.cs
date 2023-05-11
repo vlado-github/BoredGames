@@ -13,11 +13,17 @@ public static class MappingConfig
             .Map(dest => dest.RoundNumber, src => src.RoundNumber)
             .Map(dest => dest.PlayerMove, src => src.ActionType);
 
-        TypeAdapterConfig<Statistic, PlayerStatsViewModel>
+        TypeAdapterConfig<PlayerStatistic, PlayerScoreViewModel>
             .NewConfig()
             .Map(dest => dest.PlayerId, src => src.PlayerId)
             .Map(dest => dest.RoundWins, src => src.RoundWins)
             .Map(dest => dest.RoundLosses, src => src.RoundLosses);
+
+        TypeAdapterConfig<GameScore, GameScoreViewModel>
+            .NewConfig()
+            .Map(dest => dest.PlayerScores, src => src.PlayersStats)
+            .Map(dest => dest.CurrentRound, src => src.CurrentRoundNumber)
+            .Map(dest => dest.RequiredNumberOfWins, src => src.RequiredNumberOfWins);
 
         TypeAdapterConfig<GameDefinition, GameDefinitionViewModel>
             .NewConfig()

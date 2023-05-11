@@ -32,12 +32,12 @@ public class Executor : IExecutor
                 executionState = await _inputHandler.Handle();
             }
 
-            while (executionState.GameState.State != GameStateEnum.Finished)
+            while (executionState.GameDefinition.State != GameStateEnum.Finished)
             {
                 executionState = await _playHandler.Handle(executionState);
             }
 
-            var winners = await _boredGamesApi.GetGameWinners(executionState.GameId.ToString());
+            var winners = await _boredGamesApi.GetGameWinners(executionState.GameDefinition.GameId.ToString());
             if (winners.Contains(Guid.Parse(_settings.HeaderPlayerIdValue)))
             {
                 Console.WriteLine(string.Empty);

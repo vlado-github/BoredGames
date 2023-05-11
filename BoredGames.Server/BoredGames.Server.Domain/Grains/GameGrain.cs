@@ -3,7 +3,6 @@ using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Entities;
-using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Grains.Base;
 using Orleans;
 
@@ -24,18 +23,7 @@ public class GameGrain : Grain, IGameGrain
 
     public void Setup(CreateGameCommand command)
     {
-        switch (command.Title)
-        {
-            case GameTitle.RockPaperScissors:
-            {
-                _gameRuleEngine = GameRuleEngineFactory.GetInstance(command);
-                break;
-            }
-            default:
-            {
-                throw new NotImplementedException($"Game {command.Title} doesn't exist.");
-            }
-        }
+        _gameRuleEngine = GameRuleEngineFactory.GetInstance(command);
     }
 
     public Task<GameDefinition> AddPlayerToGame(Guid playerId)
@@ -56,12 +44,12 @@ public class GameGrain : Grain, IGameGrain
         }
 
         if (_gameState is GameState.AwaitingPlayers 
-            && _playersIds.Count == _gameRuleEngine.GetSettings().RequiredNumberOfPlayers)
+            && _playersIds.Count == _gameRuleEngine.GetConfiguration().RequiredNumberOfPlayers)
         {
             _gameState = GameState.InPlay;
         }
 
-        var settings = _gameRuleEngine.GetSettings();
+        var settings = _gameRuleEngine.GetConfiguration();
         var result = new GameDefinition
         {
             GameId = this.GetPrimaryKey(),
@@ -81,7 +69,7 @@ public class GameGrain : Grain, IGameGrain
         return Task.FromResult(result);
     }
 
-    public Task<IList<Statistic>> GetScore()
+    public Task<GameScore> GetScore()
     {
         var result = _gameRuleEngine.GetScore();
         return Task.FromResult(result);

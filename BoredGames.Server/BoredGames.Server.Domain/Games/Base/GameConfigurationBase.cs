@@ -3,7 +3,7 @@ using Orleans;
 namespace BoredGames.Server.Domain.Games.Base;
 
 [GenerateSerializer]
-public class GameSettingsBase
+public class GameConfigurationBase
 {
     [Id(0)]
     public int RequiredNumberOfPlayers { get; set; }

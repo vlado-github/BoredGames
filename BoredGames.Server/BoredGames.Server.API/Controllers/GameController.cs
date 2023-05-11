@@ -88,11 +88,7 @@ namespace BoredGames.Server.API.Controllers
         {
             var game = _grainFactory.GetGrain<IGameGrain>(gameId);
             var score = await game.GetScore();
-            var playerStats = score.Adapt<IList<PlayerStatsViewModel>>();
-            return new GameScoreViewModel()
-            {
-                PlayerScores = playerStats
-            };
+            return score.Adapt<GameScoreViewModel>();
         }
     }
 }

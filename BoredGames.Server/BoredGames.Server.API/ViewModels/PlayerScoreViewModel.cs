@@ -1,6 +1,6 @@
 namespace BoredGames.Server.API.ViewModels;
 
-public class PlayerStatsViewModel
+public class PlayerScoreViewModel
 {
     public Guid PlayerId { get; set; }
     public IList<RoundResultViewModel> RoundWins { get; set; }
