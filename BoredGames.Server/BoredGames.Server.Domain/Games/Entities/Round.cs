@@ -10,11 +10,17 @@ public class Rounds
     public Rounds(int numberOfRounds)
     {
         _rounds = new List<Round>();
-        for (int i = 0; i < numberOfRounds; i++)
+        for (int i = 1; i <= numberOfRounds; i++)
         {
-            var roundNumber = i + 1;
-            var isCurrent = i == 0;
-            _rounds.Add(new Round(roundNumber, isCurrent));
+            var roundNumber = i;
+            if (i == 1)
+            {
+                _rounds.Add(new Round(roundNumber, isCurrent: true));
+            }
+            else
+            {
+                _rounds.Add(new Round(roundNumber, isCurrent: false));
+            }
         }
         Current = _rounds.Single(r => r.IsCurrent);
     }

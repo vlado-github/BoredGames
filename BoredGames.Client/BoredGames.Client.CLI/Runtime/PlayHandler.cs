@@ -13,27 +13,24 @@ public class PlayHandler
         _boredGamesApi = boredGamesApi;
     }
 
-    public void PrintGameScore(GameScoreResponse score)
+    private void PrintGameScore(GameScoreResponse? score)
     {
         if (score != null)
         {
+            Console.WriteLine($">>> Round {score.CurrentRound}/{score.RequiredNumberOfWins}");
             foreach (var playerScore in score.PlayerScores)
             {
                 Console.WriteLine($">>> {playerScore.PlayerId} " +
-                                  $"Win/Loss: {playerScore.RoundWins.Count() / playerScore.RoundLosses.Count()}");
+                                  $"Win/Loss: {playerScore.RoundWins.Count()} / {playerScore.RoundLosses.Count()}");
             }
         }
     }
 
     public async Task<ExecutionState> Handle(ExecutionState executionState)
     {
-        if (executionState.GameScore != null)
-        {
-            Console.WriteLine($">>> Round {executionState.GameScore.CurrentRound}/{executionState.GameScore.RequiredNumberOfWins}");
-        }
-        
-        executionState.GameState = await _boredGamesApi.GetGameState(executionState.GameDefinition.GameId.ToString());
-        if (executionState.GameState.State == GameStateEnum.AwaitingPlayers)
+        var response = await _boredGamesApi.GetGameState(executionState.GameId.ToString());
+        executionState.State = response.State;
+        if (executionState.State == GameStateEnum.AwaitingPlayers)
         {
             if (!executionState.IsWaitingToJoinMessagePrinted)
             {
@@ -46,9 +43,8 @@ public class PlayHandler
                 Console.Write(".");
             }
         }
-        else if (executionState.GameDefinition.State == GameStateEnum.InPlay)
+        else if (executionState.State == GameStateEnum.InPlay)
         {
-            PrintGameScore(executionState.GameScore);
             if (!string.IsNullOrEmpty(executionState.ActionType))
             {
                 if (!executionState.IsWaitingForMoveMessagePrinted)
@@ -66,18 +62,25 @@ public class PlayHandler
             {
                 Console.WriteLine(string.Empty);
                 Console.WriteLine("Choose your action [R]ock/[P]aper/[S]cissors:");
-                var action = Console.ReadLine();
-                if (action.Equals("R", StringComparison.InvariantCultureIgnoreCase))
+                var action = Console.ReadLine()?.First().ToString();
+                if (!string.IsNullOrEmpty(action))
                 {
-                    executionState.ActionType = "rock";
-                }
-                else if (action.Equals("P", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    executionState.ActionType = "paper";
-                }
-                else if (action.Equals("S", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    executionState.ActionType = "scissors";
+                    if (action.Equals("R", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        executionState.ActionType = "rock";
+                    }
+                    else if (action.Equals("P", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        executionState.ActionType = "paper";
+                    }
+                    else if (action.Equals("S", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        executionState.ActionType = "scissors";
+                    }
+                    else
+                    {
+                        Console.WriteLine("Unrecognized action type.");
+                    }
                 }
                 else
                 {
@@ -86,14 +89,16 @@ public class PlayHandler
 
                 if (!string.IsNullOrEmpty(executionState.ActionType))
                 {
-                    executionState.GameState = await _boredGamesApi.MakeMove(
-                        new MakeMoveRequest(executionState.GameDefinition.GameId, executionState.ActionType));
+                    var moveResponse = await _boredGamesApi.MakeMove(
+                        new MakeMoveRequest(executionState.GameId, executionState.ActionType));
+                    executionState.State = moveResponse.State;
                     executionState.GameScore = await _boredGamesApi.GetGameScore(
-                        executionState.GameDefinition.GameId.ToString());
+                        executionState.GameId.ToString());
                     PrintGameScore(executionState.GameScore);
                 }
             }
         }
+        
 
         return executionState;
     }

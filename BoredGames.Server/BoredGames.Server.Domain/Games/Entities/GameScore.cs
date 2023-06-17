@@ -16,7 +16,7 @@ public class GameScore
     {
         RequiredNumberOfWins = requiredNumberOfWins;
         PlayersStats = new List<PlayerStatistic>();
-        CurrentRoundNumber = 0;
+        CurrentRoundNumber = 1;
     }
 
     public void AddWin(Guid playerId, int roundNumber, string actionType)

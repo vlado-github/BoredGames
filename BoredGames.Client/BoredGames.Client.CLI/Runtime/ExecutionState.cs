@@ -4,10 +4,13 @@ namespace BoredGames.Client.CLI.Runtime;
 
 public class ExecutionState
 {
+    public Guid GameId { get; set; }
+    public GameStateEnum State { get; set; }
+    public int RequiredNumberOfPlayers { get; set; }
+    public int RequiredNumberOfWins { get; set; }
+    public string? Description { get; set; }
     public bool Joined { get; set; }
-    public GameDefinitionResponse GameDefinition { get; set; }
-    public GameStateResponse GameState { get; set; }
-    public GameScoreResponse GameScore { get; set; }
+    public GameScoreResponse? GameScore { get; set; } = null;
     public string ActionType { get; set; }
     public string WaitingToJoinMessage { get; set; } = "Waiting for players to join...";
     public bool IsWaitingToJoinMessagePrinted { get; set; } = false;

@@ -29,16 +29,20 @@ public class InputHandler
             var numOfWins = Console.ReadLine();
             Console.Write(">>> Bet description:");
             var description = Console.ReadLine();
-            result.GameDefinition = await _boredGamesApi.CreateGame(new CreateGameRequest
+            var response = await _boredGamesApi.CreateGame(new CreateGameRequest
             {
                 GameTitle = gameTitleId,
                 NumberOfPlayers = Int32.Parse(numOfPlayers),
                 NumberOfWins = Int32.Parse(numOfWins),
                 Description = description
             });
+            result.GameId = response.GameId;
+            result.State = response.State;
+            result.Description = response.Description;
+            result.RequiredNumberOfPlayers = response.RequiredNumberOfPlayers;
+            result.RequiredNumberOfWins = response.RequiredNumberOfWins;
             result.Joined = true;
-            result.GameState = await _boredGamesApi.GetGameState(result.GameDefinition.GameId.ToString());
-            Console.WriteLine($"<<< GameID: {result.GameDefinition.GameId}");
+            Console.WriteLine($"<<< GameID: {result.GameId}");
         }
         else if (input == "join")
         {
@@ -49,10 +53,15 @@ public class InputHandler
                 Console.WriteLine("You have to enter Game ID to join.");
             }
             var gameId = new Guid(gameIdInput);
-            result.GameDefinition = await _boredGamesApi.Join(new JoinGameRequest()
+            var response = await _boredGamesApi.Join(new JoinGameRequest()
             {
                 GameId = gameId
             });
+            result.GameId = response.GameId;
+            result.State = response.State;
+            result.Description = response.Description;
+            result.RequiredNumberOfPlayers = response.RequiredNumberOfPlayers;
+            result.RequiredNumberOfWins = response.RequiredNumberOfWins;
             result.Joined = true;
         }
         else if (input == "exit")

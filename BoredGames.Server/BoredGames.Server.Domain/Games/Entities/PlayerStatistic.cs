@@ -1,5 +1,8 @@
+using Orleans;
+
 namespace BoredGames.Server.Domain.Games.Entities;
 
+[GenerateSerializer]
 public class PlayerStatistic
 {
     public PlayerStatistic(Guid playerId)
@@ -19,8 +22,11 @@ public class PlayerStatistic
         RoundLosses.Add(new Hand(roundNumber, actionType));
     }
     
+    [Id(0)]
     public Guid PlayerId { get; private set; }
+    [Id(1)]
     public  IList<Hand> RoundWins { get; private set; }
+    [Id(2)]
     public IList<Hand> RoundLosses { get; private set; }
     public int NumberOfWins => RoundWins.Count;
     public int NumberOfLoses => RoundLosses.Count;

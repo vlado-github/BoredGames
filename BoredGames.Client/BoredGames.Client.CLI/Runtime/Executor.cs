@@ -32,12 +32,12 @@ public class Executor : IExecutor
                 executionState = await _inputHandler.Handle();
             }
 
-            while (executionState.GameDefinition.State != GameStateEnum.Finished)
+            while (executionState.State != GameStateEnum.Finished)
             {
                 executionState = await _playHandler.Handle(executionState);
             }
 
-            var winners = await _boredGamesApi.GetGameWinners(executionState.GameDefinition.GameId.ToString());
+            var winners = await _boredGamesApi.GetGameWinners(executionState.GameId.ToString());
             if (winners.Contains(Guid.Parse(_settings.HeaderPlayerIdValue)))
             {
                 Console.WriteLine(string.Empty);
@@ -49,10 +49,14 @@ public class Executor : IExecutor
             {
                 Console.WriteLine(string.Empty);
                 Console.WriteLine("**********");
-                var endMessage = $"You lost! Winners: {string.Join(",", winners)}";
+                var endMessage = $"You lost! Winner(s): {string.Join(",", winners)}";
+                Console.WriteLine($"You need to {executionState.Description}");
                 Console.WriteLine(endMessage);
                 Console.WriteLine("**********");
             }
+            
+            var score = await _boredGamesApi.GetGameScore(executionState.GameId.ToString());
+            ShowScore(executionState.GameScore);
         }
         catch (Exception ex)
         {
@@ -69,5 +73,17 @@ public class Executor : IExecutor
         }
         Console.WriteLine("-----------------------------------------------");
         Console.WriteLine($"Your PlayerID: {_settings.HeaderPlayerIdValue}");
+    }
+
+    private void ShowScore(GameScoreResponse? score)
+    {
+        if (score == null) return;
+        
+        Console.WriteLine($">>> Round {score.CurrentRound}/{score.RequiredNumberOfWins}");
+        foreach (var playerScore in score.PlayerScores)
+        {
+            Console.WriteLine($">>> {playerScore.PlayerId} " +
+                              $"Win/Loss: {playerScore.RoundWins.Count()} / {playerScore.RoundLosses.Count()}");
+        }
     }
 }
