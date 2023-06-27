@@ -5,7 +5,9 @@ namespace BoredGames.Client.CLI.Runtime;
 public class ExecutionState
 {
     public Guid GameId { get; set; }
-    public GameStateEnum State { get; set; }
+    public GameStatusEnum GameStatus { get; set; }
+    public RoundStatusEnum RoundStatus { get; set; }
+    public int RoundNumber { get; set; }
     public int RequiredNumberOfPlayers { get; set; }
     public int RequiredNumberOfWins { get; set; }
     public string? Description { get; set; }

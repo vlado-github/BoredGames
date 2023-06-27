@@ -17,6 +17,7 @@ public static class MappingConfig
             .NewConfig()
             .Map(dest => dest.PlayerId, src => src.PlayerId)
             .Map(dest => dest.RoundWins, src => src.RoundWins)
+            .Map(dest => dest.RoundDraws, src => src.RoundDraws)
             .Map(dest => dest.RoundLosses, src => src.RoundLosses);
 
         TypeAdapterConfig<GameScore, GameScoreViewModel>
@@ -28,7 +29,6 @@ public static class MappingConfig
         TypeAdapterConfig<GameDefinition, GameDefinitionViewModel>
             .NewConfig()
             .Map(dest => dest.GameId, src => src.GameId)
-            .Map(dest => dest.State, src => src.State)
             .Map(dest => dest.Description, 
                 src => src.Description)
             .Map(dest => dest.RequiredNumberOfPlayers, 

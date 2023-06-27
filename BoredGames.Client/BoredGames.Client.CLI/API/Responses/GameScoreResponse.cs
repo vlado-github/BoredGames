@@ -12,6 +12,7 @@ public class PlayerScore
     public Guid PlayerId { get; set; }
     public IList<RoundResult> RoundWins { get; set; }
     public IList<RoundResult> RoundLosses { get; set; }
+    public IList<RoundResult> RoundDraws { get; set; }
 }
 
 public class RoundResult

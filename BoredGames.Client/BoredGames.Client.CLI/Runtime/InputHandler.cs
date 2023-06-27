@@ -37,7 +37,8 @@ public class InputHandler
                 Description = description
             });
             result.GameId = response.GameId;
-            result.State = response.State;
+            result.GameStatus = response.Status;
+            
             result.Description = response.Description;
             result.RequiredNumberOfPlayers = response.RequiredNumberOfPlayers;
             result.RequiredNumberOfWins = response.RequiredNumberOfWins;
@@ -58,7 +59,7 @@ public class InputHandler
                 GameId = gameId
             });
             result.GameId = response.GameId;
-            result.State = response.State;
+            result.GameStatus = response.Status;
             result.Description = response.Description;
             result.RequiredNumberOfPlayers = response.RequiredNumberOfPlayers;
             result.RequiredNumberOfWins = response.RequiredNumberOfWins;

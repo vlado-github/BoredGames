@@ -52,7 +52,7 @@ namespace BoredGames.Server.API.Controllers
         public async Task<GameStateViewModel> MakeMove(MakeMove request)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(request.GameId);
-            var state = await game.MakeMove(new MakeMoveCommand
+            var roundResult = await game.MakeMove(new MakeMoveCommand
             {
                 ActionType = request.ActionType,
                 PlayerId = this.GetPlayerId()
@@ -60,7 +60,9 @@ namespace BoredGames.Server.API.Controllers
             return new GameStateViewModel
             {
                 Id = request.GameId,
-                State = state
+                GameStatus = roundResult.GameStatus,
+                RoundStatus = roundResult.RoundStatus,
+                RoundNumber = roundResult.RoundNumber
             };
         }
 
@@ -72,7 +74,9 @@ namespace BoredGames.Server.API.Controllers
             return new GameStateViewModel
             {
                 Id = gameId,
-                State = state
+                GameStatus = state.GameStatus,
+                RoundNumber = state.RoundNumber,
+                RoundStatus = state.RoundStatus
             };
         }
         

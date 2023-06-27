@@ -6,8 +6,9 @@ namespace BoredGames.Server.Domain.Games.Base;
 
 public interface IGameRuleEngine
 {
-    GameState Handle(MakeMoveCommand command);
+    RoundResult Handle(MakeMoveCommand command);
     IList<Guid> GetWinners();
     GameScore GetScore();
     GameConfigurationBase GetConfiguration();
+    RoundResult GetRoundResult();
 }

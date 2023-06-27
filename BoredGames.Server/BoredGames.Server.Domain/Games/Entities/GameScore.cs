@@ -50,6 +50,22 @@ public class GameScore
             playerStat.AddLoss(roundNumber, actionType);
         }
     }
+    
+    public void AddDraw(Guid playerId, int roundNumber, string actionType)
+    {
+        CurrentRoundNumber = roundNumber;
+        var playerStat = PlayersStats.SingleOrDefault(x => x.PlayerId == playerId);
+        if (playerStat == null)
+        {
+            playerStat = new PlayerStatistic(playerId);
+            playerStat.AddDraw(roundNumber, actionType);
+            PlayersStats.Add(playerStat);
+        }
+        else
+        {
+            playerStat.AddLoss(roundNumber, actionType);
+        }
+    }
 
     public IList<Guid> GetWinners()
     {

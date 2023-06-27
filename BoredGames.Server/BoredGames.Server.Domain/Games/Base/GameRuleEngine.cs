@@ -17,11 +17,12 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
         _gameScore = new GameScore(_settings.RequiredNumberOfWins);
     }
 
-    public abstract GameState Handle(MakeMoveCommand command);
+    public abstract RoundResult Handle(MakeMoveCommand command);
 
     public abstract IList<Guid> GetWinners();
 
     public abstract GameScore GetScore();
 
     public abstract GameConfigurationBase GetConfiguration();
+    public abstract RoundResult GetRoundResult();
 }

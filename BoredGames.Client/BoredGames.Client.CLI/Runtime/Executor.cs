@@ -32,7 +32,7 @@ public class Executor : IExecutor
                 executionState = await _inputHandler.Handle();
             }
 
-            while (executionState.State != GameStateEnum.Finished)
+            while (executionState.GameStatus != GameStatusEnum.Finished)
             {
                 executionState = await _playHandler.Handle(executionState);
             }

@@ -17,6 +17,7 @@ public class PlayHandler
     {
         if (score != null)
         {
+            Console.WriteLine("");
             Console.WriteLine($">>> Round {score.CurrentRound}/{score.RequiredNumberOfWins}");
             foreach (var playerScore in score.PlayerScores)
             {
@@ -29,8 +30,13 @@ public class PlayHandler
     public async Task<ExecutionState> Handle(ExecutionState executionState)
     {
         var response = await _boredGamesApi.GetGameState(executionState.GameId.ToString());
-        executionState.State = response.State;
-        if (executionState.State == GameStateEnum.AwaitingPlayers)
+        executionState.GameStatus = response.GameStatus;
+        executionState.RoundStatus = response.RoundStatus;
+        executionState.RoundNumber = response.RoundNumber;
+        
+        Console.WriteLine($">>> {executionState.RoundNumber} {executionState.RoundStatus}");
+        
+        if (executionState.GameStatus == GameStatusEnum.AwaitingPlayers)
         {
             if (!executionState.IsWaitingToJoinMessagePrinted)
             {
@@ -43,60 +49,85 @@ public class PlayHandler
                 Console.Write(".");
             }
         }
-        else if (executionState.State == GameStateEnum.InPlay)
+        else if (executionState.GameStatus == GameStatusEnum.InPlay)
         {
-            if (!string.IsNullOrEmpty(executionState.ActionType))
+            if (executionState.RoundStatus == RoundStatusEnum.InProgress)
             {
-                if (!executionState.IsWaitingForMoveMessagePrinted)
+                if (!string.IsNullOrEmpty(executionState.ActionType))
                 {
-                    Console.Write(executionState.WaitingForMoveMessage);
-                    executionState.IsWaitingForMoveMessagePrinted = true;
+                    if (!executionState.IsWaitingForMoveMessagePrinted)
+                    {
+                        Console.Write(executionState.WaitingForMoveMessage);
+                        executionState.IsWaitingForMoveMessagePrinted = true;
+                    }
+                    else
+                    {
+                        Thread.Sleep(2000);
+                        Console.Write(".");
+                    }
                 }
                 else
                 {
-                    Thread.Sleep(2000);
-                    Console.Write(".");
-                }
-            }
-            else
-            {
-                Console.WriteLine(string.Empty);
-                Console.WriteLine("Choose your action [R]ock/[P]aper/[S]cissors:");
-                var action = Console.ReadLine()?.First().ToString();
-                if (!string.IsNullOrEmpty(action))
-                {
-                    if (action.Equals("R", StringComparison.InvariantCultureIgnoreCase))
+                    Console.WriteLine(string.Empty);
+                    Console.WriteLine("Choose your action [R]ock/[P]aper/[S]cissors:");
+                    var action = Console.ReadLine()?.First().ToString();
+                    if (!string.IsNullOrEmpty(action))
                     {
-                        executionState.ActionType = "rock";
-                    }
-                    else if (action.Equals("P", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        executionState.ActionType = "paper";
-                    }
-                    else if (action.Equals("S", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        executionState.ActionType = "scissors";
+                        if (action.Equals("R", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            executionState.ActionType = "rock";
+                        }
+                        else if (action.Equals("P", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            executionState.ActionType = "paper";
+                        }
+                        else if (action.Equals("S", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            executionState.ActionType = "scissors";
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unrecognized action type.");
+                        }
                     }
                     else
                     {
                         Console.WriteLine("Unrecognized action type.");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Unrecognized action type.");
-                }
 
-                if (!string.IsNullOrEmpty(executionState.ActionType))
-                {
-                    var moveResponse = await _boredGamesApi.MakeMove(
-                        new MakeMoveRequest(executionState.GameId, executionState.ActionType));
-                    executionState.State = moveResponse.State;
-                    executionState.GameScore = await _boredGamesApi.GetGameScore(
-                        executionState.GameId.ToString());
-                    PrintGameScore(executionState.GameScore);
+                    if (!string.IsNullOrEmpty(executionState.ActionType))
+                    {
+                        var moveResponse = await _boredGamesApi.MakeMove(
+                            new MakeMoveRequest(executionState.GameId, executionState.ActionType));
+                        executionState.GameStatus = moveResponse.GameStatus;
+                        executionState.RoundStatus = moveResponse.RoundStatus;
+                        executionState.RoundNumber = moveResponse.RoundNumber;
+                        
+                        Console.WriteLine($">>>{executionState.RoundStatus}");
+
+                        if (executionState.RoundStatus == RoundStatusEnum.Completed)
+                        {
+                            executionState.GameScore = await _boredGamesApi.GetGameScore(
+                                executionState.GameId.ToString());
+                            executionState.ActionType = string.Empty;
+                            PrintGameScore(executionState.GameScore);
+                        }
+                    }
                 }
             }
+            else
+            {
+                executionState.GameScore = await _boredGamesApi.GetGameScore(
+                    executionState.GameId.ToString());
+                executionState.ActionType = string.Empty;
+                PrintGameScore(executionState.GameScore);
+            }
+        }
+        else if (executionState.GameStatus == GameStatusEnum.Finished)
+        {
+            executionState.GameScore = await _boredGamesApi.GetGameScore(
+                executionState.GameId.ToString());
+            PrintGameScore(executionState.GameScore);
         }
         
 

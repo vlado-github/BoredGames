@@ -1,3 +1,4 @@
+using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Domain.Commands;
 
 namespace BoredGames.Server.Domain.Games.Entities;
@@ -66,6 +67,12 @@ public class Round
     public List<MakeMoveCommand> GetMoves()
     {
         return MovesStack;
+    }
+
+    public RoundStatus GetStatus()
+    {
+        var state = IsFinished ? RoundStatus.Completed : RoundStatus.InProgress;
+        return state;
     }
 
     public bool IsCurrent { get; set; }
