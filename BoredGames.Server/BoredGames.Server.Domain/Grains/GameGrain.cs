@@ -11,29 +11,37 @@ namespace BoredGames.Server.Domain.Grains;
 public class GameGrain : Grain, IGameGrain
 {
     private List<Guid> _playersIds;
-    private GameStatus _gameStatus;
+    private GameState _gameState;
     private IGameRuleEngine _gameRuleEngine;
 
     public override Task OnActivateAsync(CancellationToken token)
     {
         _playersIds = new List<Guid>();
-        _gameStatus = GameStatus.AwaitingPlayers;
+        _gameState = new GameState
+        {
+            GameId = this.GetPrimaryKey(),
+            GameStatus = GameStatus.AwaitingPlayers
+        };
         return base.OnActivateAsync(token);
     }
 
     public void Setup(CreateGameCommand command)
     {
         _gameRuleEngine = GameRuleEngineFactory.GetInstance(command);
+        
+        var roundResult = _gameRuleEngine.GetCurrentRoundResult();
+        _gameState.RoundNumber = roundResult.RoundNumber;
+        _gameState.RoundStatus = roundResult.RoundStatus;
     }
 
     public Task<GameDefinition> AddPlayerToGame(Guid playerId)
     {
-        if (_gameStatus is GameStatus.Finished)
+        if (_gameState.GameStatus is GameStatus.Finished)
         {
             throw new ActionValidationException("Player can't joined to finished game.");
         }
         
-        if (_gameStatus is GameStatus.InPlay)
+        if (_gameState.GameStatus is GameStatus.InPlay)
         {
             throw new ActionValidationException("Player can't joined during play.");
         }
@@ -43,17 +51,16 @@ public class GameGrain : Grain, IGameGrain
             _playersIds.Add(playerId);
         }
 
-        if (_gameStatus is GameStatus.AwaitingPlayers 
+        if (_gameState.GameStatus is GameStatus.AwaitingPlayers 
             && _playersIds.Count == _gameRuleEngine.GetConfiguration().RequiredNumberOfPlayers)
         {
-            _gameStatus = GameStatus.InPlay;
+            _gameState.GameStatus = GameStatus.InPlay;
         }
 
         var settings = _gameRuleEngine.GetConfiguration();
         var result = new GameDefinition
         {
             GameId = this.GetPrimaryKey(),
-            Status = _gameStatus,
             RequiredNumberOfPlayers = settings.RequiredNumberOfPlayers,
             RequiredNumberOfWins = settings.RequiredNumberOfWins,
             Description = settings.Description
@@ -65,7 +72,19 @@ public class GameGrain : Grain, IGameGrain
     public Task<RoundResult> MakeMove(MakeMoveCommand command)
     {
         var result = _gameRuleEngine.Handle(command);
-        _gameStatus = result.GameStatus;
+        _gameState.RoundNumber = result.RoundNumber;
+        _gameState.RoundStatus = result.RoundStatus;
+        
+        var allRoundsFinished = _gameRuleEngine.AreAllRoundsFinished();
+        if (allRoundsFinished)
+        {
+            _gameState.GameStatus = GameStatus.Finished;
+        }
+        else
+        {
+            _gameState.GameStatus = GameStatus.InPlay;
+        }
+        
         return Task.FromResult(result);
     }
 
@@ -83,14 +102,6 @@ public class GameGrain : Grain, IGameGrain
 
     public Task<GameState> GetState()
     {
-        var currentRoundResult = _gameRuleEngine.GetRoundResult();
-        var result = new GameState
-        {
-            GameId = this.GetPrimaryKey(),
-            GameStatus = _gameStatus,
-            RoundStatus = currentRoundResult.RoundStatus,
-            RoundNumber = currentRoundResult.RoundNumber
-        };
-        return Task.FromResult(result);
+        return Task.FromResult(_gameState);
     }
 }

@@ -10,11 +10,9 @@ public class GameDefinition
     [Id(0)]
     public Guid GameId { get; set; }
     [Id(1)]
-    public GameStatus Status { get; set; }
-    [Id(2)]
     public int RequiredNumberOfPlayers { get; set; }
-    [Id(3)]
+    [Id(2)]
     public int RequiredNumberOfWins { get; set; }
-    [Id(4)]
+    [Id(3)]
     public string? Description { get; set; }
 }

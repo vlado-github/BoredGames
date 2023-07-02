@@ -1,4 +1,5 @@
 using BoredGames.Server.Common.Enums;
+using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Commands;
 
 namespace BoredGames.Server.Domain.Games.Entities;
@@ -61,6 +62,11 @@ public class Round
     
     public void AddMove(MakeMoveCommand command)
     {
+        if (MovesStack.Any(x => x.PlayerId == command.PlayerId))
+        {
+            throw new OperationNotAllowedException(
+                $"Player with ID {command.PlayerId} has already made a move for round {Number}.");
+        }
         MovesStack.Add(command);
     }
 

@@ -22,9 +22,8 @@ public static class MappingConfig
 
         TypeAdapterConfig<GameScore, GameScoreViewModel>
             .NewConfig()
-            .Map(dest => dest.PlayerScores, src => src.PlayersStats)
-            .Map(dest => dest.CurrentRound, src => src.CurrentRoundNumber)
-            .Map(dest => dest.RequiredNumberOfWins, src => src.RequiredNumberOfWins);
+            .Map(dest => dest.PlayerScores, src => src.PlayerStatistics)
+            .Map(dest => dest.CurrentRound, src => src.CurrentRoundNumber);
 
         TypeAdapterConfig<GameDefinition, GameDefinitionViewModel>
             .NewConfig()

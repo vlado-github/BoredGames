@@ -26,7 +26,6 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
         }
 
         return new RoundResult(
-            gameStatus: GameStatus.InPlay, 
             roundStatus: _rounds.Current.GetStatus(), 
             roundNumber: _rounds.Current.Number);
     }
@@ -46,17 +45,14 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
         return _settings;
     }
 
-    public override RoundResult GetRoundResult()
+    public override bool AreAllRoundsFinished()
     {
-        if (_rounds.AreFinished())
-        {
-            return new RoundResult(
-                gameStatus: GameStatus.Finished, 
-                roundStatus: _rounds.Current.GetStatus(),
-                roundNumber: _rounds.Current.Number);
-        }
+        return _rounds.AreFinished();
+    }
+
+    public override RoundResult GetCurrentRoundResult()
+    {
         return new RoundResult(
-            gameStatus: GameStatus.InPlay, 
             roundStatus: _rounds.Current.GetStatus(),
             roundNumber: _rounds.Current.Number);
     }
@@ -67,11 +63,12 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
         {
             var remainingCommands = new List<MakeMoveCommand>(_rounds.Current.GetMoves());
             remainingCommands.Remove(move);
-            if (CheckRule(move.ActionType, remainingCommands) == GameResult.Win)
+            var result = CheckRule(move.ActionType, remainingCommands);
+            if (result == GameResult.Win)
             {
                 _gameScore.AddWin(move.PlayerId, _rounds.Current.Number, move.ActionType);
             }
-            else if (CheckRule(move.ActionType, remainingCommands) == GameResult.Loss)
+            else if (result == GameResult.Loss)
             {
                 _gameScore.AddLoss(move.PlayerId, _rounds.Current.Number, move.ActionType);
             }
@@ -80,22 +77,12 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
                 _gameScore.AddDraw(move.PlayerId, _rounds.Current.Number, move.ActionType);
             }
         }
-
-        var currentRoundState = _rounds.Current.GetStatus();
-        var currentRoundNumber = _rounds.Current.Number;
+        
         _rounds.Next();
         
-        if (_rounds.AreFinished())
-        {
-            return new RoundResult(
-                gameStatus: GameStatus.Finished, 
-                roundStatus: currentRoundState,
-                roundNumber: currentRoundNumber);
-        }
         return new RoundResult(
-            gameStatus: GameStatus.InPlay, 
-            roundStatus: currentRoundState,
-            roundNumber: currentRoundNumber);
+            roundStatus: _rounds.Current.GetStatus(),
+            roundNumber: _rounds.Current.Number);
     }
 
     private GameResult CheckRule(string actionType, IList<MakeMoveCommand> remainingCommands)

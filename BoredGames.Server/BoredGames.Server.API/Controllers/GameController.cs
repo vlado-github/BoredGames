@@ -57,10 +57,11 @@ namespace BoredGames.Server.API.Controllers
                 ActionType = request.ActionType,
                 PlayerId = this.GetPlayerId()
             });
+            var currentState = await game.GetState();
             return new GameStateViewModel
             {
                 Id = request.GameId,
-                GameStatus = roundResult.GameStatus,
+                GameStatus = currentState.GameStatus,
                 RoundStatus = roundResult.RoundStatus,
                 RoundNumber = roundResult.RoundNumber
             };

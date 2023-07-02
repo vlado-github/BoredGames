@@ -7,6 +7,7 @@ public class ExecutionState
     public Guid GameId { get; set; }
     public GameStatusEnum GameStatus { get; set; }
     public RoundStatusEnum RoundStatus { get; set; }
+    public bool IsNewRound { get; set; }
     public int RoundNumber { get; set; }
     public int RequiredNumberOfPlayers { get; set; }
     public int RequiredNumberOfWins { get; set; }

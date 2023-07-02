@@ -54,9 +54,6 @@ public class Executor : IExecutor
                 Console.WriteLine(endMessage);
                 Console.WriteLine("**********");
             }
-            
-            var score = await _boredGamesApi.GetGameScore(executionState.GameId.ToString());
-            ShowScore(executionState.GameScore);
         }
         catch (Exception ex)
         {
@@ -73,17 +70,5 @@ public class Executor : IExecutor
         }
         Console.WriteLine("-----------------------------------------------");
         Console.WriteLine($"Your PlayerID: {_settings.HeaderPlayerIdValue}");
-    }
-
-    private void ShowScore(GameScoreResponse? score)
-    {
-        if (score == null) return;
-        
-        Console.WriteLine($">>> Round {score.CurrentRound}/{score.RequiredNumberOfWins}");
-        foreach (var playerScore in score.PlayerScores)
-        {
-            Console.WriteLine($">>> {playerScore.PlayerId} " +
-                              $"Win/Loss: {playerScore.RoundWins.Count()} / {playerScore.RoundLosses.Count()}");
-        }
     }
 }

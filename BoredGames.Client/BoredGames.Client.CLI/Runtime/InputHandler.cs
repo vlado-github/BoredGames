@@ -14,7 +14,7 @@ public class InputHandler
     
     public async Task<ExecutionState> Handle()
     {
-        var result = new ExecutionState();
+        var executionState = new ExecutionState();
         Console.WriteLine("Type command (e.g. create, join, exit):");
         Console.Write(">");
         var input = Console.ReadLine();
@@ -36,14 +36,14 @@ public class InputHandler
                 NumberOfWins = Int32.Parse(numOfWins),
                 Description = description
             });
-            result.GameId = response.GameId;
-            result.GameStatus = response.Status;
+            executionState.GameId = response.GameId;
+            executionState.GameStatus = response.Status;
             
-            result.Description = response.Description;
-            result.RequiredNumberOfPlayers = response.RequiredNumberOfPlayers;
-            result.RequiredNumberOfWins = response.RequiredNumberOfWins;
-            result.Joined = true;
-            Console.WriteLine($"<<< GameID: {result.GameId}");
+            executionState.Description = response.Description;
+            executionState.RequiredNumberOfPlayers = response.RequiredNumberOfPlayers;
+            executionState.RequiredNumberOfWins = response.RequiredNumberOfWins;
+            executionState.Joined = true;
+            Console.WriteLine($"<<< GameID: {executionState.GameId}");
         }
         else if (input == "join")
         {
@@ -58,12 +58,12 @@ public class InputHandler
             {
                 GameId = gameId
             });
-            result.GameId = response.GameId;
-            result.GameStatus = response.Status;
-            result.Description = response.Description;
-            result.RequiredNumberOfPlayers = response.RequiredNumberOfPlayers;
-            result.RequiredNumberOfWins = response.RequiredNumberOfWins;
-            result.Joined = true;
+            executionState.GameId = response.GameId;
+            executionState.GameStatus = response.Status;
+            executionState.Description = response.Description;
+            executionState.RequiredNumberOfPlayers = response.RequiredNumberOfPlayers;
+            executionState.RequiredNumberOfWins = response.RequiredNumberOfWins;
+            executionState.Joined = true;
         }
         else if (input == "exit")
         {
@@ -74,6 +74,6 @@ public class InputHandler
             Console.WriteLine($"Command '{input}' is not recognized.");
         }
 
-        return result;
+        return executionState;
     }
 }

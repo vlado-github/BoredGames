@@ -10,5 +10,6 @@ public interface IGameRuleEngine
     IList<Guid> GetWinners();
     GameScore GetScore();
     GameConfigurationBase GetConfiguration();
-    RoundResult GetRoundResult();
+    RoundResult GetCurrentRoundResult();
+    bool AreAllRoundsFinished();
 }

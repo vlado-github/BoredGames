@@ -22,7 +22,9 @@ public class PlayHandler
             foreach (var playerScore in score.PlayerScores)
             {
                 Console.WriteLine($">>> {playerScore.PlayerId} " +
-                                  $"Win/Loss: {playerScore.RoundWins.Count()} / {playerScore.RoundLosses.Count()}");
+                                  $"Win/Loss/Draw: {playerScore.RoundWins.Count()} " +
+                                  $"/ {playerScore.RoundLosses.Count()}" +
+                                  $"/ {playerScore.RoundDraws.Count()}");
             }
         }
     }
@@ -32,10 +34,9 @@ public class PlayHandler
         var response = await _boredGamesApi.GetGameState(executionState.GameId.ToString());
         executionState.GameStatus = response.GameStatus;
         executionState.RoundStatus = response.RoundStatus;
+        executionState.IsNewRound = response.RoundNumber > executionState.RoundNumber;
         executionState.RoundNumber = response.RoundNumber;
-        
-        Console.WriteLine($">>> {executionState.RoundNumber} {executionState.RoundStatus}");
-        
+
         if (executionState.GameStatus == GameStatusEnum.AwaitingPlayers)
         {
             if (!executionState.IsWaitingToJoinMessagePrinted)
@@ -53,6 +54,10 @@ public class PlayHandler
         {
             if (executionState.RoundStatus == RoundStatusEnum.InProgress)
             {
+                if (executionState.IsNewRound)
+                {
+                    executionState.ActionType = string.Empty;
+                }
                 if (!string.IsNullOrEmpty(executionState.ActionType))
                 {
                     if (!executionState.IsWaitingForMoveMessagePrinted)
@@ -97,30 +102,11 @@ public class PlayHandler
 
                     if (!string.IsNullOrEmpty(executionState.ActionType))
                     {
-                        var moveResponse = await _boredGamesApi.MakeMove(
+                        await _boredGamesApi.MakeMove(
                             new MakeMoveRequest(executionState.GameId, executionState.ActionType));
-                        executionState.GameStatus = moveResponse.GameStatus;
-                        executionState.RoundStatus = moveResponse.RoundStatus;
-                        executionState.RoundNumber = moveResponse.RoundNumber;
                         
-                        Console.WriteLine($">>>{executionState.RoundStatus}");
-
-                        if (executionState.RoundStatus == RoundStatusEnum.Completed)
-                        {
-                            executionState.GameScore = await _boredGamesApi.GetGameScore(
-                                executionState.GameId.ToString());
-                            executionState.ActionType = string.Empty;
-                            PrintGameScore(executionState.GameScore);
-                        }
                     }
                 }
-            }
-            else
-            {
-                executionState.GameScore = await _boredGamesApi.GetGameScore(
-                    executionState.GameId.ToString());
-                executionState.ActionType = string.Empty;
-                PrintGameScore(executionState.GameScore);
             }
         }
         else if (executionState.GameStatus == GameStatusEnum.Finished)
@@ -129,7 +115,10 @@ public class PlayHandler
                 executionState.GameId.ToString());
             PrintGameScore(executionState.GameScore);
         }
-        
+        else
+        {
+            Console.WriteLine($"GameStatus {executionState.GameStatus} is not supported.");
+        }
 
         return executionState;
     }

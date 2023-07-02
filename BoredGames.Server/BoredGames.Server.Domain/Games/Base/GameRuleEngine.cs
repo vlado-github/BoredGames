@@ -24,5 +24,6 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
     public abstract GameScore GetScore();
 
     public abstract GameConfigurationBase GetConfiguration();
-    public abstract RoundResult GetRoundResult();
+    public abstract RoundResult GetCurrentRoundResult();
+    public abstract bool AreAllRoundsFinished();
 }
