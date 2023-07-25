@@ -21,7 +21,7 @@ public class PlayHandler
             Console.WriteLine($">>> Round {score.CurrentRound}/{score.RequiredNumberOfWins}");
             foreach (var playerScore in score.PlayerScores)
             {
-                Console.WriteLine($">>> {playerScore.PlayerId} " +
+                Console.WriteLine($">>> {playerScore.PlayerId} [{playerScore.PlayerNickName}] " +
                                   $"Win/Loss/Draw: {playerScore.RoundWins.Count()} " +
                                   $"/ {playerScore.RoundLosses.Count()}" +
                                   $"/ {playerScore.RoundDraws.Count()}");

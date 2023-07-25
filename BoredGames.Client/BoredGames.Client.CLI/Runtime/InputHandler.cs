@@ -29,12 +29,15 @@ public class InputHandler
             var numOfWins = Console.ReadLine();
             Console.Write(">>> Bet description:");
             var description = Console.ReadLine();
+            Console.Write(">>> Your nickname:");
+            var playerNickName = Console.ReadLine();
             var response = await _boredGamesApi.CreateGame(new CreateGameRequest
             {
                 GameTitle = gameTitleId,
                 NumberOfPlayers = Int32.Parse(numOfPlayers),
                 NumberOfWins = Int32.Parse(numOfWins),
-                Description = description
+                Description = description,
+                PlayerNickName = playerNickName
             });
             executionState.GameId = response.GameId;
             executionState.GameStatus = response.Status;
@@ -49,6 +52,8 @@ public class InputHandler
         {
             Console.Write(">>> Enter Game ID:");
             var gameIdInput = Console.ReadLine();
+            Console.Write(">>> Your nickname:");
+            var playerNickName = Console.ReadLine();
             if (string.IsNullOrEmpty(gameIdInput))
             {
                 Console.WriteLine("You have to enter Game ID to join.");
@@ -56,7 +61,8 @@ public class InputHandler
             var gameId = new Guid(gameIdInput);
             var response = await _boredGamesApi.Join(new JoinGameRequest()
             {
-                GameId = gameId
+                GameId = gameId,
+                PlayerNickName = playerNickName
             });
             executionState.GameId = response.GameId;
             executionState.GameStatus = response.Status;

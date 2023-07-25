@@ -10,13 +10,13 @@ namespace BoredGames.Server.Domain.Grains;
 
 public class GameGrain : Grain, IGameGrain
 {
-    private List<Guid> _playersIds;
+    private IList<Player> _players;
     private GameState _gameState;
     private IGameRuleEngine _gameRuleEngine;
 
     public override Task OnActivateAsync(CancellationToken token)
     {
-        _playersIds = new List<Guid>();
+        _players = new List<Player>();
         _gameState = new GameState
         {
             GameId = this.GetPrimaryKey(),
@@ -34,7 +34,7 @@ public class GameGrain : Grain, IGameGrain
         _gameState.RoundStatus = roundResult.RoundStatus;
     }
 
-    public Task<GameDefinition> AddPlayerToGame(Guid playerId)
+    public Task<GameDefinition> AddPlayerToGame(Player player)
     {
         if (_gameState.GameStatus is GameStatus.Finished)
         {
@@ -46,13 +46,13 @@ public class GameGrain : Grain, IGameGrain
             throw new ActionValidationException("Player can't joined during play.");
         }
 
-        if (!_playersIds.Contains(playerId))
+        if (!_players.Select(x => x.Id).Contains(player.Id))
         {
-            _playersIds.Add(playerId);
+            _players.Add(player);
         }
 
         if (_gameState.GameStatus is GameStatus.AwaitingPlayers 
-            && _playersIds.Count == _gameRuleEngine.GetConfiguration().RequiredNumberOfPlayers)
+            && _players.Count == _gameRuleEngine.GetConfiguration().RequiredNumberOfPlayers)
         {
             _gameState.GameStatus = GameStatus.InPlay;
         }
@@ -94,7 +94,7 @@ public class GameGrain : Grain, IGameGrain
         return Task.FromResult(result);
     }
 
-    public Task<IList<Guid>> GetWinners()
+    public Task<IList<Player>> GetWinners()
     {
         var result = _gameRuleEngine.GetWinners();
         return Task.FromResult(result);

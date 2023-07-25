@@ -14,7 +14,7 @@ public interface IBoredGamesApi
     Task<GameScoreResponse> GetGameScore([AliasAs("gameId")] string gameId);
 
     [Get("/api/game/{gameId}/winners")]
-    Task<List<Guid>> GetGameWinners([AliasAs("gameId")] string gameId);
+    Task<List<PlayerResponse>> GetGameWinners([AliasAs("gameId")] string gameId);
 
     [Post("/api/game/create")]
     Task<GameDefinitionResponse> CreateGame([Body] CreateGameRequest request);

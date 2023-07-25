@@ -3,6 +3,7 @@ using BoredGames.Server.API.Filters;
 using BoredGames.Server.API.Models;
 using BoredGames.Server.API.ViewModels;
 using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.Entities;
 using BoredGames.Server.Domain.Grains.Base;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,8 @@ namespace BoredGames.Server.API.Controllers
                 Title = request.GameTitle,
                 NumberOfPlayers = request.NumberOfPlayers,
                 NumberOfWins = request.NumberOfWins,
-                Description = request.Description
+                Description = request.Description,
+                PlayerNickName = request.PlayerNickName
             });
             return gameDefinition.Adapt<GameDefinitionViewModel>();
         }
@@ -43,7 +45,8 @@ namespace BoredGames.Server.API.Controllers
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
             var gameDefinition = await player.JoinGame(new JoinGameCommand()
             {
-                GameId = request.GameId
+                GameId = request.GameId,
+                PlayerNickName = request.PlayerNickName
             });
             return gameDefinition.Adapt<GameDefinitionViewModel>();
         }
@@ -52,10 +55,15 @@ namespace BoredGames.Server.API.Controllers
         public async Task<GameStateViewModel> MakeMove(MakeMove request)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(request.GameId);
+
+            var playerId = this.GetPlayerId();
+            var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
+            var playerNickName = (await player.GetPlayerDetails()).NickName;
             var roundResult = await game.MakeMove(new MakeMoveCommand
             {
                 ActionType = request.ActionType,
-                PlayerId = this.GetPlayerId()
+                PlayerId = playerId,
+                PlayerNickName = playerNickName
             });
             var currentState = await game.GetState();
             return new GameStateViewModel
@@ -82,7 +90,7 @@ namespace BoredGames.Server.API.Controllers
         }
         
         [HttpGet("{gameId:guid}/winners")]
-        public async Task<List<Guid>> GetWinners(Guid gameId)
+        public async Task<List<Player>> GetWinners(Guid gameId)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(gameId);
             return (await game.GetWinners()).ToList();

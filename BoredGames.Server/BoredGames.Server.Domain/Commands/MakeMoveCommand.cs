@@ -10,4 +10,6 @@ public class MakeMoveCommand : CommandBase
     public Guid PlayerId { get; set; }
     [Id(1)]
     public string ActionType { get; set; }
+    [Id(2)]
+    public string PlayerNickName { get; set; }
 }

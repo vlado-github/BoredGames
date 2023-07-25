@@ -79,7 +79,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
         var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
         var winners = await game.GetWinners();
         Assert.Single(winners);
-        Assert.Equal(winners.Single(), new Guid(playerId));
+        Assert.Equal(winners.Single().Id, new Guid(playerId));
     }
     
     [Then("Game is a draw")]

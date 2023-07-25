@@ -19,7 +19,7 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
 
     public abstract RoundResult Handle(MakeMoveCommand command);
 
-    public abstract IList<Guid> GetWinners();
+    public abstract IList<Player> GetWinners();
 
     public abstract GameScore GetScore();
 

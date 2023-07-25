@@ -16,6 +16,7 @@ public static class MappingConfig
         TypeAdapterConfig<PlayerStatistic, PlayerScoreViewModel>
             .NewConfig()
             .Map(dest => dest.PlayerId, src => src.PlayerId)
+            .Map(dest => dest.PlayerNickName, src => src.PlayerNickName)
             .Map(dest => dest.RoundWins, src => src.RoundWins)
             .Map(dest => dest.RoundDraws, src => src.RoundDraws)
             .Map(dest => dest.RoundLosses, src => src.RoundLosses);

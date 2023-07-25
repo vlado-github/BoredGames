@@ -38,7 +38,7 @@ public class Executor : IExecutor
             }
 
             var winners = await _boredGamesApi.GetGameWinners(executionState.GameId.ToString());
-            if (winners.Contains(Guid.Parse(_settings.HeaderPlayerIdValue)))
+            if (winners.Select(x => x.Id).Contains(Guid.Parse(_settings.HeaderPlayerIdValue)))
             {
                 Console.WriteLine(string.Empty);
                 Console.WriteLine("**********");
@@ -49,7 +49,7 @@ public class Executor : IExecutor
             {
                 Console.WriteLine(string.Empty);
                 Console.WriteLine("**********");
-                var endMessage = $"You lost! Winner(s): {string.Join(",", winners)}";
+                var endMessage = $"You lost! Winner(s): {string.Join(",", winners.Select(x => x.NickName))}";
                 Console.WriteLine($"You need to {executionState.Description}");
                 Console.WriteLine(endMessage);
                 Console.WriteLine("**********");

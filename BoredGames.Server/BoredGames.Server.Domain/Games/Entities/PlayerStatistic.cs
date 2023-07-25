@@ -5,9 +5,10 @@ namespace BoredGames.Server.Domain.Games.Entities;
 [GenerateSerializer]
 public class PlayerStatistic
 {
-    public PlayerStatistic(Guid playerId)
+    public PlayerStatistic(Player player)
     {
-        PlayerId = playerId;
+        PlayerId = player.Id;
+        PlayerNickName = player.NickName;
         RoundWins = new List<Hand>();
         RoundLosses = new List<Hand>();
         RoundDraws = new List<Hand>();
@@ -36,6 +37,8 @@ public class PlayerStatistic
     public IList<Hand> RoundLosses { get; private set; }
     [Id(3)]
     public IList<Hand> RoundDraws { get; private set; }
+    [Id(4)]
+    public string PlayerNickName { get; private set; }
     public int NumberOfWins => RoundWins.Count;
     public int NumberOfLoses => RoundLosses.Count;
     public int NumberOfDraws => RoundDraws.Count;

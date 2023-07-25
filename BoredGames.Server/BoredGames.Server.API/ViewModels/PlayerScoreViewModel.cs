@@ -10,6 +10,7 @@ public class PlayerScoreViewModel
     }
     
     public Guid PlayerId { get; set; }
+    public string PlayerNickName { get; set; }
     public IList<RoundResultViewModel> RoundWins { get; set; }
     public IList<RoundResultViewModel> RoundLosses { get; set; }
     public IList<RoundResultViewModel> RoundDraws { get; set; }

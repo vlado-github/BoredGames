@@ -19,13 +19,13 @@ public class GameScore
         _requiredNumberOfWins = requiredNumberOfWins;
     }
 
-    public void AddWin(Guid playerId, int roundNumber, string actionType)
+    public void AddWin(Player player, int roundNumber, string actionType)
     {
         CurrentRoundNumber = roundNumber;
-        var playerStat = PlayerStatistics.SingleOrDefault(x => x.PlayerId == playerId);
+        var playerStat = PlayerStatistics.SingleOrDefault(x => x.PlayerId == player.Id);
         if (playerStat == null)
         {
-            playerStat = new PlayerStatistic(playerId);
+            playerStat = new PlayerStatistic(player);
             playerStat.AddWin(roundNumber, actionType);
             PlayerStatistics.Add(playerStat);
         }
@@ -35,13 +35,13 @@ public class GameScore
         }
     }
 
-    public void AddLoss(Guid playerId, int roundNumber, string actionType)
+    public void AddLoss(Player player, int roundNumber, string actionType)
     {
         CurrentRoundNumber = roundNumber;
-        var playerStat = PlayerStatistics.SingleOrDefault(x => x.PlayerId == playerId);
+        var playerStat = PlayerStatistics.SingleOrDefault(x => x.PlayerId == player.Id);
         if (playerStat == null)
         {
-            playerStat = new PlayerStatistic(playerId);
+            playerStat = new PlayerStatistic(player);
             playerStat.AddLoss(roundNumber, actionType);
             PlayerStatistics.Add(playerStat);
         }
@@ -51,13 +51,13 @@ public class GameScore
         }
     }
     
-    public void AddDraw(Guid playerId, int roundNumber, string actionType)
+    public void AddDraw(Player player, int roundNumber, string actionType)
     {
         CurrentRoundNumber = roundNumber;
-        var playerStat = PlayerStatistics.SingleOrDefault(x => x.PlayerId == playerId);
+        var playerStat = PlayerStatistics.SingleOrDefault(x => x.PlayerId == player.Id);
         if (playerStat == null)
         {
-            playerStat = new PlayerStatistic(playerId);
+            playerStat = new PlayerStatistic(player);
             playerStat.AddDraw(roundNumber, actionType);
             PlayerStatistics.Add(playerStat);
         }
@@ -67,11 +67,11 @@ public class GameScore
         }
     }
 
-    public IList<Guid> GetWinners()
+    public IList<Player> GetWinners()
     {
         var winners = PlayerStatistics
             .Where(x => x.NumberOfWins == _requiredNumberOfWins)
-            .Select(x => x.PlayerId)
+            .Select(x => new Player(x.PlayerId, x.PlayerNickName))
             .ToList();
         return winners;
     }

@@ -15,4 +15,6 @@ public class CreateGameCommand : CommandBase
     public int NumberOfWins { get; set; }
     [Id(3)]
     public string? Description { get; set; }
+    [Id(4)]
+    public string? PlayerNickName { get; set; }
 }

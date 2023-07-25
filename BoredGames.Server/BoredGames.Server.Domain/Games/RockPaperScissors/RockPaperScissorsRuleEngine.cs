@@ -35,7 +35,7 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
         return _gameScore;
     }
 
-    public override IList<Guid> GetWinners()
+    public override IList<Player> GetWinners()
     {
         return _gameScore.GetWinners();
     }
@@ -64,17 +64,18 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
             var remainingCommands = new List<MakeMoveCommand>(_rounds.Current.GetMoves());
             remainingCommands.Remove(move);
             var result = CheckRule(move.ActionType, remainingCommands);
+            var player = new Player(move.PlayerId, move.PlayerNickName);
             if (result == GameResult.Win)
             {
-                _gameScore.AddWin(move.PlayerId, _rounds.Current.Number, move.ActionType);
+                _gameScore.AddWin(player, _rounds.Current.Number, move.ActionType);
             }
             else if (result == GameResult.Loss)
             {
-                _gameScore.AddLoss(move.PlayerId, _rounds.Current.Number, move.ActionType);
+                _gameScore.AddLoss(player, _rounds.Current.Number, move.ActionType);
             }
             else
             {
-                _gameScore.AddDraw(move.PlayerId, _rounds.Current.Number, move.ActionType);
+                _gameScore.AddDraw(player, _rounds.Current.Number, move.ActionType);
             }
         }
         
