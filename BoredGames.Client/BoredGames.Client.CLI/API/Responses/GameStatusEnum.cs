@@ -1,7 +1,7 @@
 namespace BoredGames.Client.CLI.API.Responses;
 
 [Serializable]
-public enum GameStateEnum
+public enum GameStatusEnum
 {
     AwaitingPlayers,
     InPlay,

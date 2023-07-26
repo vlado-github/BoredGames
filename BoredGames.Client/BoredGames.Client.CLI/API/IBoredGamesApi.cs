@@ -9,16 +9,19 @@ public interface IBoredGamesApi
 {
     [Get("/api/game/{gameId}/state")]
     Task<GameStateResponse> GetGameState([AliasAs("gameId")] string gameId);
+    
+    [Get("/api/game/{gameId}/score")]
+    Task<GameScoreResponse> GetGameScore([AliasAs("gameId")] string gameId);
 
     [Get("/api/game/{gameId}/winners")]
-    Task<List<Guid>> GetGameWinners([AliasAs("gameId")] string gameId);
+    Task<List<PlayerResponse>> GetGameWinners([AliasAs("gameId")] string gameId);
 
-    [Post("/api/game")]
-    Task<Guid> CreateGame();
+    [Post("/api/game/create")]
+    Task<GameDefinitionResponse> CreateGame([Body] CreateGameRequest request);
 
     [Post("/api/game/makemove")]
     Task<GameStateResponse> MakeMove([Body] MakeMoveRequest request);
 
     [Put("/api/game/join")]
-    Task<GameStateResponse> Join([Body] JoinGameRequest request);
+    Task<GameDefinitionResponse> Join([Body] JoinGameRequest request);
 }

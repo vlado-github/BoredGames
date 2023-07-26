@@ -1,4 +1,6 @@
+using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Grains.Base;
 using BoredGames.Server.Tests.Base;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,14 +31,24 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     public async Task GivenTheGameIsCreated()
     {
         var player01 = _grainFactory.GetGrain<IPlayerGrain>(_player01);
-        _gameId = await player01.CreateGame();
+        var command = new CreateGameCommand
+        {
+            Title = GameTitle.RockPaperScissors,
+            NumberOfPlayers = 2,
+            NumberOfWins = 1,
+        };
+        var gameDefinition = await player01.CreateGame(command);
+        _gameId = gameDefinition.GameId;
     }
 
     [And("Second player joined")]
     public async Task GivenTheSecondPlayerJoinedTheGame()
     {
         var player02 = _grainFactory.GetGrain<IPlayerGrain>(_player02);
-        await player02.JoinGame(_gameId);
+        await player02.JoinGame(new JoinGameCommand
+        {
+            GameId = _gameId
+        });
     }
     
     [And(@"Player ""(.+)"" made a move ""(.+)""")]
@@ -67,7 +79,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
         var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
         var winners = await game.GetWinners();
         Assert.Single(winners);
-        Assert.Equal(winners.Single(), new Guid(playerId));
+        Assert.Equal(winners.Single().Id, new Guid(playerId));
     }
     
     [Then("Game is a draw")]

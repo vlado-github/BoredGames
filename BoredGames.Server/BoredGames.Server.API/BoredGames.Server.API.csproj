@@ -10,6 +10,7 @@
     <ItemGroup>
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
+      <PackageReference Include="Mapster" Version="7.3.0" />
       <PackageReference Include="Microsoft.Orleans.Server" Version="7.1.1" />
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.5" />
       <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />

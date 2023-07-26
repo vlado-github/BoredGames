@@ -1,7 +1,7 @@
 ﻿namespace BoredGames.Server.Common.Enums;
 
 [Serializable]
-public enum GameState
+public enum GameStatus
 {
     AwaitingPlayers,
     InPlay,

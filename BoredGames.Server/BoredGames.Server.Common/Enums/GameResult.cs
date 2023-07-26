@@ -5,6 +5,6 @@ namespace BoredGames.Server.Common.Enums;
 public enum GameResult
 {
     Win,
-    Lose,
+    Loss,
     Draw,
 }
