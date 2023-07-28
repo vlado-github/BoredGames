@@ -1,22 +1,25 @@
 ﻿using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Common.Exceptions;
-using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Games.Base;
+using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
-using BoredGames.Server.Domain.Grains.Base;
+using BoredGames.Server.Service.Commands;
+using BoredGames.Server.Service.Grains.Base;
+using BoredGames.Server.Service.ViewModels;
+using Mapster;
 using Orleans;
 
-namespace BoredGames.Server.Domain.Grains;
+namespace BoredGames.Server.Service.Grains;
 
 public class GameGrain : Grain, IGameGrain
 {
-    private IList<Player> _players;
+    private IList<PlayerDto> _players;
     private GameState _gameState;
     private IGameRuleEngine _gameRuleEngine;
 
     public override Task OnActivateAsync(CancellationToken token)
     {
-        _players = new List<Player>();
+        _players = new List<PlayerDto>();
         _gameState = new GameState
         {
             GameId = this.GetPrimaryKey(),
@@ -27,14 +30,15 @@ public class GameGrain : Grain, IGameGrain
 
     public void Setup(CreateGameCommand command)
     {
-        _gameRuleEngine = GameRuleEngineFactory.GetInstance(command);
+        var dto = command.Adapt<GameDto>();
+        _gameRuleEngine = GameRuleEngineFactory.GetInstance(dto);
         
         var roundResult = _gameRuleEngine.GetCurrentRoundResult();
         _gameState.RoundNumber = roundResult.RoundNumber;
         _gameState.RoundStatus = roundResult.RoundStatus;
     }
 
-    public Task<GameDefinition> AddPlayerToGame(Player player)
+    public Task<GameDefinitionViewModel> AddPlayerToGame(AddPlayerCommand command)
     {
         if (_gameState.GameStatus is GameStatus.Finished)
         {
@@ -46,9 +50,10 @@ public class GameGrain : Grain, IGameGrain
             throw new ActionValidationException("Player can't joined during play.");
         }
 
-        if (!_players.Select(x => x.Id).Contains(player.Id))
+        var dto = command.Adapt<PlayerDto>();
+        if (!_players.Select(x => x.Id).Contains(dto.Id))
         {
-            _players.Add(player);
+            _players.Add(dto);
         }
 
         if (_gameState.GameStatus is GameStatus.AwaitingPlayers 
@@ -58,20 +63,16 @@ public class GameGrain : Grain, IGameGrain
         }
 
         var settings = _gameRuleEngine.GetConfiguration();
-        var result = new GameDefinition
-        {
-            GameId = this.GetPrimaryKey(),
-            RequiredNumberOfPlayers = settings.RequiredNumberOfPlayers,
-            RequiredNumberOfWins = settings.RequiredNumberOfWins,
-            Description = settings.Description
-        };
 
+        var result = settings.Adapt<GameDefinitionViewModel>();
+        result.GameId = this.GetPrimaryKey();
         return Task.FromResult(result);
     }
 
-    public Task<RoundResult> MakeMove(MakeMoveCommand command)
+    public Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
     {
-        var result = _gameRuleEngine.Handle(command);
+        var dto = command.Adapt<MoveDto>();
+        var result = _gameRuleEngine.Handle(dto);
         _gameState.RoundNumber = result.RoundNumber;
         _gameState.RoundStatus = result.RoundStatus;
         
@@ -85,23 +86,23 @@ public class GameGrain : Grain, IGameGrain
             _gameState.GameStatus = GameStatus.InPlay;
         }
         
-        return Task.FromResult(result);
+        return Task.FromResult(_gameState.Adapt<GameStateViewModel>());
     }
 
-    public Task<GameScore> GetScore()
+    public Task<GameScoreViewModel> GetScore()
     {
         var result = _gameRuleEngine.GetScore();
-        return Task.FromResult(result);
+        return Task.FromResult(result.Adapt<GameScoreViewModel>());
     }
 
-    public Task<IList<Player>> GetWinners()
+    public Task<IList<PlayerViewModel>> GetWinners()
     {
         var result = _gameRuleEngine.GetWinners();
-        return Task.FromResult(result);
+        return Task.FromResult(result.Adapt<IList<PlayerViewModel>>());
     }
 
-    public Task<GameState> GetState()
+    public Task<GameStateViewModel> GetState()
     {
-        return Task.FromResult(_gameState);
+        return Task.FromResult(_gameState.Adapt<GameStateViewModel>());
     }
 }

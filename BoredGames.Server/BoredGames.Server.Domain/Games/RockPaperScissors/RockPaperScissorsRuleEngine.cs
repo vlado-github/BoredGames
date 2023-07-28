@@ -1,6 +1,6 @@
 using BoredGames.Server.Common.Enums;
-using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Games.Base;
+using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
 
 namespace BoredGames.Server.Domain.Games.RockPaperScissors;
@@ -17,9 +17,9 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
         Setup(RockPaperScissorsConfiguration.Default);
     }
 
-    public override RoundResult Handle(MakeMoveCommand command)
+    public override RoundResult Handle(MoveDto dto)
     {
-        _rounds.Current.AddMove(command);
+        _rounds.Current.AddMove(dto);
         if (_rounds.Current.GetMoves().Count == _settings.RequiredNumberOfPlayers)
         {
             return ResolveResult();
@@ -61,7 +61,7 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
     {
         foreach (var move in _rounds.Current.GetMoves())
         {
-            var remainingCommands = new List<MakeMoveCommand>(_rounds.Current.GetMoves());
+            var remainingCommands = new List<MoveDto>(_rounds.Current.GetMoves());
             remainingCommands.Remove(move);
             var result = CheckRule(move.ActionType, remainingCommands);
             var player = new Player(move.PlayerId, move.PlayerNickName);
@@ -86,15 +86,15 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
             roundNumber: _rounds.Current.Number);
     }
 
-    private GameResult CheckRule(string actionType, IList<MakeMoveCommand> remainingCommands)
+    private GameResult CheckRule(string actionType, IList<MoveDto> remainingDtos)
     {
         if (actionType == RockAction)
         {
-            if (remainingCommands.Any(m => m.ActionType == PaperAction))
+            if (remainingDtos.Any(m => m.ActionType == PaperAction))
             {
                 return GameResult.Loss;
             }
-            if (remainingCommands.All(x => x.ActionType == RockAction))
+            if (remainingDtos.All(x => x.ActionType == RockAction))
             {
                 return GameResult.Draw;
             }
@@ -102,11 +102,11 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
         }
         else if (actionType == PaperAction)
         {
-            if (remainingCommands.Any(m => m.ActionType == ScissorsAction))
+            if (remainingDtos.Any(m => m.ActionType == ScissorsAction))
             {
                 return GameResult.Loss;
             }
-            if (remainingCommands.All(x => x.ActionType == PaperAction))
+            if (remainingDtos.All(x => x.ActionType == PaperAction))
             {
                 return GameResult.Draw;
             }
@@ -114,11 +114,11 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
         }
         else //Scissors
         {
-            if (remainingCommands.Any(m => m.ActionType == RockAction))
+            if (remainingDtos.Any(m => m.ActionType == RockAction))
             {
                 return GameResult.Loss;
             }
-            if (remainingCommands.All(x => x.ActionType == ScissorsAction))
+            if (remainingDtos.All(x => x.ActionType == ScissorsAction))
             {
                 return GameResult.Draw;
             }

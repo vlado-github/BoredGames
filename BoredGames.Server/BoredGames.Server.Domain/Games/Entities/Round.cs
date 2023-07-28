@@ -1,6 +1,6 @@
 using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Common.Exceptions;
-using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.Dtos;
 
 namespace BoredGames.Server.Domain.Games.Entities;
 
@@ -57,20 +57,20 @@ public class Round
         IsCurrent = isCurrent;
         IsFinished = false;
         Number = number;
-        MovesStack = new List<MakeMoveCommand>();
+        MovesStack = new List<MoveDto>();
     }
     
-    public void AddMove(MakeMoveCommand command)
+    public void AddMove(MoveDto dto)
     {
-        if (MovesStack.Any(x => x.PlayerId == command.PlayerId))
+        if (MovesStack.Any(x => x.PlayerId == dto.PlayerId))
         {
             throw new OperationNotAllowedException(
-                $"Player with ID {command.PlayerId} has already made a move for round {Number}.");
+                $"Player with ID {dto.PlayerId} has already made a move for round {Number}.");
         }
-        MovesStack.Add(command);
+        MovesStack.Add(dto);
     }
 
-    public List<MakeMoveCommand> GetMoves()
+    public List<MoveDto> GetMoves()
     {
         return MovesStack;
     }
@@ -84,5 +84,5 @@ public class Round
     public bool IsCurrent { get; set; }
     public bool IsFinished { get; set; }
     public int Number { get; private set; }
-    public List<MakeMoveCommand> MovesStack { get; private set; }
+    public List<MoveDto> MovesStack { get; private set; }
 }

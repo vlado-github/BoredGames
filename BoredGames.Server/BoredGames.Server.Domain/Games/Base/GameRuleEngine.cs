@@ -1,5 +1,4 @@
-using BoredGames.Server.Common.Enums;
-using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
 
 namespace BoredGames.Server.Domain.Games.Base;
@@ -17,7 +16,7 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
         _gameScore = new GameScore(_settings.RequiredNumberOfWins);
     }
 
-    public abstract RoundResult Handle(MakeMoveCommand command);
+    public abstract RoundResult Handle(MoveDto dto);
 
     public abstract IList<Player> GetWinners();
 

@@ -1,28 +1,27 @@
 using BoredGames.Server.Common.Enums;
-using BoredGames.Server.Domain.Commands;
-using BoredGames.Server.Domain.Games.Entities;
+using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.RockPaperScissors;
 
 namespace BoredGames.Server.Domain.Games.Base;
 
 public static class GameRuleEngineFactory
 {
-    public static IGameRuleEngine GetInstance(CreateGameCommand command)
+    public static IGameRuleEngine GetInstance(GameDto dto)
     {
-        switch (command.Title)
+        switch (dto.Title)
         {
             case GameTitle.RockPaperScissors:
             {
                 var ruleEngine = new RockPaperScissorsRuleEngine();
                 ruleEngine.Setup(new RockPaperScissorsConfiguration(
-                    requiredNumberOfPlayers: command.NumberOfPlayers,
-                    requiredNumberOfWins: command.NumberOfWins,
-                    description: command.Description));
+                    requiredNumberOfPlayers: dto.NumberOfPlayers,
+                    requiredNumberOfWins: dto.NumberOfWins,
+                    description: dto.Description));
                 return ruleEngine;
             }
             default:
             {
-                throw new NotImplementedException($"Game {command.Title} doesn't exist.");
+                throw new NotImplementedException($"Game {dto.Title} doesn't exist.");
             }
         }
     }

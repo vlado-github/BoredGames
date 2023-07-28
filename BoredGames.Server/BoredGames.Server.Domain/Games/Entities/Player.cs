@@ -1,9 +1,7 @@
 using Bogus;
-using Orleans;
 
 namespace BoredGames.Server.Domain.Games.Entities;
 
-[GenerateSerializer]
 public class Player
 {
     public Player(Guid id)
@@ -18,8 +16,6 @@ public class Player
         NickName = nickName;
     }
     
-    [Id(0)]
     public Guid Id { get; private set; }
-    [Id(1)]
     public string NickName { get; private set; }
 }
