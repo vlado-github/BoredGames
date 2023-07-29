@@ -6,7 +6,7 @@ namespace BoredGames.Server.Service.Grains.Base;
 
 public interface IPlayerGrain : IGrainWithGuidKey
 {
-    Task<string> GetNickName();
+    Task<PlayerViewModel> GetDetails();
     Task<GameDefinitionViewModel> CreateGame(CreateGameCommand command);
     Task<GameDefinitionViewModel> JoinGame(JoinGameCommand command);
 }

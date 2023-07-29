@@ -58,12 +58,12 @@ namespace BoredGames.Server.API.Controllers
 
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
-            var playerNickName = await player.GetNickName();
+            var playerDetails= await player.GetDetails();
             var gameState = await game.MakeMove(new MakeMoveCommand
             {
                 ActionType = request.ActionType,
                 PlayerId = playerId,
-                PlayerNickName = playerNickName
+                PlayerNickName = playerDetails.NickName
             });
             return gameState;
         }

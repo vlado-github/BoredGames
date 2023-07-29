@@ -8,5 +8,5 @@ public class PlayerViewModel
     [Id(0)]
     public Guid Id { get; set; }
     [Id(1)]
-    public string NickName { get; set; }
+    public string? NickName { get; set; }
 }

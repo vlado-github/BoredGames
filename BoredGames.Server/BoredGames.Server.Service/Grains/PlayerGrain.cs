@@ -9,7 +9,7 @@ namespace BoredGames.Server.Service.Grains;
 
 public class PlayerGrain : Grain, IPlayerGrain
 {
-    private string _nickName;
+    private string? _nickName;
     
     public override Task OnActivateAsync(CancellationToken token)
     {
@@ -37,18 +37,22 @@ public class PlayerGrain : Grain, IPlayerGrain
     public async Task<GameDefinitionViewModel> JoinGame(JoinGameCommand command)
     {
         var gameGrain = GrainFactory.GetGrain<IGameGrain>(command.GameId);
-        var playerNickName = command.PlayerNickName;
+        _nickName = command.PlayerNickName;
         var addPlayerCommand = new AddPlayerCommand
         {
             Id = this.GetPrimaryKey(),
-            NickName = playerNickName
+            NickName = _nickName
         };
         var gameDefinition = await gameGrain.AddPlayerToGame(addPlayerCommand);
         return gameDefinition.Adapt<GameDefinitionViewModel>();
     }
 
-    public Task<string> GetNickName()
+    public Task<PlayerViewModel> GetDetails()
     {
-        return Task.FromResult(_nickName);
+        return Task.FromResult(new PlayerViewModel()
+        {
+            Id = this.GetPrimaryKey(),
+            NickName = _nickName
+        });
     }
 }
