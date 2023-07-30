@@ -7,6 +7,9 @@ namespace BoredGames.Client.CLI.API;
 [Headers("Accept: application/json")]
 public interface IBoredGamesApi
 {
+    [Get("/api/game/titles")]
+    Task<IList<GameTitleResponse>> GetTitles();
+
     [Get("/api/game/{gameId}/state")]
     Task<GameStateResponse> GetGameState([AliasAs("gameId")] string gameId);
     

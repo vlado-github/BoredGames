@@ -1,6 +1,7 @@
 using BoredGames.Server.API.Extensions;
 using BoredGames.Server.API.Filters;
 using BoredGames.Server.API.Models;
+using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Domain.Games.Entities;
 using BoredGames.Server.Service.Commands;
 using BoredGames.Server.Service.Grains.Base;
@@ -20,6 +21,22 @@ namespace BoredGames.Server.API.Controllers
         public GameController(IGrainFactory grainFactory)
         {
             _grainFactory = grainFactory;
+        }
+
+        [HttpGet("titles")]
+        public Task<IList<GameTitleViewModel>> GetTitles()
+        {
+            var result = new List<GameTitleViewModel>();
+            foreach(GameTitle title in Enum.GetValues(typeof(GameTitle)) )
+            {
+                result.Add(new GameTitleViewModel()
+                {
+                    Id = (int) title,
+                    Name = title.ToString()
+                });
+            }
+
+            return Task.FromResult<IList<GameTitleViewModel>>(result);
         }
         
         [HttpPost("create")]
