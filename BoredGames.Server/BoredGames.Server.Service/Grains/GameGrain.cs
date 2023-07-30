@@ -76,14 +76,19 @@ public class GameGrain : Grain, IGameGrain
         _gameState.RoundNumber = result.RoundNumber;
         _gameState.RoundStatus = result.RoundStatus;
         
-        var allRoundsFinished = _gameRuleEngine.AreAllRoundsFinished();
-        if (allRoundsFinished)
+        var requiredWinsAchieved = _gameRuleEngine.RequiredNumberOfWinsAchieved();
+        if (requiredWinsAchieved)
         {
             _gameState.GameStatus = GameStatus.Finished;
         }
         else
         {
             _gameState.GameStatus = GameStatus.InPlay;
+            var allRoundsCompleted = _gameRuleEngine.AreAllRoundsFinished();
+            if (allRoundsCompleted)
+            {
+                _gameRuleEngine.AddExtraRound();
+            }
         }
         
         return Task.FromResult(_gameState.Adapt<GameStateViewModel>());

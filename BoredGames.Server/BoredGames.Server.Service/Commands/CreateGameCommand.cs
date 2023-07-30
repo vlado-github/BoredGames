@@ -12,9 +12,11 @@ public class CreateGameCommand : CommandBase
     [Id(1)]
     public int NumberOfPlayers { get; set; }
     [Id(2)]
-    public int NumberOfWins { get; set; }
+    public int RequiredNumberOfWins { get; set; }
     [Id(3)]
-    public string? Description { get; set; }
+    public int NumberOfRounds { get; set; }
     [Id(4)]
+    public string? Description { get; set; }
+    [Id(5)]
     public string? PlayerNickName { get; set; }
 }

@@ -15,7 +15,7 @@ public static class GameRuleEngineFactory
                 var ruleEngine = new RockPaperScissorsRuleEngine();
                 ruleEngine.Setup(new RockPaperScissorsConfiguration(
                     requiredNumberOfPlayers: dto.NumberOfPlayers,
-                    requiredNumberOfWins: dto.NumberOfWins,
+                    requiredNumberOfWins: dto.RequiredNumberOfWins,
                     description: dto.Description));
                 return ruleEngine;
             }

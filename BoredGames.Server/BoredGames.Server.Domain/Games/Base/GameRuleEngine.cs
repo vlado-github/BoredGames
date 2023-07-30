@@ -1,3 +1,4 @@
+using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
 
@@ -17,12 +18,39 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
     }
 
     public abstract RoundResult Handle(MoveDto dto);
-
-    public abstract IList<Player> GetWinners();
-
-    public abstract GameScore GetScore();
-
+    
     public abstract GameConfigurationBase GetConfiguration();
-    public abstract RoundResult GetCurrentRoundResult();
-    public abstract bool AreAllRoundsFinished();
+    
+    public RoundResult GetCurrentRoundResult()
+    {
+        return new RoundResult(
+            roundStatus: _rounds.Current.GetStatus(),
+            roundNumber: _rounds.Current.Number);
+    }
+
+    public bool RequiredNumberOfWinsAchieved()
+    {
+        return _gameScore.PlayerStatistics
+            .Any(x => x.NumberOfWins == _settings.RequiredNumberOfWins);
+    }
+    
+    public bool AreAllRoundsFinished()
+    {
+        return _rounds.AreFinished();
+    }
+
+    public void AddExtraRound()
+    {
+        _rounds.AddExtraRound();
+    }
+    
+    public GameScore GetScore()
+    {
+        return _gameScore;
+    }
+
+    public IList<Player> GetWinners()
+    {
+        return _gameScore.GetWinners();
+    }
 }

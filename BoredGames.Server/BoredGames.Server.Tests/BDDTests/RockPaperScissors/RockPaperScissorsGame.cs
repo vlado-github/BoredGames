@@ -35,7 +35,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
         {
             Title = GameTitle.RockPaperScissors,
             NumberOfPlayers = 2,
-            NumberOfWins = 1,
+            RequiredNumberOfWins = 1,
         };
         var gameDefinition = await player01.CreateGame(command);
         _gameId = gameDefinition.GameId;

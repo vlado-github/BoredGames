@@ -47,6 +47,16 @@ public class Rounds
     {
         return _rounds.All(x => x.IsFinished);
     }
+
+    public void AddExtraRound()
+    {
+        if (!AreFinished())
+        {
+            throw new OperationNotAllowedException(
+                $"Extra round is not allowed until all rounds are finished.");
+        }
+        _rounds.Add(new Round(_rounds.Count + 1));
+    }
 }
 
 

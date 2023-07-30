@@ -48,7 +48,8 @@ namespace BoredGames.Server.API.Controllers
             {
                 Title = request.GameTitle,
                 NumberOfPlayers = request.NumberOfPlayers,
-                NumberOfWins = request.NumberOfWins,
+                RequiredNumberOfWins = request.RequiredNumberOfWins,
+                NumberOfRounds = request.NumberOfRounds,
                 Description = request.Description,
                 PlayerNickName = request.PlayerNickName
             });

@@ -35,12 +35,14 @@ public class InputHandler
         }
         else if (input == "create")
         {
-            Console.Write(">>> Choose game title (e.g. 0,1,2...:");
+            Console.Write(">>> Choose game title (e.g. 0,1,2...):");
             var gameTitle = Console.ReadLine();
             var gameTitleId = string.IsNullOrEmpty(gameTitle) ? 0 : int.Parse(gameTitle);
             Console.Write(">>> Number of players:");
             var numOfPlayers = Console.ReadLine();
-            Console.Write(">>> Number of wins:");
+            Console.Write(">>> Number of rounds:");
+            var numOfRounds = Console.ReadLine();
+            Console.Write(">>> Required number of wins:");
             var numOfWins = Console.ReadLine();
             Console.Write(">>> Bet description:");
             var description = Console.ReadLine();
@@ -50,7 +52,8 @@ public class InputHandler
             {
                 GameTitle = gameTitleId,
                 NumberOfPlayers = Int32.Parse(numOfPlayers),
-                NumberOfWins = Int32.Parse(numOfWins),
+                RequiredNumberOfWins = Int32.Parse(numOfWins),
+                NumberOfRounds = Int32.Parse(numOfRounds),
                 Description = description,
                 PlayerNickName = playerNickName
             });

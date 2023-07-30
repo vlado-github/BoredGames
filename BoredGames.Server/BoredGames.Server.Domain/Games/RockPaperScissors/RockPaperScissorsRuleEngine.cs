@@ -29,34 +29,12 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
             roundStatus: _rounds.Current.GetStatus(), 
             roundNumber: _rounds.Current.Number);
     }
-    
-    public override GameScore GetScore()
-    {
-        return _gameScore;
-    }
-
-    public override IList<Player> GetWinners()
-    {
-        return _gameScore.GetWinners();
-    }
 
     public override RockPaperScissorsConfiguration GetConfiguration()
     {
         return _settings;
     }
-
-    public override bool AreAllRoundsFinished()
-    {
-        return _rounds.AreFinished();
-    }
-
-    public override RoundResult GetCurrentRoundResult()
-    {
-        return new RoundResult(
-            roundStatus: _rounds.Current.GetStatus(),
-            roundNumber: _rounds.Current.Number);
-    }
-
+    
     private RoundResult ResolveResult()
     {
         foreach (var move in _rounds.Current.GetMoves())
