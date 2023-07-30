@@ -1,7 +1,7 @@
 using BoredGames.Server.Common.Enums;
-using BoredGames.Server.Domain.Commands;
 using BoredGames.Server.Domain.Games.RockPaperScissors;
-using BoredGames.Server.Domain.Grains.Base;
+using BoredGames.Server.Service.Commands;
+using BoredGames.Server.Service.Grains.Base;
 using BoredGames.Server.Tests.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans;

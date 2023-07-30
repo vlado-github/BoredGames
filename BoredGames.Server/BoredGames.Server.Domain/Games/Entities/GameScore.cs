@@ -1,22 +1,17 @@
-using Orleans;
-
 namespace BoredGames.Server.Domain.Games.Entities;
 
-[GenerateSerializer]
 public class GameScore
 {
-    [Id(0)]
     public IList<PlayerStatistic> PlayerStatistics { get; private set; }
-    [Id(1)]
     public int CurrentRoundNumber { get; private set; }
 
-    private readonly int _requiredNumberOfWins;
+    public readonly int RequiredNumberOfWins;
 
     public GameScore(int requiredNumberOfWins)
     {
         PlayerStatistics = new List<PlayerStatistic>();
         CurrentRoundNumber = 1;
-        _requiredNumberOfWins = requiredNumberOfWins;
+        RequiredNumberOfWins = requiredNumberOfWins;
     }
 
     public void AddWin(Player player, int roundNumber, string actionType)
@@ -70,7 +65,7 @@ public class GameScore
     public IList<Player> GetWinners()
     {
         var winners = PlayerStatistics
-            .Where(x => x.NumberOfWins == _requiredNumberOfWins)
+            .Where(x => x.NumberOfWins == RequiredNumberOfWins)
             .Select(x => new Player(x.PlayerId, x.PlayerNickName))
             .ToList();
         return winners;

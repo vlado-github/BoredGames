@@ -11,16 +11,31 @@ public class InputHandler
     {
         _boredGamesApi = boredGamesApi;
     }
+
+    public async Task ListGameTitles()
+    {
+        var response = await _boredGamesApi.GetTitles();
+        Console.WriteLine("***** Games *****");
+        foreach (var title in response)
+        {
+            Console.WriteLine($"[{title.Id}] : {title.Name}");
+        }
+        Console.WriteLine("***** Games *****");
+    }
     
     public async Task<ExecutionState> Handle()
     {
         var executionState = new ExecutionState();
-        Console.WriteLine("Type command (e.g. create, join, exit):");
+        Console.WriteLine("Type command (e.g. list, create, join, exit):");
         Console.Write(">");
         var input = Console.ReadLine();
-        if (input == "create")
+        if (input == "list")
         {
-            Console.Write(">>> Choose game title (e.g. 0,1,2...):");
+            await ListGameTitles();
+        }
+        else if (input == "create")
+        {
+            Console.Write(">>> Choose game title (e.g. 0,1,2...:");
             var gameTitle = Console.ReadLine();
             var gameTitleId = string.IsNullOrEmpty(gameTitle) ? 0 : int.Parse(gameTitle);
             Console.Write(">>> Number of players:");

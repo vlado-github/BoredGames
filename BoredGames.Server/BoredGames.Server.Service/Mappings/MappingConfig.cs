@@ -1,13 +1,38 @@
-using BoredGames.Server.API.ViewModels;
+using Bogus;
+using Bogus.DataSets;
+using BoredGames.Server.Domain.Games.Base;
+using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
+using BoredGames.Server.Service.Commands;
+using BoredGames.Server.Service.ViewModels;
 using Mapster;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace BoredGames.Server.API.Mappings;
+namespace BoredGames.Server.Service.Mappings;
 
 public static class MappingConfig
 {
     public static void RegisterMappings(this IServiceCollection services)
     {
+        var faker = new Faker();
+        
+        TypeAdapterConfig<CreateGameCommand, GameDto>
+            .NewConfig();
+        
+        TypeAdapterConfig<MakeMoveCommand, MoveDto>
+            .NewConfig();
+        
+        TypeAdapterConfig<AddPlayerCommand, PlayerDto>
+            .NewConfig()
+            .Map(dest => dest.NickName, 
+                src => src.NickName ?? faker.Name.FirstName(Name.Gender.Female));
+        
+        TypeAdapterConfig<GameState, GameStateViewModel>
+            .NewConfig();
+        
+        TypeAdapterConfig<GameConfigurationBase, GameDefinitionViewModel>
+            .NewConfig();
+        
         TypeAdapterConfig<Hand, RoundResultViewModel>
             .NewConfig()
             .Map(dest => dest.RoundNumber, src => src.RoundNumber)
@@ -23,6 +48,7 @@ public static class MappingConfig
 
         TypeAdapterConfig<GameScore, GameScoreViewModel>
             .NewConfig()
+            .Map(dest => dest.RequiredNumberOfWins, src => src.RequiredNumberOfWins)
             .Map(dest => dest.PlayerScores, src => src.PlayerStatistics)
             .Map(dest => dest.CurrentRound, src => src.CurrentRoundNumber);
 

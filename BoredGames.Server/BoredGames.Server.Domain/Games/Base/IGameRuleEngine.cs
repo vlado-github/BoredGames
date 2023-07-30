@@ -1,12 +1,11 @@
-using BoredGames.Server.Common.Enums;
-using BoredGames.Server.Domain.Commands;
+using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
 
 namespace BoredGames.Server.Domain.Games.Base;
 
 public interface IGameRuleEngine
 {
-    RoundResult Handle(MakeMoveCommand command);
+    RoundResult Handle(MoveDto dto);
     IList<Player> GetWinners();
     GameScore GetScore();
     GameConfigurationBase GetConfiguration();

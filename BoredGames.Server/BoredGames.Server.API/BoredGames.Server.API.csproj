@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BoredGames.Server.Domain\BoredGames.Server.Domain.csproj" />
+      <ProjectReference Include="..\BoredGames.Server.Service\BoredGames.Server.Service.csproj" />
     </ItemGroup>
 
 </Project>

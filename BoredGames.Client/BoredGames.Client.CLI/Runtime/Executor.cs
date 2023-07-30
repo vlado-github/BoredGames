@@ -69,6 +69,8 @@ public class Executor : IExecutor
             Console.WriteLine(title);
         }
         Console.WriteLine("-----------------------------------------------");
+        await _inputHandler.ListGameTitles();
+        Console.WriteLine("-----------------------------------------------");
         Console.WriteLine($"Your PlayerID: {_settings.HeaderPlayerIdValue}");
     }
 }

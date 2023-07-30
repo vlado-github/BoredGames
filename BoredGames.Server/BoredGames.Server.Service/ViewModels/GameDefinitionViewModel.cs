@@ -1,12 +1,16 @@
-using BoredGames.Server.Common.Enums;
-using BoredGames.Server.Domain.Games.Entities;
+using Orleans;
 
-namespace BoredGames.Server.API.ViewModels;
+namespace BoredGames.Server.Service.ViewModels;
 
+[GenerateSerializer]
 public class GameDefinitionViewModel
 {
+    [Id(0)]
     public Guid GameId { get; set; }
+    [Id(1)]
     public int RequiredNumberOfPlayers { get; set; } 
+    [Id(2)]
     public int RequiredNumberOfWins { get; set; } 
+    [Id(3)]
     public string? Description { get; set; } 
 }

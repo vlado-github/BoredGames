@@ -1,7 +1,7 @@
-using BoredGames.Server.Domain.Commands.Base;
+using BoredGames.Server.Service.Commands.Base;
 using Orleans;
 
-namespace BoredGames.Server.Domain.Commands;
+namespace BoredGames.Server.Service.Commands;
 
 [GenerateSerializer]
 public class MakeMoveCommand : CommandBase
