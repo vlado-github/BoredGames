@@ -13,7 +13,7 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
     public void Setup(T settings) 
     {
         _settings = settings;
-        _rounds = new Rounds(_settings.RequiredNumberOfWins);
+        _rounds = new Rounds(_settings.NumberOfRounds);
         _gameScore = new GameScore(_settings.RequiredNumberOfWins);
     }
 
