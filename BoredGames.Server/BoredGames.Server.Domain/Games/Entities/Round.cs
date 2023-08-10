@@ -27,11 +27,12 @@ public class Rounds
         Current = _rounds.Single(r => r.IsCurrent);
     }
 
+    
+
     public void Next()
     {
-        if (!Current.IsFinished)
+        if (Current.IsFinished)
         {
-            Current.IsFinished = true;
             Current.IsCurrent = false;
             var nextNumber = Current.Number + 1;
             if (_rounds.Count() >= nextNumber)
@@ -47,6 +48,16 @@ public class Rounds
     {
         return _rounds.All(x => x.IsFinished);
     }
+
+    public void AddExtraRound()
+    {
+        if (!AreFinished())
+        {
+            throw new OperationNotAllowedException(
+                $"Extra round is not allowed until all rounds are finished.");
+        }
+        _rounds.Add(new Round(_rounds.Count + 1));
+    }
 }
 
 
@@ -58,6 +69,11 @@ public class Round
         IsFinished = false;
         Number = number;
         MovesStack = new List<MoveDto>();
+    }
+    
+    public void Complete()
+    {
+        IsFinished = true;
     }
     
     public void AddMove(MoveDto dto)

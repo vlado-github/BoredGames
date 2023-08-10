@@ -85,7 +85,7 @@ public class GameGrain : Grain, IGameGrain
         {
             _gameState.GameStatus = GameStatus.InPlay;
         }
-        
+
         return Task.FromResult(_gameState.Adapt<GameStateViewModel>());
     }
 
