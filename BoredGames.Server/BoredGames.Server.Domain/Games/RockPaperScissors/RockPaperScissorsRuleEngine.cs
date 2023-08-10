@@ -57,6 +57,13 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
             }
         }
         
+        _rounds.Current.Complete();
+
+        if (_rounds.AreFinished() && !_gameScore.IsRequiredNumberOfWinsMet())
+        {
+            _rounds.AddExtraRound();
+        }
+        
         _rounds.Next();
         
         return new RoundResult(

@@ -27,11 +27,12 @@ public class Rounds
         Current = _rounds.Single(r => r.IsCurrent);
     }
 
+    
+
     public void Next()
     {
-        if (!Current.IsFinished)
+        if (Current.IsFinished)
         {
-            Current.IsFinished = true;
             Current.IsCurrent = false;
             var nextNumber = Current.Number + 1;
             if (_rounds.Count() >= nextNumber)
@@ -68,6 +69,11 @@ public class Round
         IsFinished = false;
         Number = number;
         MovesStack = new List<MoveDto>();
+    }
+    
+    public void Complete()
+    {
+        IsFinished = true;
     }
     
     public void AddMove(MoveDto dto)

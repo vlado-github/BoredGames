@@ -62,6 +62,11 @@ public class GameScore
         }
     }
 
+    public bool IsRequiredNumberOfWinsMet()
+    {
+        return PlayerStatistics.Any(x => x.NumberOfWins == RequiredNumberOfWins);
+    }
+
     public IList<Player> GetWinners()
     {
         var winners = PlayerStatistics

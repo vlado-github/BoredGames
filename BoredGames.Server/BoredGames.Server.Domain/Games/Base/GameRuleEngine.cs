@@ -28,22 +28,11 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
             roundNumber: _rounds.Current.Number);
     }
 
-    public bool RequiredNumberOfWinsAchieved()
-    {
-        return _gameScore.PlayerStatistics
-            .Any(x => x.NumberOfWins == _settings.RequiredNumberOfWins);
-    }
-    
     public bool AreAllRoundsFinished()
     {
         return _rounds.AreFinished();
     }
 
-    public void AddExtraRound()
-    {
-        _rounds.AddExtraRound();
-    }
-    
     public GameScore GetScore()
     {
         return _gameScore;

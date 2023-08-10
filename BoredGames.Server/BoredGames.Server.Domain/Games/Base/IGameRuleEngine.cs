@@ -11,6 +11,4 @@ public interface IGameRuleEngine
     GameConfigurationBase GetConfiguration();
     RoundResult GetCurrentRoundResult();
     bool AreAllRoundsFinished();
-    bool RequiredNumberOfWinsAchieved();
-    void AddExtraRound();
 }
