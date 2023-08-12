@@ -1,5 +1,6 @@
+using System.Configuration;
 using BoredGames.Server.API.Extensions;
-using BoredGames.Server.API.Filters;
+using BoredGames.Server.API.Middlewares;
 using BoredGames.Server.API.Models;
 using BoredGames.Server.Service.Mappings;
 using FluentValidation;
@@ -7,6 +8,7 @@ using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.SetupOrleans();
+builder.SetupSerilog();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(MakeMoveValidator));
 builder.Services.AddControllers();
@@ -14,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCustomCors();
 builder.Services.RegisterMappings();
+
+
 
 var app = builder.Build();
 if (!app.Environment.IsProduction())
@@ -28,6 +32,11 @@ if (!app.Environment.IsProduction())
 app.UseCors(CorsPolicyExtensions.CorsPolicyName);
 app.UseHttpsRedirection();
 app.UseAuthorization();
+
+//Adding Middlewares
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.MapControllers();
 app.Run();
 

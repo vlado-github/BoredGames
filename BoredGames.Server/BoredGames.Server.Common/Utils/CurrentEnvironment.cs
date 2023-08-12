@@ -4,7 +4,12 @@ namespace BoredGames.Server.Common.Utils;
 
 public static class CurrentEnvironment
 {
-    public static string AspNetCoreEnvVar = "ASPNETCORE_ENVIRONMENT";
+    private static string AspNetCoreEnvVar = "ASPNETCORE_ENVIRONMENT";
+
+    public static string Get()
+    {
+        return Environment.GetEnvironmentVariable(AspNetCoreEnvVar) ?? "Local";
+    }
     
     public static bool IsLocal()
     {
