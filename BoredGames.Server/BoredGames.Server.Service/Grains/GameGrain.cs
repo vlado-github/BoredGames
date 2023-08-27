@@ -42,12 +42,12 @@ public class GameGrain : Grain, IGameGrain
     {
         if (_gameState.GameStatus is GameStatus.Finished)
         {
-            throw new ActionValidationException("Player can't joined to finished game.");
+            throw new OperationNotAllowedException("Player can't joined to finished game.");
         }
         
         if (_gameState.GameStatus is GameStatus.InPlay)
         {
-            throw new ActionValidationException("Player can't joined during play.");
+            throw new OperationNotAllowedException("Player can't joined during play.");
         }
 
         var dto = command.Adapt<PlayerDto>();
