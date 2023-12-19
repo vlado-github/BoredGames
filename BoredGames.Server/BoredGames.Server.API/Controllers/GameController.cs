@@ -24,7 +24,7 @@ namespace BoredGames.Server.API.Controllers
         }
 
         [HttpGet("titles")]
-        public Task<IList<GameTitleViewModel>> GetTitles()
+        public IList<GameTitleViewModel> GetTitles()
         {
             var result = new List<GameTitleViewModel>();
             foreach(GameTitle title in Enum.GetValues(typeof(GameTitle)) )
@@ -36,7 +36,7 @@ namespace BoredGames.Server.API.Controllers
                 });
             }
 
-            return Task.FromResult<IList<GameTitleViewModel>>(result);
+            return result;
         }
         
         [HttpPost("create")]
