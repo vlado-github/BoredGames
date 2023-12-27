@@ -32,7 +32,8 @@ namespace BoredGames.Server.API.Controllers
                 result.Add(new GameTitleViewModel()
                 {
                     Id = (int) title,
-                    Name = title.ToString()
+                    Name = title.ToString(),
+                    ThumbnailImageUrl = "https://i.ibb.co/9n2tfBr/2023-12-19-0us-Kleki.png"
                 });
             }
 
