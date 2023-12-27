@@ -20,6 +20,15 @@ class ApiService {
         }
     }
 
+    async createGame(request) {
+        try {
+            const response = await this.api.post("game/create", request);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
     handleError(error) {
         console.error('API Request Error:', error);
         throw error;

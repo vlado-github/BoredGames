@@ -1,5 +1,6 @@
 <script setup>
 import router from '@/router';
+import apiService from '@/api/api';
 
   const props = defineProps({
     id: Number,
@@ -7,9 +8,17 @@ import router from '@/router';
     iconUrl: String
   })
 
-  function startGame() {
-    console.log(`start ${props.id}`);
-    router.push({ name: 'play', params: { gameInstanceId: props.id } })
+  async function startGame() {
+    const response = await apiService.createGame({
+      gameTitle: props.id,
+      numberOfPlayers: 2,
+      requiredNumberOfWins: 1,
+      numberOfRounds: 1,
+      description: "test",
+      playerNickName: "vlado"
+    });
+    
+    router.push({ name: 'play', params: { gameInstanceId: response.gameId} })
   }
 </script>
 
