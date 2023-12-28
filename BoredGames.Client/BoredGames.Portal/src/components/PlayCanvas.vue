@@ -1,12 +1,39 @@
 <script>
 import * as PIXI from 'pixi.js';
+import apiService from '@/api/api';
+import GameStatusEnum from '@/consts/gameStatusEnum';
+
 import backsideImage from '../assets/backside.png';
 import rockImage from '../assets/rock.png';
 import paperImage from '../assets/paper.png';
 import scissorsImage from '../assets/scissors.png';
 
 export default {
-  mounted() {
+  data() {
+    return {
+      gameId: '',
+      gameStatus: 0
+    }
+  },
+  beforeUnmount() {
+    clearInterval(this.refreshInterval);
+  },
+  async mounted() {
+    // Join game if not already joined
+    let gameId = localStorage.getItem('gameId');
+    if (!gameId) {
+      const response = await joinGame();
+      gameId = response.gameId; 
+    }
+    localStorage.setItem('gameId', gameId);
+    this.gameId = gameId;
+    await this.updateGameStatus();
+
+    // Check game state periodically
+    this.refreshInterval = setInterval(async () => {
+      await this.updateGameStatus();
+    }, 1000);
+
     // Create PIXI application
     this.app = new PIXI.Application({
       resolution: window.devicePixelRatio || 1,
@@ -24,21 +51,45 @@ export default {
     const imageHeight = 250
     const w = this.app.screen.width/3;
     const h = this.app.screen.height/3;
+    const screenWidth = this.app.screen.width;
+    const screenHeight = this.app.screen.height;
 
-    this.foldedCard01 = PIXI.Sprite.from(backsideImage);
-    this.foldedCard01.x = this.app.screen.width - 2*w - imageWidth;
-    this.foldedCard01.y = this.app.screen.height - 2*h - imageHeight;
-    this.container.addChild(this.foldedCard01);
+    if (this.gameStatus === GameStatusEnum.AwaitingPlayers) {
+      const awaitingPlayerMessage = new PIXI.Text('Awaiting player', {
+        fontFamily: 'Arial',
+        fontSize: 36,
+        fill: 0xffffff,
+        x: screenWidth - 2*w - imageWidth,
+        y: screenHeight - 2*h - imageHeight
+      });
+      this.container.addChild(awaitingPlayerMessage);
+    }
+    else if (this.gameStatus === GameStatusEnum.InPlay) {
+      this.foldedCard01 = PIXI.Sprite.from(backsideImage);
+      this.foldedCard01.x = screenWidth - 2*w - imageWidth;
+      this.foldedCard01.y = screenHeight - 2*h - imageHeight;
+      this.container.addChild(this.foldedCard01);
 
-    this.foldedCard02 = PIXI.Sprite.from(backsideImage);
-    this.foldedCard02.x = this.app.screen.width - w - imageWidth;
-    this.foldedCard02.y = this.app.screen.height - 2*h - imageHeight;
-    this.container.addChild(this.foldedCard02);
+      this.foldedCard02 = PIXI.Sprite.from(backsideImage);
+      this.foldedCard02.x = screenWidth - w - imageWidth;
+      this.foldedCard02.y = screenHeight - 2*h - imageHeight;
+      this.container.addChild(this.foldedCard02);
 
-    this.foldedCard03 = PIXI.Sprite.from(backsideImage);
-    this.foldedCard03.x = this.app.screen.width - imageWidth;
-    this.foldedCard03.y = this.app.screen.height - 2*h - imageHeight;
-    this.container.addChild(this.foldedCard03);
+      this.foldedCard03 = PIXI.Sprite.from(backsideImage);
+      this.foldedCard03.x = screenWidth - imageWidth;
+      this.foldedCard03.y = screenHeight - 2*h - imageHeight;
+      this.container.addChild(this.foldedCard03);
+    }
+    else {
+      const awaitingPlayerMessage = new PIXI.Text('score:', {
+        fontFamily: 'Arial',
+        fontSize: 36,
+        fill: 0xffffff,
+        x: screenWidth/2,
+        y: screenHeight/2
+      });
+      this.container.addChild(awaitingPlayerMessage);
+    }
 
     this.rock = PIXI.Sprite.from(rockImage);
     this.rock.x = this.app.screen.width - 2*w - imageWidth;
@@ -69,6 +120,17 @@ export default {
     this.app.destroy();
   },
   methods: {
+    async joinGame() {
+      return await apiService.joinGame({
+        gameId: this.$route.params.gameInstanceId,
+        playerNickName: "player02"
+      });
+    },
+    async updateGameStatus() {
+      const response = await apiService.getGameState(this.gameId);
+      this.gameStatus = response.gameStatus;
+    },
+
     scissorsClick(event)
     {
         this.scissors.x = this.app.screen.width/2;

@@ -1,6 +1,6 @@
 <script setup>
-import router from '@/router';
-import apiService from '@/api/api';
+  import router from '@/router';
+  import apiService from '@/api/api';
 
   const props = defineProps({
     id: Number,
@@ -17,6 +17,8 @@ import apiService from '@/api/api';
       description: "test",
       playerNickName: "vlado"
     });
+
+    localStorage.setItem('gameId', response.gameId);
     
     router.push({ name: 'play', params: { gameInstanceId: response.gameId} })
   }

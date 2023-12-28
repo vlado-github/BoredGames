@@ -29,6 +29,24 @@ class ApiService {
         }
     }
 
+    async joinGame(request) {
+        try {
+            const response = await this.api.put("game/join", request);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    async getGameState(gameId) {
+        try {
+            const response = await this.api.get(`game/${gameId}/state`);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
     handleError(error) {
         console.error('API Request Error:', error);
         throw error;
