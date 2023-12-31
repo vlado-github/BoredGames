@@ -3,6 +3,7 @@ import GameTitleTile from './GameTitleTile.vue'
 import apiService from '../api/api';
 
 export default {
+  name: 'gameGallery',
   components: {
     GameTitleTile
   },

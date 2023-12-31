@@ -2,38 +2,53 @@
 import * as PIXI from 'pixi.js';
 import apiService from '@/api/api';
 import GameStatusEnum from '@/consts/gameStatusEnum';
+import LocalStorageKeys from '@/consts/localStorageKeys';
 
 import backsideImage from '../assets/backside.png';
 import rockImage from '../assets/rock.png';
 import paperImage from '../assets/paper.png';
 import scissorsImage from '../assets/scissors.png';
 
+const imageWidth = 250;
+const imageHeight = 250
+
 export default {
+  name: 'cardTable',
+
   data() {
     return {
       gameId: '',
-      gameStatus: 0
+      gameStatus: 0,
+      screenWidth: 800,
+      screenHeight: 600
     }
   },
-  beforeUnmount() {
-    clearInterval(this.refreshInterval);
+  watch: {
+    gameStatus: async function (currentValue) {
+      if (currentValue === GameStatusEnum.InPlay)
+      {
+        this.setOpponentHand();
+      } else if (currentValue === GameStatusEnum.Finished) {
+        await this.displayScore();
+      }
+    }
   },
-  async mounted() {
+  async beforeMount() {
     // Join game if not already joined
-    let gameId = localStorage.getItem('gameId');
-    if (!gameId) {
-      const response = await joinGame();
-      gameId = response.gameId; 
-    }
-    localStorage.setItem('gameId', gameId);
-    this.gameId = gameId;
-    await this.updateGameStatus();
+    await this.joinGame();
 
     // Check game state periodically
     this.refreshInterval = setInterval(async () => {
       await this.updateGameStatus();
     }, 1000);
-
+  },
+  beforeUnmount() {
+    clearInterval(this.refreshInterval);
+  },
+  beforeDestroy() {
+    this.app.destroy();
+  },
+  async mounted() {
     // Create PIXI application
     this.app = new PIXI.Application({
       resolution: window.devicePixelRatio || 1,
@@ -44,27 +59,96 @@ export default {
     });
 
     this.container = new PIXI.Container();
-
     this.app.stage.addChild(this.container);
 
-    const imageWidth = 250;
-    const imageHeight = 250
-    const w = this.app.screen.width/3;
-    const h = this.app.screen.height/3;
-    const screenWidth = this.app.screen.width;
-    const screenHeight = this.app.screen.height;
+    this.screenWidth = this.app.screen.width;
+    this.screenHeight = this.app.screen.height;
 
     if (this.gameStatus === GameStatusEnum.AwaitingPlayers) {
-      const awaitingPlayerMessage = new PIXI.Text('Awaiting player', {
-        fontFamily: 'Arial',
-        fontSize: 36,
-        fill: 0xffffff,
-        x: screenWidth - 2*w - imageWidth,
-        y: screenHeight - 2*h - imageHeight
-      });
-      this.container.addChild(awaitingPlayerMessage);
+      this.displayAwaitingMessage();
     }
-    else if (this.gameStatus === GameStatusEnum.InPlay) {
+
+    this.setPlayerHand();
+  },
+  methods: {
+    async joinGame() {
+      let gameId = localStorage.getItem(LocalStorageKeys.GameId);
+      let routeParam = this.$route.params.gameInstanceId;
+
+      if (!gameId || gameId != routeParam) {
+        const response = await apiService.joinGame({
+          gameId: routeParam,
+          playerNickName: "player02"
+        });
+        gameId = response.gameId; 
+      }
+      localStorage.setItem(LocalStorageKeys.GameId, gameId);
+      this.gameId = gameId;
+      await this.updateGameStatus();
+    },
+
+    async updateGameStatus() {
+      const response = await apiService.getGameState(this.gameId);
+      this.gameStatus = response.gameStatus;
+    },
+
+    async makeMove(move) {
+      return await apiService.makeMove({
+        gameId: this.gameId, 
+        actionType: move 
+      });
+    },
+
+    async getWinner() {
+      return await apiService.getGameWinner(this.gameId);
+    },
+
+    async getScore() {
+      return await apiService.getGameScore(this.gameId);
+    },
+
+    setPlayerHand() {
+      const w = this.screenWidth/3;
+      const screenWidth = this.screenWidth;
+      const screenHeight = this.screenHeight;
+
+      this.rock = PIXI.Sprite.from(rockImage);
+      this.rock.width = imageWidth;
+      this.rock.height = imageHeight;
+      this.rock.x = screenWidth - 2*w - imageWidth;
+      this.rock.y = screenHeight - imageHeight;
+      this.container.addChild(this.rock);
+      this.rock.eventMode = 'static';
+      this.rock.cursor = 'pointer';
+      this.rock.on('pointerdown', this.rockClick);
+
+      this.paper = PIXI.Sprite.from(paperImage);
+      this.paper.width = imageWidth;
+      this.paper.height = imageHeight;
+      this.paper.x = screenWidth - w - imageWidth;
+      this.paper.y = screenHeight - imageHeight;
+      this.container.addChild(this.paper);
+      this.paper.eventMode = 'static';
+      this.paper.cursor = 'pointer';
+      this.paper.on('pointerdown', this.paperClick);
+
+      this.scissors = PIXI.Sprite.from(scissorsImage);
+      this.scissors.width = imageWidth;
+      this.scissors.height = imageHeight;
+      this.scissors.x = this.screenWidth - imageWidth;
+      this.scissors.y = this.screenHeight - imageHeight;
+      this.container.addChild(this.scissors);
+      this.scissors.eventMode = 'static';
+      this.scissors.cursor = 'pointer';
+      this.scissors.on('pointerdown', this.scissorsClick);
+    },
+
+    setOpponentHand() {
+      const w = this.screenWidth/3;
+      const h = this.screenHeight/3;
+      const screenWidth = this.screenWidth;
+      const screenHeight = this.screenHeight;
+
       this.foldedCard01 = PIXI.Sprite.from(backsideImage);
       this.foldedCard01.x = screenWidth - 2*w - imageWidth;
       this.foldedCard01.y = screenHeight - 2*h - imageHeight;
@@ -79,77 +163,57 @@ export default {
       this.foldedCard03.x = screenWidth - imageWidth;
       this.foldedCard03.y = screenHeight - 2*h - imageHeight;
       this.container.addChild(this.foldedCard03);
-    }
-    else {
-      const awaitingPlayerMessage = new PIXI.Text('score:', {
+
+      this.container.removeChild(this.awaitingPlayerMessage);
+    },
+
+    displayAwaitingMessage(){
+      const h = this.screenHeight/3;
+
+      this.awaitingPlayerMessage = new PIXI.Text('Awaiting player', {
         fontFamily: 'Arial',
         fontSize: 36,
         fill: 0xffffff,
-        x: screenWidth/2,
-        y: screenHeight/2
+        x: this.screenWidth/2,
+        y: this.screenHeight - 2*h - imageHeight
       });
-      this.container.addChild(awaitingPlayerMessage);
-    }
-
-    this.rock = PIXI.Sprite.from(rockImage);
-    this.rock.x = this.app.screen.width - 2*w - imageWidth;
-    this.rock.y = this.app.screen.height - imageHeight;
-    this.container.addChild(this.rock);
-    this.rock.eventMode = 'static';
-    this.rock.cursor = 'pointer';
-    this.rock.on('pointerdown', this.rockClick);
-
-    this.paper = PIXI.Sprite.from(paperImage);
-    this.paper.x = this.app.screen.width - w - imageWidth;
-    this.paper.y = this.app.screen.height - imageHeight;
-    this.container.addChild(this.paper);
-    this.paper.eventMode = 'static';
-    this.paper.cursor = 'pointer';
-    this.paper.on('pointerdown', this.paperClick);
-
-    this.scissors = PIXI.Sprite.from(scissorsImage);
-    this.scissors.x = this.app.screen.width - imageWidth;
-    this.scissors.y = this.app.screen.height - imageHeight;
-    this.container.addChild(this.scissors);
-    this.scissors.eventMode = 'static';
-    this.scissors.cursor = 'pointer';
-    this.scissors.on('pointerdown', this.scissorsClick);
-  },
-  beforeDestroy() {
-    // Destroy PIXI application when the component is destroyed
-    this.app.destroy();
-  },
-  methods: {
-    async joinGame() {
-      return await apiService.joinGame({
-        gameId: this.$route.params.gameInstanceId,
-        playerNickName: "player02"
-      });
-    },
-    async updateGameStatus() {
-      const response = await apiService.getGameState(this.gameId);
-      this.gameStatus = response.gameStatus;
+      this.container.addChild(this.awaitingPlayerMessage);
     },
 
-    scissorsClick(event)
+    async displayScore(){
+      const response = await apiService.getGameWinner(this.gameId);
+      this.awaitingPlayerMessage = new PIXI.Text(`score: ${response[0].nickName}`, {
+        fontFamily: 'Arial',
+        fontSize: 36,
+        fill: 0xffffff,
+        x: this.screenWidth/2,
+        y: this.screenHeight/2
+      });
+      this.container.addChild(this.awaitingPlayerMessage);
+    },
+
+    async scissorsClick(event)
     {
         this.scissors.x = this.app.screen.width/2;
         this.container.removeChild(this.rock);
         this.container.removeChild(this.paper);
+        await this.makeMove('scissors');
     },
 
-    rockClick(event)
+    async rockClick(event)
     {
         this.rock.x = this.app.screen.width/2;
         this.container.removeChild(this.scissors);
         this.container.removeChild(this.paper);
+        await this.makeMove('rock');
     },
 
-    paperClick(event)
+    async paperClick(event)
     {
         this.paper.x = this.app.screen.width/2;
         this.container.removeChild(this.rock);
         this.container.removeChild(this.scissors);
+        await this.makeMove('paper');
     },
   },
 };

@@ -1,6 +1,7 @@
 <script setup>
   import router from '@/router';
   import apiService from '@/api/api';
+  import LocalStorageKeys from '@/consts/localStorageKeys';
 
   const props = defineProps({
     id: Number,
@@ -18,7 +19,7 @@
       playerNickName: "vlado"
     });
 
-    localStorage.setItem('gameId', response.gameId);
+    localStorage.setItem(LocalStorageKeys.GameId, response.gameId);
     
     router.push({ name: 'play', params: { gameInstanceId: response.gameId} })
   }
