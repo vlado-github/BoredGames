@@ -2,6 +2,7 @@ using BoredGames.Server.API.Extensions;
 using BoredGames.Server.API.Filters;
 using BoredGames.Server.API.Models;
 using BoredGames.Server.Common.Enums;
+using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Entities;
 using BoredGames.Server.Service.Commands;
 using BoredGames.Server.Service.Grains.Base;
@@ -92,6 +93,13 @@ namespace BoredGames.Server.API.Controllers
         {
             var game = _grainFactory.GetGrain<IGameGrain>(gameId);
             return await game.GetState();
+        }
+
+        [HttpGet("{gameId:guid}/config")]
+        public async Task<GameDefinitionViewModel> GetConfig(Guid gameId)
+        {
+            var game = _grainFactory.GetGrain<IGameGrain>(gameId);
+            return await game.GetConfig();
         }
         
         [HttpGet("{gameId:guid}/winners")]

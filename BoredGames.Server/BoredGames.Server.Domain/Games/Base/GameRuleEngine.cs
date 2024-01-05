@@ -14,7 +14,7 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
     {
         _settings = settings;
         _rounds = new Rounds(_settings.NumberOfRounds);
-        _gameScore = new GameScore(_settings.RequiredNumberOfWins);
+        _gameScore = new GameScore(_settings.NumberOfRounds, _settings.RequiredNumberOfWins);
     }
 
     public abstract RoundResult Handle(MoveDto dto);

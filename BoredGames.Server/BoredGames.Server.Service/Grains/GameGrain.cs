@@ -95,6 +95,14 @@ public class GameGrain : Grain, IGameGrain
         return Task.FromResult(result.Adapt<GameScoreViewModel>());
     }
 
+    public Task<GameDefinitionViewModel> GetConfig()
+    {
+        var config = _gameRuleEngine.GetConfiguration();
+        var definition = config.Adapt<GameDefinitionViewModel>();
+        definition.GameId = this.GetPrimaryKey();
+        return Task.FromResult(definition);
+    }
+
     public Task<IList<PlayerViewModel>> GetWinners()
     {
         var result = _gameRuleEngine.GetWinners();

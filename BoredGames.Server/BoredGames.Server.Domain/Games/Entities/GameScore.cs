@@ -6,12 +6,14 @@ public class GameScore
     public int CurrentRoundNumber { get; private set; }
 
     public readonly int RequiredNumberOfWins;
+    public readonly int NumberOfRounds;
 
-    public GameScore(int requiredNumberOfWins)
+    public GameScore(int numberOfRounds, int requiredNumberOfWins)
     {
         PlayerStatistics = new List<PlayerStatistic>();
         CurrentRoundNumber = 1;
         RequiredNumberOfWins = requiredNumberOfWins;
+        NumberOfRounds = numberOfRounds;
     }
 
     public void AddWin(Player player, int roundNumber, string actionType)

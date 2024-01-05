@@ -12,5 +12,7 @@ public class GameDefinitionViewModel
     [Id(2)]
     public int RequiredNumberOfWins { get; set; } 
     [Id(3)]
-    public string? Description { get; set; } 
+    public int NumberOfRounds { get; set; } 
+    [Id(4)]
+    public string? Description { get; set; }
 }
