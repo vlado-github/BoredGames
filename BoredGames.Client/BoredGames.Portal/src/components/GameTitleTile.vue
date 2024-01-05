@@ -21,14 +21,18 @@
 
     localStorage.setItem(LocalStorageKeys.GameId, response.gameId);
     
-    router.push({ name: 'play', params: { gameInstanceId: response.gameId} })
+    router.push({ name: 'game', params: { gameInstanceId: response.gameId} })
   }
 </script>
 
 <template>
-  <div>
-    <img @click="startGame" v-bind:src="iconUrl" v-bind:id="id" width="50" height="50"/> 
-    <span>{{ title }}</span>
+  <div class="col-md-4">
+    <div style="cursor: pointer">
+        <img @click="startGame" v-bind:id="id" width="200" height="250" v-bind:src="iconUrl" v-bind:alt="title"/>
+    </div>
+    <div>
+      <span>{{ title }}</span>
+    </div>
   </div>
 </template>
 

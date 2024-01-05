@@ -25,11 +25,17 @@ export default {
 </script>
 
 <template>
-  <GameTitleTile
-    v-for="title in titles"
-    :id="title.id"
-    :title="title.name"
-    :iconUrl="title.thumbnailImageUrl"
-  />
+  <div class="container mt-5">
+    <h2>Bored Games</h2>
+    
+    <div class="row">
+      <GameTitleTile
+        v-for="title in titles"
+        :id="title.id"
+        :title="title.name"
+        :iconUrl="title.thumbnailImageUrl"
+      />
+    </div>
+  </div>
 
 </template>
