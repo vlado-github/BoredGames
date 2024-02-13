@@ -3,7 +3,9 @@ import * as PIXI from 'pixi.js';
 import apiService from '@/api/api';
 import GameStatusEnum from '@/consts/gameStatusEnum';
 import LocalStorageKeys from '@/consts/localStorageKeys';
-import { Table, MessageBox } from '@/games/rockpaperscissors'
+import { Table, MessageBox, Hand } from '@/games/rockpaperscissors';
+
+const spritesheet = await PIXI.Assets.load(`${import.meta.env.VITE_BASE_URL}/assets/spritesheet.json`);
 
 export default {
   name: 'gameScreen',
@@ -18,41 +20,6 @@ export default {
     }
   },
 
-  watch: {
-    gameStatus: async function (currentValue) {
-      if (currentValue !== GameStatusEnum.AwaitingPlayers) {
-        const awaitingMessage = this.app.stage.children.find(x => x.name === 'awaitingMessage');
-        if (awaitingMessage){
-          awaitingMessage.visible = false;
-        }
-      }
-      if (currentValue === GameStatusEnum.Finished) {
-        const response = await apiService.getGameWinner(this.gameId);
-        const gameOverMessage = this.app.stage.children.find(x => x.name === 'gameOverMessage');
-        if (gameOverMessage){
-          gameOverMessage.visible = true;
-          if (response[0].id == localStorage.getItem(LocalStorageKeys.PlayerId)){
-            gameOverMessage.text = 'Victory!';
-          }
-          else {
-            gameOverMessage.text = 'Defeat';
-          }
-          
-        }
-      }
-    }
-  },
-
-  async beforeMount() {
-    // Join game if not already joined
-    await this.joinGame();
-
-    // Check game state periodically
-    this.refreshInterval = setInterval(async () => {
-      await this.updateGameStatus();
-    }, 500);
-  },
-
   beforeUnmount() {
     clearInterval(this.refreshInterval);
   },
@@ -61,7 +28,10 @@ export default {
     this.app.destroy();
   },
 
-  async mounted() {
+  async mounted() {  
+    // Join game if not already joined
+    await this.joinGame();
+
     // Create PIXI application
     this.app = new PIXI.Application({
       resolution: window.devicePixelRatio || 1,
@@ -74,13 +44,14 @@ export default {
     const gameSettings = {
       gameId: this.gameId,
       cardsPerHand: 3,
-      screenWidth: this.app.screen.width,
-      screenHeight: this.app.screen.height
+      cardDeck: ['rock', 'paper', 'scissors']
     };
 
     const displaySettings = {
       screenWidth: this.app.screen.width,
       screenHeight: this.app.screen.height,
+      cardWidth: 250,
+      cardHeight: 250,
       font: 'Arial',
       messageFillColor: '0xffffff',
     }
@@ -94,29 +65,86 @@ export default {
     gameOverMessage.visible = false;
     this.app.stage.addChild(gameOverMessage);
 
+    // Setup card table
     const table = new Table();
-    table.setup(gameSettings);
-
+    const opponentHand = new Hand(gameSettings, displaySettings, true);
+    const playerHand = new Hand(gameSettings, displaySettings, false);
+    table.addChild(opponentHand);
+    table.addChild(playerHand);
     this.app.stage.addChild(table);
+
+    // Check game state periodically
+    // todo: use SSE
+    this.refreshInterval = setInterval(async () => {
+      await this.updateGameStatus();
+      if (this.gameStatus !== GameStatusEnum.AwaitingPlayers) {
+          const awaitingMessage = this.app.stage.children.find(x => x.name === 'awaitingMessage');
+          if (awaitingMessage){
+            awaitingMessage.visible = false;
+          }
+      }
+      if (this.gameStatus === GameStatusEnum.Finished) {
+        const winnerResponse = await apiService.getGameWinner(this.gameId);
+        const scoreResponse = await apiService.getGameScore(this.gameId);
+        const gameOverMessage = this.app.stage.children.find(x => x.name === 'gameOverMessage');
+        if (gameOverMessage){
+          gameOverMessage.visible = true;
+          const playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
+          
+          if (winnerResponse[0].id == playerId){
+            gameOverMessage.text = 'Victory!';
+            const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
+            if (opponentScore){
+              const opponentMove = opponentScore.roundLosses[0].playerMove;
+              opponentHand.children.forEach(card => {
+                if (card.cardType == opponentMove){
+                  card.texture = spritesheet.textures[`${opponentMove}.png`];
+                  card.x = this.screenWidth / 2;
+                  card.visible = true;
+                }else{
+                  card.visible = false;
+                }
+              });
+            }
+          }
+          else {
+            gameOverMessage.text = 'Defeat';            
+            const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
+            if (opponentScore){
+              const opponentMove = opponentScore.roundWins[0].playerMove; 
+              opponentHand.children.forEach(card => {
+                if (card.cardType == opponentMove){
+                  card.texture = spritesheet.textures[`${opponentMove}.png`];
+                  card.x = this.screenWidth / 2;
+                  card.visible = true;
+                }else{
+                  card.visible = false;
+                }
+              });
+            }
+          }
+        }
+      }
+    }, 500);
   },
 
   methods: {
     async joinGame() {
       let gameId = localStorage.getItem(LocalStorageKeys.GameId);
-      let routeParam = this.$route.params.gameInstanceId;
-      const request = {
-          gameId: routeParam,
-          playerNickName: "Robert"
-      };
+      const routeParam = this.$route.params.gameInstanceId;
+      const playerNickName = 'Jean-Luc Picard';
 
       if (!gameId || gameId != routeParam) {
-        const response = await apiService.joinGame(request);
+        const response = await apiService.joinGame({
+          gameId: routeParam,
+          playerNickName: playerNickName
+        });
         gameId = response.gameId; 
       }
       localStorage.setItem(LocalStorageKeys.GameId, gameId);
-      localStorage.setItem(LocalStorageKeys.PlayerNickName, request.playerNickName);
+      localStorage.setItem(LocalStorageKeys.PlayerNickName, playerNickName);
       this.gameId = gameId;
-      this.playerNickName = request.playerNickName;
+      this.playerNickName = playerNickName;
 
       await this.updateGameStatus();
     },
@@ -124,7 +152,6 @@ export default {
     async updateGameStatus() {
       const response = await apiService.getGameState(this.gameId);
       this.gameStatus = response.gameStatus;
-      console.log('>>>'+response.gameStatus)
     },
 
     async getWinner() {

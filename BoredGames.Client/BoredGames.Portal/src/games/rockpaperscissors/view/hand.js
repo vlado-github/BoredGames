@@ -1,22 +1,22 @@
 import * as PIXI from 'pixi.js';
 import { Card } from './card';
 
-const imageWidth = 250;
-const imageHeight = 250;
+
 
 export class Hand extends PIXI.Container{
-    constructor(gameSettings, isOpponentHand) {
+    constructor(gameSettings, displaySettings, isOpponentHand) {
         super();
 
         this.isOpponentHand = isOpponentHand;
         this.gameSettings = gameSettings;
-        this.handCards = ['rock', 'paper', 'scissors'];
+        this.displaySettings = displaySettings;
+        this.handCards = gameSettings.cardDeck;
         this.#setup()
     }
 
     #setup() {
-        const w = this.gameSettings.screenWidth/3;
-        const h = this.gameSettings.screenHeight/3;
+        const w = this.displaySettings.screenWidth/3;
+        const h = this.displaySettings.screenHeight/3;
 
         if (this.isOpponentHand) {
             for (let i=0; i<this.handCards.length; i++) {
@@ -25,12 +25,12 @@ export class Hand extends PIXI.Container{
                     this.handCards[i],
                     this.isOpponentHand);
                 card.setPosition(
-                    this.gameSettings.screenWidth - 2*w + i*w - imageWidth,
-                    this.gameSettings.screenHeight - 2*h - imageHeight);
+                    this.displaySettings.screenWidth - 2*w + i*w - this.displaySettings.cardWidth,
+                    this.displaySettings.screenHeight - 2*h - this.displaySettings.cardHeight);
                 card.setScale(
-                    imageWidth,
-                    imageHeight,
-                    this.gameSettings.screenWidth);
+                    this.displaySettings.cardWidth,
+                    this.displaySettings.cardHeight,
+                    this.displaySettings.screenWidth);
                 this.addChild(card);
             }
         }
@@ -41,12 +41,12 @@ export class Hand extends PIXI.Container{
                     this.handCards[i],
                     this.isOpponentHand);
                 card.setPosition(
-                    this.gameSettings.screenWidth - 2*w + i*w - imageWidth,
-                    this.gameSettings.screenHeight - imageHeight);
+                    this.displaySettings.screenWidth - 2*w + i*w - this.displaySettings.cardWidth,
+                    this.displaySettings.screenHeight - this.displaySettings.cardHeight);
                 card.setScale(
-                    imageWidth,
-                    imageHeight,
-                    this.gameSettings.screenWidth);
+                    this.displaySettings.cardWidth,
+                    this.displaySettings.cardHeight,
+                    this.displaySettings.screenWidth);
                 this.addChild(card);
             }
         }
