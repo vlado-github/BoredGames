@@ -15,8 +15,8 @@ export class Hand extends PIXI.Container{
     }
 
     #setup() {
-        const w = this.displaySettings.screenWidth/3;
-        const h = this.displaySettings.screenHeight/3;
+        const widthMargin = this.displaySettings.cardWidth/3;
+        const heightMargin = this.displaySettings.cardHeight/5;
 
         if (this.isOpponentHand) {
             for (let i=0; i<this.handCards.length; i++) {
@@ -25,8 +25,8 @@ export class Hand extends PIXI.Container{
                     this.handCards[i],
                     this.isOpponentHand);
                 card.setPosition(
-                    this.displaySettings.screenWidth - 2*w + i*w - this.displaySettings.cardWidth,
-                    this.displaySettings.screenHeight - 2*h - this.displaySettings.cardHeight);
+                    i*(this.displaySettings.cardWidth+2*widthMargin) + widthMargin,
+                    heightMargin);
                 card.setScale(
                     this.displaySettings.cardWidth,
                     this.displaySettings.cardHeight,
@@ -41,8 +41,8 @@ export class Hand extends PIXI.Container{
                     this.handCards[i],
                     this.isOpponentHand);
                 card.setPosition(
-                    this.displaySettings.screenWidth - 2*w + i*w - this.displaySettings.cardWidth,
-                    this.displaySettings.screenHeight - this.displaySettings.cardHeight);
+                    i*(this.displaySettings.cardWidth+2*widthMargin) + widthMargin,
+                    this.displaySettings.screenHeight - this.displaySettings.cardHeight - heightMargin);
                 card.setScale(
                     this.displaySettings.cardWidth,
                     this.displaySettings.cardHeight,

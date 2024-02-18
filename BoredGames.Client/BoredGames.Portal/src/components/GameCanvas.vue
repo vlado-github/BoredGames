@@ -14,9 +14,7 @@ export default {
     return {
       gameId: '',
       playerNickName: '',
-      gameStatus: 0,
-      screenWidth: 800,
-      screenHeight: 600
+      gameStatus: 0
     }
   },
 
@@ -47,11 +45,13 @@ export default {
       cardDeck: ['rock', 'paper', 'scissors']
     };
 
+    const screenRation = this.app.screen.width/this.app.screen.height;
+
     const displaySettings = {
       screenWidth: this.app.screen.width,
       screenHeight: this.app.screen.height,
-      cardWidth: 250,
-      cardHeight: 250,
+      cardWidth: screenRation * 150,
+      cardHeight: screenRation * 150,
       font: 'Arial',
       messageFillColor: '0xffffff',
     }
@@ -84,48 +84,52 @@ export default {
           }
       }
       if (this.gameStatus === GameStatusEnum.Finished) {
-        const winnerResponse = await apiService.getGameWinner(this.gameId);
-        const scoreResponse = await apiService.getGameScore(this.gameId);
-        const gameOverMessage = this.app.stage.children.find(x => x.name === 'gameOverMessage');
-        if (gameOverMessage){
-          gameOverMessage.visible = true;
-          const playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
-          
-          if (winnerResponse[0].id == playerId){
-            gameOverMessage.text = 'Victory!';
-            const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
-            if (opponentScore){
-              const opponentMove = opponentScore.roundLosses[0].playerMove;
-              opponentHand.children.forEach(card => {
-                if (card.cardType == opponentMove){
-                  card.texture = spritesheet.textures[`${opponentMove}.png`];
-                  card.x = this.screenWidth / 2;
-                  card.visible = true;
-                }else{
-                  card.visible = false;
-                }
-              });
-            }
+        await handleGameOver(this.app, this.gameId);
+      }
+    }, 500);
+
+    async function handleGameOver(app, gameId) {
+      const winnerResponse = await apiService.getGameWinner(gameId);
+      const scoreResponse = await apiService.getGameScore(gameId);
+      const gameOverMessage = app.stage.children.find(x => x.name === 'gameOverMessage');
+      if (gameOverMessage) {
+        gameOverMessage.visible = true;
+        const playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
+
+        if (winnerResponse[0].id == playerId) {
+          gameOverMessage.text = 'Victory!';
+          const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
+          if (opponentScore) {
+            const opponentMove = opponentScore.roundLosses[0].playerMove;
+            opponentHand.children.forEach(card => {
+              if (card.cardType == opponentMove) {
+                card.texture = spritesheet.textures[`${opponentMove}.png`];
+                card.x = app.screen.width / 2;
+                card.visible = true;
+              } else {
+                card.visible = false;
+              }
+            });
           }
-          else {
-            gameOverMessage.text = 'Defeat';            
-            const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
-            if (opponentScore){
-              const opponentMove = opponentScore.roundWins[0].playerMove; 
-              opponentHand.children.forEach(card => {
-                if (card.cardType == opponentMove){
-                  card.texture = spritesheet.textures[`${opponentMove}.png`];
-                  card.x = this.screenWidth / 2;
-                  card.visible = true;
-                }else{
-                  card.visible = false;
-                }
-              });
-            }
+        }
+        else {
+          gameOverMessage.text = 'Defeat';
+          const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
+          if (opponentScore) {
+            const opponentMove = opponentScore.roundWins[0].playerMove;
+            opponentHand.children.forEach(card => {
+              if (card.cardType == opponentMove) {
+                card.texture = spritesheet.textures[`${opponentMove}.png`];
+                card.x = app.screen.width / 2;
+                card.visible = true;
+              } else {
+                card.visible = false;
+              }
+            });
           }
         }
       }
-    }, 500);
+    }
   },
 
   methods: {
