@@ -19,7 +19,7 @@ export class Hand extends PIXI.Container{
         const heightMargin = this.displaySettings.cardHeight/5;
 
         this.height = this.displaySettings.cardHeight;
-        this.width = 6*widthMargin+this.handCards.length*this.displaySettings.cardWidth;
+        this.width = this.displaySettings.screenWidth;//6*widthMargin+this.handCards.length*this.displaySettings.cardWidth;
 
         if (this.isOpponentHand) {
             this.x = widthMargin;

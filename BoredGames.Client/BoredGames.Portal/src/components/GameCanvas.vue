@@ -102,11 +102,12 @@ export default {
           const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
           if (opponentScore) {
             const opponentMove = opponentScore.roundLosses[0].playerMove;
+            const handMiddlePosition = opponentHand.width/2;
             opponentHand.children.forEach(card => {
               if (card.cardType == opponentMove) {
-                console.log("opponenthand width: "+card.parent.width);
+                card.isSelected = true;
                 card.texture = spritesheet.textures[`${opponentMove}.png`];
-                card.x = card.parent.width / 2;
+                card.x = handMiddlePosition;
                 card.anchor.x = 0.5;
                 card.visible = true;
               } else {
@@ -120,11 +121,12 @@ export default {
           const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
           if (opponentScore) {
             const opponentMove = opponentScore.roundWins[0].playerMove;
+            const handMiddlePosition = opponentHand.width/2;
             opponentHand.children.forEach(card => {
               if (card.cardType == opponentMove) {
-                console.log("opponenthand width: "+card.parent.width);
+                card.isSelected = true;
                 card.texture = spritesheet.textures[`${opponentMove}.png`];
-                card.x = card.parent.width / 2;
+                card.x = handMiddlePosition;
                 card.anchor.x = 0.5;
                 card.visible = true;
               } else {
