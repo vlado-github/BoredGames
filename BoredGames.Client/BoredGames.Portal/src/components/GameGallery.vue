@@ -25,8 +25,8 @@ export default {
 </script>
 
 <template>
-  <div class="container mt-5">
-    <h2>Bored Games</h2>
+  <div class="container mt-5 gallery">
+    <h2 class="header">Bored Games</h2>
     
     <div class="row">
       <GameTitleTile
@@ -39,3 +39,13 @@ export default {
   </div>
 
 </template>
+
+<style>
+  .header {
+    color: whitesmoke;
+    text-align: center;
+  }
+  .gallery {
+    background-color: #1b2939;
+  }
+</style>

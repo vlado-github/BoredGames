@@ -34,7 +34,7 @@ namespace BoredGames.Server.API.Controllers
                 {
                     Id = (int) title,
                     Name = title.ToString(),
-                    ThumbnailImageUrl = "https://i.ibb.co/9n2tfBr/2023-12-19-0us-Kleki.png"
+                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png"
                 });
             }
 

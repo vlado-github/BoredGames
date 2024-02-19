@@ -16,12 +16,11 @@ export class Card extends PIXI.Sprite{
         this.cardType = cardType;
         this.isSelected = false;
 
-        this.eventMode = 'static';
-        this.cursor = 'pointer';
-        this.on('pointerdown', this.#onClick);
-
         if (!isFolded) {
             this.alpha=initalAlpha;
+            this.eventMode = 'static';
+            this.cursor = 'pointer';
+            this.on('pointerdown', this.#onClick);
             this.on('pointerover', this.#onHoverIn);
             this.on('pointerout', this.#onHoverOut);
         }

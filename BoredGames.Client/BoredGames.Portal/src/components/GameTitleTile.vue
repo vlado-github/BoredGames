@@ -27,14 +27,23 @@
 
 <template>
   <div class="col-md-4">
-    <div style="cursor: pointer">
-        <img @click="startGame" v-bind:id="id" width="200" height="250" v-bind:src="iconUrl" v-bind:alt="title"/>
-    </div>
-    <div>
-      <span>{{ title }}</span>
+    <div class="title">
+        <img @click="startGame" v-bind:id="id" width="250" height="250" v-bind:src="iconUrl" v-bind:alt="title"/>
+        <span class="caption">{{ title }}</span>
     </div>
   </div>
 </template>
 
 <style scoped>
+  .title {
+    cursor: pointer;
+    text-align: center;
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+  }
+  .caption {
+    display: block;
+    color: whitesmoke;
+}
 </style>
