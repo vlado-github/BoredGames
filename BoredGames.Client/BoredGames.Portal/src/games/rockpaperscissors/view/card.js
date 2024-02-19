@@ -31,7 +31,8 @@ export class Card extends PIXI.Sprite{
     }
 
     async #onClick(event) {
-        this.x = this.screenWidth/2;
+        this.x = this.parent.width/2;
+        this.anchor.x = 0.5;
         const unselectedCards = this.parent.children.filter(x => x.cardType != this.cardType);
         unselectedCards.forEach(card => {
             card.visible = false;

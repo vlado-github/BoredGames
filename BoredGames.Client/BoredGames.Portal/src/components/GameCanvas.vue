@@ -85,6 +85,7 @@ export default {
       }
       if (this.gameStatus === GameStatusEnum.Finished) {
         await handleGameOver(this.app, this.gameId);
+        clearInterval(this.refreshInterval);
       }
     }, 500);
 
@@ -103,8 +104,10 @@ export default {
             const opponentMove = opponentScore.roundLosses[0].playerMove;
             opponentHand.children.forEach(card => {
               if (card.cardType == opponentMove) {
+                console.log("opponenthand width: "+card.parent.width);
                 card.texture = spritesheet.textures[`${opponentMove}.png`];
-                card.x = app.screen.width / 2;
+                card.x = card.parent.width / 2;
+                card.anchor.x = 0.5;
                 card.visible = true;
               } else {
                 card.visible = false;
@@ -119,8 +122,10 @@ export default {
             const opponentMove = opponentScore.roundWins[0].playerMove;
             opponentHand.children.forEach(card => {
               if (card.cardType == opponentMove) {
+                console.log("opponenthand width: "+card.parent.width);
                 card.texture = spritesheet.textures[`${opponentMove}.png`];
-                card.x = app.screen.width / 2;
+                card.x = card.parent.width / 2;
+                card.anchor.x = 0.5;
                 card.visible = true;
               } else {
                 card.visible = false;

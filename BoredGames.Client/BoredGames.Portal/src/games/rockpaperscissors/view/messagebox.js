@@ -12,6 +12,7 @@ export class MessageBox extends PIXI.Text {
     setup(displaySettings){
         this.x = displaySettings.screenWidth/2;
         this.y = displaySettings.screenHeight/2;
+        this.anchor.set(0.5);
         this.font = displaySettings.font;
         this.style.fill = displaySettings.messageFillColor;
     }
