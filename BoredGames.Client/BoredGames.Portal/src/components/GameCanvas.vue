@@ -4,6 +4,7 @@ import apiService from '@/api/api';
 import GameStatusEnum from '@/consts/gameStatusEnum';
 import LocalStorageKeys from '@/consts/localStorageKeys';
 import { Table, MessageBox, Hand } from '@/games/rockpaperscissors';
+import { DialogBox } from '@/games/rockpaperscissors/view/dialogbox';
 
 const spritesheet = await PIXI.Assets.load(`${import.meta.env.VITE_BASE_URL}/assets/spritesheet.json`);
 
@@ -53,25 +54,31 @@ export default {
       cardWidth: screenRation * 150,
       cardHeight: screenRation * 150,
       font: 'Arial',
-      messageFillColor: '0xffffff',
+      textFillColor: '0xffffff',
     }
 
-    const awaitingMessage = new MessageBox('awaitingMessage', 'Awaiting for player', 36);
-    awaitingMessage.setup(displaySettings);
-    this.app.stage.addChild(awaitingMessage);
 
-    const gameOverMessage = new MessageBox('gameOverMessage', '', 36);
-    gameOverMessage.setup(displaySettings);
-    gameOverMessage.visible = false;
-    this.app.stage.addChild(gameOverMessage);
 
     // Setup card table
     const table = new Table();
+    this.app.stage.addChild(table);
+
     const opponentHand = new Hand(gameSettings, displaySettings, true);
     const playerHand = new Hand(gameSettings, displaySettings, false);
     table.addChild(opponentHand);
     table.addChild(playerHand);
-    this.app.stage.addChild(table);
+
+    
+    const awaitingMessage = new DialogBox('awaitingMessage', 'Awaiting for player', [{text: 'Copy invite link'}]);
+    this.app.stage.addChild(awaitingMessage);
+    awaitingMessage.setup(displaySettings);
+    
+
+    const gameOverMessage = new DialogBox('gameOverMessage', '');
+    this.app.stage.addChild(gameOverMessage);
+    gameOverMessage.setup(displaySettings);
+    gameOverMessage.visible = false;
+
 
     // Check game state periodically
     // todo: use SSE
@@ -92,48 +99,48 @@ export default {
     async function handleGameOver(app, gameId) {
       const winnerResponse = await apiService.getGameWinner(gameId);
       const scoreResponse = await apiService.getGameScore(gameId);
-      const gameOverMessage = app.stage.children.find(x => x.name === 'gameOverMessage');
-      if (gameOverMessage) {
-        gameOverMessage.visible = true;
-        const playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
+      const playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
 
-        if (winnerResponse[0].id == playerId) {
-          gameOverMessage.text = 'Victory!';
-          const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
-          if (opponentScore) {
-            const opponentMove = opponentScore.roundLosses[0].playerMove;
-            const handMiddlePosition = opponentHand.width/2;
-            opponentHand.children.forEach(card => {
-              if (card.cardType == opponentMove) {
-                card.isSelected = true;
-                card.texture = spritesheet.textures[`${opponentMove}.png`];
-                card.x = handMiddlePosition;
-                card.anchor.x = 0.5;
-                card.visible = true;
-              } else {
-                card.visible = false;
-              }
-            });
-          }
+      if (winnerResponse[0].id == playerId) {
+        const gameOverMessage = new DialogBox('gameOverMessage', 'Victory!');
+        app.stage.addChild(gameOverMessage);
+        gameOverMessage.setup(displaySettings);
+        const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
+        if (opponentScore) {
+          const opponentMove = opponentScore.roundLosses[0].playerMove;
+          const handMiddlePosition = opponentHand.width/2;
+          opponentHand.children.forEach(card => {
+            if (card.cardType == opponentMove) {
+              card.isSelected = true;
+              card.texture = spritesheet.textures[`${opponentMove}.png`];
+              card.x = handMiddlePosition;
+              card.anchor.x = 0.5;
+              card.visible = true;
+            } else {
+              card.visible = false;
+            }
+          });
         }
-        else {
-          gameOverMessage.text = 'Defeat';
-          const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
-          if (opponentScore) {
-            const opponentMove = opponentScore.roundWins[0].playerMove;
-            const handMiddlePosition = opponentHand.width/2;
-            opponentHand.children.forEach(card => {
-              if (card.cardType == opponentMove) {
-                card.isSelected = true;
-                card.texture = spritesheet.textures[`${opponentMove}.png`];
-                card.x = handMiddlePosition;
-                card.anchor.x = 0.5;
-                card.visible = true;
-              } else {
-                card.visible = false;
-              }
-            });
-          }
+      }
+      else {
+        const gameOverMessage = new DialogBox('gameOverMessage', 'Defeat');
+        app.stage.addChild(gameOverMessage);
+        gameOverMessage.setup(displaySettings);
+        const opponentScore = scoreResponse.playerScores.find(x => x.playerId != playerId);
+        if (opponentScore) {
+          const opponentMove = opponentScore.roundWins[0].playerMove;
+          const handMiddlePosition = opponentHand.width/2;
+          opponentHand.children.forEach(card => {
+            if (card.cardType == opponentMove) {
+              card.isSelected = true;
+              card.texture = spritesheet.textures[`${opponentMove}.png`];
+              card.x = handMiddlePosition;
+              card.anchor.x = 0.5;
+              card.visible = true;
+            } else {
+              card.visible = false;
+            }
+          });
         }
       }
     }

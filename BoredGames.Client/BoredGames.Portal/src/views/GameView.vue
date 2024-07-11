@@ -1,7 +1,7 @@
 <script setup>
-import GameCanvas from '../components/GameCanvas.vue'
+import CardTable from '../components/CardGame/CardTable.vue'
 </script>
 
 <template>
-  <GameCanvas />
+  <CardTable />
 </template>

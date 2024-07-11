@@ -21,7 +21,7 @@
 
     localStorage.setItem(LocalStorageKeys.GameId, response.gameId);
     
-    router.push({ name: 'game', params: { gameInstanceId: response.gameId} })
+    router.push({ name: 'game', query: { gameInstanceId: response.gameId } })
   }
 </script>
 

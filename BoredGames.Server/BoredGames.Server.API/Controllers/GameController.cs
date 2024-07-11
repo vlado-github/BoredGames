@@ -36,6 +36,12 @@ namespace BoredGames.Server.API.Controllers
                     Name = title.ToString(),
                     ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png"
                 });
+                result.Add(new GameTitleViewModel()
+                {
+                    Id = (int) title,
+                    Name = title.ToString(),
+                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png"
+                });
             }
 
             return result;
