@@ -17,7 +17,7 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: GameView,
-      props: route => ({ query: route.query.gameInstanceId })
+      props: route => ({ gameInstanceId: route.query.gameInstanceId })
     }
   ]
 })

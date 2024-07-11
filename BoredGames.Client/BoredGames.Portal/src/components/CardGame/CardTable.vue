@@ -1,27 +1,54 @@
 <script>
 import PlayerHand from './PlayerHand.vue'
+import apiService from '@/api/api';
 
 export default {
   name: 'cardTable',
   props: {
     gameInstanceId: '',
-    cardDeck: [],
   },
   components: {
     PlayerHand
   },
 
   async mounted() {
-    //const gameAssets = await apiService.getGameAssets(response.gameId);
-    const gameAssets = ["rock","paper","scissors"];
-    this.cardDeck = gameAssets;
+    this.joinGame();
+    this.refreshGameStatus();
   },
 
   data() {
     return {
-        gameInstanceId: '',
-        cardDeck: [],
+      playerJoined: false,
+      gameStatus: 0, //AwaitingPlayers
+      cardDeck: ['rock','paper','scissors']
     };
+  },
+
+  methods: {
+    async joinGame() {
+      if (!this.playerJoined) {
+        apiService.joinGame({
+          gameId: this.gameInstanceId,
+          playerNickName: 'Player'
+        }).then(response => {
+          this.playerJoined = true;
+        }).catch(err => {
+          console.log(err);
+        });
+      }
+    },
+
+    async refreshGameStatus() {
+      setInterval(() => {
+          apiService.getGameState(this.gameInstanceId)
+            .then(response => {
+              this.gameStatus = response.gameStatus;
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        }, 1000);
+    },
   }
 }
 </script>
@@ -29,12 +56,14 @@ export default {
 <template>
   <div class="cardtable">
     <PlayerHand
-        :cards=cardDeck
-        :isAgainstPlayer=true
+        :cards="cardDeck"
+        :player="{ foe: true, joined: this.gameStatus != 0 }"
+        :gameInstanceId="gameInstanceId"
     />
     <PlayerHand
-        :cards=cardDeck
-        :isAgainstPlayer=false
+        :cards="cardDeck"
+        :player="{ foe: false, joined: true}"
+        :gameInstanceId="gameInstanceId"
     />
   </div>
 

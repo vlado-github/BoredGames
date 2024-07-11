@@ -2,6 +2,7 @@ using BoredGames.Server.API.Extensions;
 using BoredGames.Server.API.Filters;
 using BoredGames.Server.API.Models;
 using BoredGames.Server.Common.Enums;
+using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Entities;
 using BoredGames.Server.Service.Commands;
@@ -81,11 +82,17 @@ namespace BoredGames.Server.API.Controllers
         public async Task<GameStateViewModel> MakeMove(MakeMove request)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(request.GameId);
+            var gameState = await game.GetState();
+
+            if (gameState.GameStatus != GameStatus.InPlay)
+            {
+                throw new ActionValidationException($"Can't make move since game status is {gameState.GameStatus}.");
+            }
 
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
             var playerDetails= await player.GetDetails();
-            var gameState = await game.MakeMove(new MakeMoveCommand
+            gameState = await game.MakeMove(new MakeMoveCommand
             {
                 ActionType = request.ActionType,
                 PlayerId = playerId,

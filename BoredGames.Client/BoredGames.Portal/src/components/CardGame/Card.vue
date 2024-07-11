@@ -1,37 +1,23 @@
 <script>
-import apiService from '@/api/api';
 
 export default {
   name: 'card',
   props: {
     cardType: '',
-    selected: false,
-    isAgainstPlayer: false
+    isAgainstPlayer: false,
+    gameInstanceId: ''
   },
 
-
-  // data() {
-  //   return {
-  //     cardType: '',
-  //     selected: false,
-  //     iconUrl: `http://localhost:5173/assets/{{this.cardType}}.png`
-  //   };
-  // },
-
-  // methods: {
-  //   async onClick() {
-  //       this.selected = true;
-  //       await apiService.makeMove(new {
-  //           gameId: '',
-  //           actionType: this.cardType,
-  //       });
-  //   }
-  // }
+  methods: {
+    async onClick() {
+      this.$emit('selectedCard', this.cardType);
+    }
+  }
 }
 </script>
 
 <template>
-  <div v-bind:id="cardType" class="cardbox">
+  <div v-bind:id="cardType" v-bind:isAgainstPlayer="isAgainstPlayer" class="cardbox" @click="onClick">
     <div class='cardframe'>
       <div class='cardcontent'>
           <img  width="100" height="100" 
@@ -49,7 +35,7 @@ export default {
       display: table-cell;
     }
 
-    .cardbox:hover {
+    .cardbox[isAgainstPlayer=false]:hover  {
       cursor: pointer;
     }
 
