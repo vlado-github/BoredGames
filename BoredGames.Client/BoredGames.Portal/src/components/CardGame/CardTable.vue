@@ -18,6 +18,7 @@ export default {
 
   data() {
     return {
+      gameStatusInterval: Number,
       playerJoined: false,
       gameStatus: 0, //AwaitingPlayers
       cardDeck: ['rock','paper','scissors']
@@ -39,10 +40,15 @@ export default {
     },
 
     async refreshGameStatus() {
-      setInterval(() => {
+      this.gameStatusInterval = setInterval(() => {
           apiService.getGameState(this.gameInstanceId)
             .then(response => {
               this.gameStatus = response.gameStatus;
+              console.log(this.gameStatus);
+              if (this.gameStatus == 2) { //Finished
+                alert("game finished");
+                clearInterval(this.gameStatusInterval);
+              }
             })
             .catch(err => {
               console.log(err)

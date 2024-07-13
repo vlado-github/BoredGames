@@ -25,7 +25,7 @@ export default {
     async receiveSelectedCard(selectedCardType) {
       alert(selectedCardType);
 
-      await apiService.makeMove(new {
+      await apiService.makeMove({
           gameId: this.gameInstanceId,
           actionType: selectedCardType,
       });
