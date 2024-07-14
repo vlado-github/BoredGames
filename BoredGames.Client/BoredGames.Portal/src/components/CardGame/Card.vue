@@ -10,7 +10,7 @@ export default {
 
   methods: {
     async onClick() {
-      this.$emit('selectedCard', this.cardType);
+      this.$emit('cardSelected', this.cardType);
     }
   }
 }

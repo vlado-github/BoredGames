@@ -1,5 +1,6 @@
 <script>
 import PlayerHand from './PlayerHand.vue'
+import GameEndDialog from './GameEndDialog.vue'
 import apiService from '@/api/api';
 
 export default {
@@ -8,10 +9,12 @@ export default {
     gameInstanceId: '',
   },
   components: {
-    PlayerHand
+    PlayerHand,
+    GameEndDialog
   },
 
   async mounted() {
+    this.cardDeck = ['rock','paper','scissors'];
     this.joinGame();
     this.refreshGameStatus();
   },
@@ -21,13 +24,14 @@ export default {
       gameStatusInterval: Number,
       playerJoined: false,
       gameStatus: 0, //AwaitingPlayers
-      cardDeck: ['rock','paper','scissors']
+      cardDeck: Array
     };
   },
 
   methods: {
     async joinGame() {
       if (!this.playerJoined) {
+        console.log(this.gameInstanceId);
         apiService.joinGame({
           gameId: this.gameInstanceId,
           playerNickName: 'Player'
@@ -42,12 +46,13 @@ export default {
     async refreshGameStatus() {
       this.gameStatusInterval = setInterval(() => {
           apiService.getGameState(this.gameInstanceId)
-            .then(response => {
+            .then(async (response) => {
               this.gameStatus = response.gameStatus;
               console.log(this.gameStatus);
               if (this.gameStatus == 2) { //Finished
-                alert("game finished");
+                console.log("game finished");
                 clearInterval(this.gameStatusInterval);
+                await this.$refs.gameEndDialog.show();
               }
             })
             .catch(err => {
@@ -71,8 +76,10 @@ export default {
         :player="{ foe: false, joined: true}"
         :gameInstanceId="gameInstanceId"
     />
+    <GameEndDialog ref="gameEndDialog"
+        :gameInstanceId="gameInstanceId"
+    />
   </div>
-
 </template>
 
 <style>

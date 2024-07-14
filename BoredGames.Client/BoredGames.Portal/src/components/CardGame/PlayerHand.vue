@@ -5,7 +5,7 @@ import apiService from '@/api/api';
 export default {
   name: 'playerHand',
   props: {
-    cards: [],
+    cards: Array,
     player: {
       foe: false,
       joined: false
@@ -17,17 +17,11 @@ export default {
     Card
   },
 
-  mounted() {
-    console.log(this.cards)
-  },
-
   methods: {
-    async receiveSelectedCard(selectedCardType) {
-      alert(selectedCardType);
-
+    async receiveSelectedCard(cardSelected) {
       await apiService.makeMove({
           gameId: this.gameInstanceId,
-          actionType: selectedCardType,
+          actionType: cardSelected,
       });
     }
   }
@@ -35,7 +29,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="player.joined === false">
+  <div v-if="player.joined === false" class='playerhand-against'>
     <label>Waiting for player to join</label>
   </div>
   <div v-else :class="player.foe ? 'playerhand-against' : 'playerhand-me'">
@@ -44,7 +38,7 @@ export default {
       :cardType="card"
       :isAgainstPlayer="player.foe"
       :gameInstanceId="gameInstanceId"
-      @selectedCard="receiveSelectedCard"
+      @cardSelected="receiveSelectedCard"
     />
   </div>
 </template>
