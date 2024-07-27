@@ -5,7 +5,30 @@ export default {
   props: {
     cardType: '',
     isAgainstPlayer: false,
-    gameInstanceId: ''
+    gameInstanceId: '',
+    isRoundCompleted: false,
+    isSelected: false
+  },
+  watch: { 
+    isRoundCompleted: function(newValue, oldValue) { // watch it
+      console.log('Prop changed: ', newValue, ' | was: ', oldValue);
+      if (newValue && this.isSelected) {
+        this.render = true;
+        this.showType = true;
+      }
+      else{
+        this.render = false;
+        this.showType = false;
+      }
+    }
+  },
+
+
+  data() {
+    return {
+      render: true,
+      showType: !this.isAgainstPlayer
+    }
   },
 
   methods: {
@@ -17,11 +40,11 @@ export default {
 </script>
 
 <template>
-  <div v-bind:id="cardType" v-bind:isAgainstPlayer="isAgainstPlayer" class="cardbox" @click="onClick">
+  <div v-if="render" v-bind:id="cardType" v-bind:isAgainstPlayer="isAgainstPlayer" class="cardbox" @click="onClick">
     <div class='cardframe'>
       <div class='cardcontent'>
           <img  width="100" height="100" 
-            v-if="isAgainstPlayer === false"
+            v-if="showType === true"
             v-bind:src="`/assets/${cardType}.png`" 
             v-bind:alt="cardType"/>
       </div>

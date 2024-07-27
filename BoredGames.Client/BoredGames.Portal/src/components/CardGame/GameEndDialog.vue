@@ -1,5 +1,6 @@
 <script>
 import apiService from '@/api/api';
+import LocalStorageKeys from '@/consts/localStorageKeys';
 
 export default {
   name: 'gameEndDialog',
@@ -12,15 +13,32 @@ export default {
     return {     
         winners: [],
         showModal: false,
+        gameScore: {},
+        isCurrentUserWinner: false
     }
   },
 
   methods: {
     async show() {
-        console.log('show dialog')
         this.showModal = true;
         this.winners = await apiService.getGameWinner(this.gameInstanceId);
-        console.log('show dialog' + this.showModal + ' [] ' +JSON.stringify(this.winners))
+       
+        const playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
+        this.isCurrentUserWinner = this.winners.some(x => x.id == playerId);
+        console.log('show dialog' + this.showModal + ' [] ' +JSON.stringify(this.winners)+' '+JSON.stringify(this.gameScore));
+    },
+
+    quit(event) {
+      console.log('>>> quit')
+      this.showModal = false;
+      this.$router.push({ name: 'home' })
+    },
+
+    playAgain(event) {
+      console.log('>>> playAgain')
+      this.showModal = false;
+      //todo: restart game on server
+      router.push({ name: 'game', props: { gameInstanceId: this.gameInstanceId } })
     }
   }
 }
@@ -29,8 +47,7 @@ export default {
 <template>
   <transition name="fade" appear>
     <div class="modal-dialog-overlay" 
-         v-if="showModal" 
-         @click="showModal = false">
+         v-if="showModal">
     </div>
   </transition>
   <transition name="pop" appear>
@@ -38,9 +55,10 @@ export default {
          role="dialog" 
          v-if="showModal"
          >
-      <h1>Vue Transitions</h1>
-      <p>The transition component in Vue can create wonderful animated entrances and exits.</p>
-      <button @click="showModal = false" class="button">Close</button>
+      <h1 v-if="this.isCurrentUserWinner" style="color: green;">Victory</h1>
+      <h1 v-else style="color: orange;">Defeat</h1>
+      <button @click="quit" class="button">Quit</button>
+      <button @click="playAgain" class="button">Play Again</button>
     </div>
   </transition>
 </template>
@@ -55,6 +73,8 @@ export default {
         left: 0;
         margin: auto;
         text-align: center;
+        align-content: center;
+        align-items: center;
         width: fit-content;
         height: fit-content;
         max-width: 22em;
@@ -65,6 +85,7 @@ export default {
         background: #FFF;
         z-index: 999;
         transform: none;
+        pointer-events: auto;
     }
     .modal-dialog h1 {
         margin: 0 0 1rem;
@@ -81,7 +102,6 @@ export default {
         z-index: 998;
         background: #2c3e50;
         opacity: 0.6;
-        cursor: pointer;
     }
 
     /* ---------------------------------- */

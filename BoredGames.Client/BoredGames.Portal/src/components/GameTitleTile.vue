@@ -13,8 +13,8 @@
     const response = await apiService.createGame({
       gameTitle: props.id,
       numberOfPlayers: 2,
-      requiredNumberOfWins: 1,
-      numberOfRounds: 1,
+      requiredNumberOfWins: 2,
+      numberOfRounds: 10,
       description: "test",
       playerNickName: "vlado"
     });
