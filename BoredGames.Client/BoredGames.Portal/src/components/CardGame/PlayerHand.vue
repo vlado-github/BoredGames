@@ -2,6 +2,7 @@
 import Card from './Card.vue'
 import apiService from '@/api/api';
 import { useToast, POSITION } from "vue-toastification";
+import GameResultEnum from '@/consts/gameResultEnum';
 
 export default {
   name: 'playerHand',
@@ -16,12 +17,8 @@ export default {
     playerScore: Object
   },
   watch: { 
-    playerScore: function(newValue, oldValue) { // watch it
-      console.log('playerScore changed: ', JSON.stringify(newValue));
-      //console.log('round'+ this.roundNumber)
-      if (!this.player.foe) {
-        this.onRoundCompleted(newValue);
-      }
+    playerScore: function(newValue, oldValue) {
+      this.onRoundCompleted(newValue);
     }
   },
   components: {
@@ -37,42 +34,72 @@ export default {
 
   methods: {
     async onCardSelect(cardSelected) {
-      await apiService.makeMove({
-          gameId: this.gameInstanceId,
-          actionType: cardSelected,
-      });
-      this.selectedCard = cardSelected;
+      if (this.selectedCard == '') {
+        await apiService.makeMove({
+            gameId: this.gameInstanceId,
+            actionType: cardSelected,
+        });
+        this.selectedCard = cardSelected;
+      }
     },
 
     async onRoundCompleted() {
       this.isRoundCompleted = true;
-
      
       let previousRound = this.roundNumber - 1;
-      let win = this.playerScore.roundWins?.some(x => x.roundNumber == previousRound);
-      if (win){
-        this.showRoundEndMessage("Round " +previousRound +" won!")
+      let win = this.playerScore.roundWins?.filter(x => x.roundNumber == previousRound);
+      if (win.some(x => x)){
+        this.selectedCard = win[0].playerMove;
+        if (!this.player.foe) {
+          this.showRoundEndMessage(GameResultEnum.Win, "Round " + previousRound +" won!");
+        }
       } else {
-        let loss = this.playerScore.roundLosses?.some(x => x.roundNumber == previousRound);
-        if (loss){
-          this.showRoundEndMessage("Round " +previousRound +" lost.");
+        let loss = this.playerScore.roundLosses?.filter(x => x.roundNumber == previousRound);
+        if (loss.some(x => x)){
+          this.selectedCard = loss[0].playerMove;
+          if (!this.player.foe) {
+            this.showRoundEndMessage(GameResultEnum.Loss, "Round " + previousRound +" lost.");
+          }
         } else {
-          let draw = this.playerScore.roundDraws?.some(x => x.roundNumber == previousRound);
-          if (draw) {
-            this.showRoundEndMessage("Round " +previousRound +" is a draw.")
+          let draw = this.playerScore.roundDraws?.filter(x => x.roundNumber == previousRound);
+          if (draw.some(x => x)) {
+            this.selectedCard = draw[0].playerMove;
+            if (!this.player.foe) {
+              this.showRoundEndMessage(GameResultEnum.Draw, "Round " + previousRound +" is a draw.");
+            }
           }
         }
       }
-      
+
+      this.resetPlayerHand();
     },
 
-    showRoundEndMessage(message){        
+    showRoundEndMessage(gameResult, message){        
       console.log(message);  
-      const toast = useToast();     
-      toast.success(message, {
-        timeout: 2000,
-        position: POSITION.TOP_CENTER
-      });          
+      const toast = useToast();   
+      if (gameResult == GameResultEnum.Win) {  
+        toast.success(message, {
+          timeout: 2000,
+          position: POSITION.TOP_CENTER,
+        }); 
+      } else if (gameResult == GameResultEnum.Loss) {
+        toast.error(message, {
+          timeout: 2000,
+          position: POSITION.TOP_CENTER,
+        });
+      } else if (gameResult == GameResultEnum.Draw) {
+        toast.warning(message, {
+          timeout: 2000,
+          position: POSITION.TOP_CENTER,
+        });
+      }         
+    },
+
+    resetPlayerHand() {
+        setTimeout(() => {
+          this.selectedCard = '';
+          console.log(">>> reset hand")
+        }, 500);
     }
   }
 }
@@ -90,6 +117,7 @@ export default {
       :gameInstanceId="gameInstanceId"
       :isRoundCompleted="isRoundCompleted"
       :isSelected="selectedCard == card"
+      :isRendered="selectedCard == '' || selectedCard == card"
       @cardSelected="onCardSelect"
     />
   </div>

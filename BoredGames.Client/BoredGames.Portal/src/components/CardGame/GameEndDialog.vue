@@ -25,7 +25,6 @@ export default {
        
         const playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
         this.isCurrentUserWinner = this.winners.some(x => x.id == playerId);
-        console.log('show dialog' + this.showModal + ' [] ' +JSON.stringify(this.winners)+' '+JSON.stringify(this.gameScore));
     },
 
     quit(event) {

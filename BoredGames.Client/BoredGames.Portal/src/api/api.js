@@ -48,7 +48,6 @@ class ApiService {
     async getGameState(gameId) {
         try {
             const response = await this.api.get(`game/${gameId}/state`);
-            //console.log(">>state: "+JSON.stringify(response));
             return response.data;
         } catch (error) {
             throw this.handleError(error);
@@ -67,7 +66,6 @@ class ApiService {
     async getGameScore(gameId) {
         try {
             const response = await this.api.get(`game/${gameId}/score`);
-           // console.log(">>score: "+JSON.stringify(response))
             return response.data;
         } catch (error) {
             throw this.handleError(error);

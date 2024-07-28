@@ -7,16 +7,15 @@ export default {
     isAgainstPlayer: false,
     gameInstanceId: '',
     isRoundCompleted: false,
-    isSelected: false
+    isSelected: false,
+    isRendered: true
   },
   watch: { 
-    isRoundCompleted: function(newValue, oldValue) { // watch it
-      console.log('Prop changed: ', newValue, ' | was: ', oldValue);
+    isRoundCompleted: function(newValue, oldValue) { 
       if (newValue && this.isSelected) {
         this.render = true;
         this.showType = true;
-      }
-      else{
+      } else {
         this.render = false;
         this.showType = false;
       }
@@ -40,7 +39,12 @@ export default {
 </script>
 
 <template>
-  <div v-if="render" v-bind:id="cardType" v-bind:isAgainstPlayer="isAgainstPlayer" class="cardbox" @click="onClick">
+  <div v-if="render && isRendered" 
+    v-bind:id="cardType" 
+    v-bind:isAgainstPlayer="isAgainstPlayer" 
+    v-bind:isSelected="isSelected" 
+    class="cardbox" 
+    @click="onClick">
     <div class='cardframe'>
       <div class='cardcontent'>
           <img  width="100" height="100" 
@@ -50,7 +54,6 @@ export default {
       </div>
     </div>
   </div>
-
 </template>
 
 <style>

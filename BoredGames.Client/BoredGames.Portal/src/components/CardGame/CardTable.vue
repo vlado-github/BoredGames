@@ -1,6 +1,7 @@
 <script>
 import PlayerHand from './PlayerHand.vue'
 import GameEndDialog from './GameEndDialog.vue'
+import ScoreBoard from './ScoreBoard.vue'
 import apiService from '@/api/api';
 import LocalStorageKeys from '@/consts/localStorageKeys';
 
@@ -11,7 +12,8 @@ export default {
   },
   components: {
     PlayerHand,
-    GameEndDialog
+    GameEndDialog,
+    ScoreBoard
   },
 
   async mounted() {
@@ -67,7 +69,6 @@ export default {
               if (this.latestRound > this.currentRound) { //Round completed
                 this.currentRound = this.latestRound;
                 this.isRoundCompleted = true;
-                console.log(">> card table: round" + this.currentRound+ " completed")
                 this.loadScore();
               }
 
@@ -95,6 +96,9 @@ export default {
         :roundNumber="latestRound"
         :playerScore="playersScores.filter(x => x.playerId != this.currentPlayerId)[0]"
     />
+    <ScoreBoard 
+      :playersScores="playersScores"
+      :currentPlayerId="currentPlayerId"/>
     <PlayerHand
         :cards="cardDeck"
         :player="{ foe: false, joined: true}"
