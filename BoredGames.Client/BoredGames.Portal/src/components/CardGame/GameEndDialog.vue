@@ -28,6 +28,8 @@ export default {
     },
 
     quit(event) {
+      localStorage.removeItem(LocalStorageKeys.GameId);
+      //todo: leave game on server
       this.showModal = false;
       this.$router.push({ name: 'home' })
     },
@@ -54,8 +56,8 @@ export default {
          >
       <h1 v-if="this.isCurrentUserWinner" style="color: green;">Victory</h1>
       <h1 v-else style="color: orange;">Defeat</h1>
-      <button @click="quit" class="button">Quit</button>
-      <button @click="playAgain" class="button">Play Again</button>
+      <button @click="quit" class="modal-dialog-button">Quit</button>
+      <button @click="playAgain" class="modal-dialog-button">Play Again</button>
     </div>
   </transition>
 </template>
@@ -82,7 +84,7 @@ export default {
         background: #FFF;
         z-index: 999;
         transform: none;
-        pointer-events: auto;
+        pointer-events: visible;
     }
     .modal-dialog h1 {
         margin: 0 0 1rem;
@@ -99,6 +101,10 @@ export default {
         z-index: 998;
         background: #2c3e50;
         opacity: 0.6;
+    }
+
+    .modal-dialog-button {
+      pointer-events:visible;
     }
 
     /* ---------------------------------- */

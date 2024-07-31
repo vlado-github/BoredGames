@@ -77,8 +77,10 @@ public class GameScore
 
     public IList<Player> GetWinners()
     {
+        var maxWins = PlayerStatistics
+            .Max(x => x.NumberOfWins);
         var winners = PlayerStatistics
-            .Where(x => x.NumberOfWins == RequiredNumberOfWins)
+            .Where(x => x.NumberOfWins == maxWins)
             .Select(x => new Player(x.PlayerId, x.PlayerNickName))
             .ToList();
         return winners;

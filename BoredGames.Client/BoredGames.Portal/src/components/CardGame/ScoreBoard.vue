@@ -3,7 +3,7 @@
 export default {
   name: 'scoreBoard',
   props: {
-    playersScores: [],
+    playersScores: Array,
     currentPlayerId: ''
   },
 
