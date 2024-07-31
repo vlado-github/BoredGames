@@ -8,20 +8,29 @@ export default {
     gameInstanceId: '',
     isRoundCompleted: false,
     isSelected: false,
-    isRendered: true
+    hide: true,
+    reset: false
   },
   watch: { 
     isRoundCompleted: function(newValue, oldValue) { 
       if (newValue && this.isSelected) {
         this.render = true;
         this.showType = true;
+      } else if (oldValue == true && newValue == false) {
+        this.render = true;
+        this.showType = false;
       } else {
         this.render = false;
         this.showType = false;
       }
+    },
+    reset: function(newValue){
+      if (newValue) {
+        this.render = true;
+        this.showType = !this.isAgainstPlayer;
+      }
     }
   },
-
 
   data() {
     return {
@@ -39,7 +48,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="render && isRendered" 
+  <div v-if="render && hide"
     v-bind:id="cardType" 
     v-bind:isAgainstPlayer="isAgainstPlayer" 
     v-bind:isSelected="isSelected" 

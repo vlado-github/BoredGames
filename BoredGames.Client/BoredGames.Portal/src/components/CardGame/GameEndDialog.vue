@@ -28,13 +28,11 @@ export default {
     },
 
     quit(event) {
-      console.log('>>> quit')
       this.showModal = false;
       this.$router.push({ name: 'home' })
     },
 
     playAgain(event) {
-      console.log('>>> playAgain')
       this.showModal = false;
       //todo: restart game on server
       router.push({ name: 'game', props: { gameInstanceId: this.gameInstanceId } })

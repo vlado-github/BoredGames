@@ -76,8 +76,11 @@ public class GameGrain : Grain, IGameGrain
         _gameState.RoundNumber = result.RoundNumber;
         _gameState.RoundStatus = result.RoundStatus;
         
+        // Game ends if all rounds are completed or 
+        // required number of wins in match is met.
         var allRoundsFinished = _gameRuleEngine.AreAllRoundsFinished();
-        if (allRoundsFinished)
+        var score = _gameRuleEngine.GetScore();
+        if (allRoundsFinished || score.IsRequiredNumberOfWinsMet())
         {
             _gameState.GameStatus = GameStatus.Finished;
         }

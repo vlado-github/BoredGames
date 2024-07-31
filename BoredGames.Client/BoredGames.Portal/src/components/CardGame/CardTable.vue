@@ -73,7 +73,6 @@ export default {
               }
 
               if (this.gameStatus == 2) { //Game Finished
-                console.log("game finished");
                 clearInterval(this.gameStatusInterval);
                 await this.$refs.gameEndDialog.show();
               }

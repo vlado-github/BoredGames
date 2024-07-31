@@ -66,7 +66,13 @@ public class GameScore
 
     public bool IsRequiredNumberOfWinsMet()
     {
-        return PlayerStatistics.Any(x => x.NumberOfWins == RequiredNumberOfWins);
+        if (!PlayerStatistics.Any())
+        {
+            return false;
+        }
+        var playerMaxWins = PlayerStatistics.Max(x => x.NumberOfWins);
+        var playerMinWins = PlayerStatistics.Min(x => x.NumberOfWins);
+        return (playerMaxWins - playerMinWins) >= RequiredNumberOfWins;
     }
 
     public IList<Player> GetWinners()

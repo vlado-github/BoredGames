@@ -28,13 +28,15 @@ export default {
   data() {
     return {
       selectedCard: '',
-      isRoundCompleted: false
+      isRoundCompleted: false,
+      reset: false
     }
   },
 
   methods: {
     async onCardSelect(cardSelected) {
       if (this.selectedCard == '') {
+        this.reset = false;
         await apiService.makeMove({
             gameId: this.gameInstanceId,
             actionType: cardSelected,
@@ -74,8 +76,7 @@ export default {
       this.resetPlayerHand();
     },
 
-    showRoundEndMessage(gameResult, message){        
-      console.log(message);  
+    showRoundEndMessage(gameResult, message){          
       const toast = useToast();   
       if (gameResult == GameResultEnum.Win) {  
         toast.success(message, {
@@ -96,10 +97,11 @@ export default {
     },
 
     resetPlayerHand() {
-        setTimeout(() => {
-          this.selectedCard = '';
-          console.log(">>> reset hand")
-        }, 500);
+      setTimeout(() => {
+        this.selectedCard = '';
+        this.reset = true;
+        this.isRoundCompleted = false;
+      }, 500);
     }
   }
 }
@@ -117,7 +119,8 @@ export default {
       :gameInstanceId="gameInstanceId"
       :isRoundCompleted="isRoundCompleted"
       :isSelected="selectedCard == card"
-      :isRendered="selectedCard == '' || selectedCard == card"
+      :hide="selectedCard == '' || selectedCard == card"
+      :reset="reset"
       @cardSelected="onCardSelect"
     />
   </div>
