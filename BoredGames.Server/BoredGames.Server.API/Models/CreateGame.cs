@@ -24,6 +24,7 @@ public class CreateGameValidator : AbstractValidator<CreateGame>
             .LessThanOrEqualTo(x => x.NumberOfRounds);
         RuleFor(x => x.NumberOfRounds)
             .GreaterThan(0)
-            .GreaterThanOrEqualTo(x => x.RequiredNumberOfWins);
+            .GreaterThanOrEqualTo(x => x.RequiredNumberOfWins)
+            .LessThan(100);
     }
 }
