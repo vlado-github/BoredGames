@@ -76,8 +76,11 @@ public class GameGrain : Grain, IGameGrain
         _gameState.RoundNumber = result.RoundNumber;
         _gameState.RoundStatus = result.RoundStatus;
         
+        // Game ends if all rounds are completed or 
+        // required number of wins in match is met.
         var allRoundsFinished = _gameRuleEngine.AreAllRoundsFinished();
-        if (allRoundsFinished)
+        var score = _gameRuleEngine.GetScore();
+        if (allRoundsFinished || score.IsRequiredNumberOfWinsMet())
         {
             _gameState.GameStatus = GameStatus.Finished;
         }
@@ -93,6 +96,14 @@ public class GameGrain : Grain, IGameGrain
     {
         var result = _gameRuleEngine.GetScore();
         return Task.FromResult(result.Adapt<GameScoreViewModel>());
+    }
+
+    public Task<GameDefinitionViewModel> GetConfig()
+    {
+        var config = _gameRuleEngine.GetConfiguration();
+        var definition = config.Adapt<GameDefinitionViewModel>();
+        definition.GameId = this.GetPrimaryKey();
+        return Task.FromResult(definition);
     }
 
     public Task<IList<PlayerViewModel>> GetWinners()

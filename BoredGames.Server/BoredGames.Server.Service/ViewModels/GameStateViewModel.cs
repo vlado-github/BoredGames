@@ -7,7 +7,7 @@ namespace BoredGames.Server.Service.ViewModels;
 public class GameStateViewModel
 {
     [Id(0)]
-    public Guid Id { get; set; }
+    public Guid GameId { get; set; }
     [Id(1)]
     public GameStatus GameStatus { get; set; }
     [Id(2)]

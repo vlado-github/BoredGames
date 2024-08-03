@@ -1,3 +1,4 @@
+using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Service.Commands;
 using BoredGames.Server.Service.ViewModels;
 using Orleans;
@@ -11,5 +12,6 @@ public interface IGameGrain : IGrainWithGuidKey
     Task<IList<PlayerViewModel>> GetWinners();
     Task<GameStateViewModel> GetState();
     Task<GameScoreViewModel> GetScore();
+    Task<GameDefinitionViewModel> GetConfig();
     void Setup(CreateGameCommand command);
 }

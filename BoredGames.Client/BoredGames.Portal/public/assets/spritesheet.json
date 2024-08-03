@@ -1,0 +1,96 @@
+{
+	"frames": {
+	  "backside.png": {
+		"frame": {
+		  "x": 0,
+		  "y": 0,
+		  "w": 200,
+		  "h": 200
+		},
+		"rotated": false,
+		"trimmed": false,
+		"spriteSourceSize": {
+		  "x": 0,
+		  "y": 0,
+		  "w": 200,
+		  "h": 200
+		},
+		"sourceSize": {
+		  "w": 200,
+		  "h": 200
+		}
+	  },
+	  "paper.png": {
+		"frame": {
+		  "x": 200,
+		  "y": 0,
+		  "w": 500,
+		  "h": 500
+		},
+		"rotated": false,
+		"trimmed": false,
+		"spriteSourceSize": {
+		  "x": 0,
+		  "y": 0,
+		  "w": 500,
+		  "h": 500
+		},
+		"sourceSize": {
+		  "w": 500,
+		  "h": 500
+		}
+	  },
+	  "rock.png": {
+		"frame": {
+		  "x": 700,
+		  "y": 0,
+		  "w": 500,
+		  "h": 500
+		},
+		"rotated": false,
+		"trimmed": false,
+		"spriteSourceSize": {
+		  "x": 0,
+		  "y": 0,
+		  "w": 500,
+		  "h": 500
+		},
+		"sourceSize": {
+		  "w": 500,
+		  "h": 500
+		}
+	  },
+	  "scissors.png": {
+		"frame": {
+		  "x": 1200,
+		  "y": 0,
+		  "w": 500,
+		  "h": 500
+		},
+		"rotated": false,
+		"trimmed": false,
+		"spriteSourceSize": {
+		  "x": 0,
+		  "y": 0,
+		  "w": 500,
+		  "h": 500
+		},
+		"sourceSize": {
+		  "w": 500,
+		  "h": 500
+		}
+	  }
+	},
+	"meta": {
+	  "app": "https://www.codeandweb.com/texturepacker",
+	  "version": "1.1",
+	  "image": "spritesheet.png",
+	  "format": "RGBA8888",
+	  "size": {
+		"w": 1700,
+		"h": 500
+	  },
+	  "scale": "1",
+	  "smartupdate": "$TexturePacker:SmartUpdate:78d90abe346acb3e9484739bb91c83e1:6cc9d5becf2bf49f83cf762f4bea00a4:729adc6043343cfda41c447ce8f464d6$"
+	}
+  }

@@ -2,6 +2,8 @@ using BoredGames.Server.API.Extensions;
 using BoredGames.Server.API.Filters;
 using BoredGames.Server.API.Models;
 using BoredGames.Server.Common.Enums;
+using BoredGames.Server.Common.Exceptions;
+using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Entities;
 using BoredGames.Server.Service.Commands;
 using BoredGames.Server.Service.Grains.Base;
@@ -24,7 +26,7 @@ namespace BoredGames.Server.API.Controllers
         }
 
         [HttpGet("titles")]
-        public Task<IList<GameTitleViewModel>> GetTitles()
+        public IList<GameTitleViewModel> GetTitles()
         {
             var result = new List<GameTitleViewModel>();
             foreach(GameTitle title in Enum.GetValues(typeof(GameTitle)) )
@@ -32,11 +34,18 @@ namespace BoredGames.Server.API.Controllers
                 result.Add(new GameTitleViewModel()
                 {
                     Id = (int) title,
-                    Name = title.ToString()
+                    Name = title.ToString(),
+                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png"
+                });
+                result.Add(new GameTitleViewModel()
+                {
+                    Id = (int) title,
+                    Name = title.ToString(),
+                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png"
                 });
             }
 
-            return Task.FromResult<IList<GameTitleViewModel>>(result);
+            return result;
         }
         
         [HttpPost("create")]
@@ -73,11 +82,17 @@ namespace BoredGames.Server.API.Controllers
         public async Task<GameStateViewModel> MakeMove(MakeMove request)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(request.GameId);
+            var gameState = await game.GetState();
+
+            if (gameState.GameStatus != GameStatus.InPlay)
+            {
+                throw new ActionValidationException($"Can't make move since game status is {gameState.GameStatus}.");
+            }
 
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
             var playerDetails= await player.GetDetails();
-            var gameState = await game.MakeMove(new MakeMoveCommand
+            gameState = await game.MakeMove(new MakeMoveCommand
             {
                 ActionType = request.ActionType,
                 PlayerId = playerId,
@@ -91,6 +106,13 @@ namespace BoredGames.Server.API.Controllers
         {
             var game = _grainFactory.GetGrain<IGameGrain>(gameId);
             return await game.GetState();
+        }
+
+        [HttpGet("{gameId:guid}/config")]
+        public async Task<GameDefinitionViewModel> GetConfig(Guid gameId)
+        {
+            var game = _grainFactory.GetGrain<IGameGrain>(gameId);
+            return await game.GetConfig();
         }
         
         [HttpGet("{gameId:guid}/winners")]

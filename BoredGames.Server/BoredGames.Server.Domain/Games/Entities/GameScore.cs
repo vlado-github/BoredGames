@@ -6,12 +6,14 @@ public class GameScore
     public int CurrentRoundNumber { get; private set; }
 
     public readonly int RequiredNumberOfWins;
+    public readonly int NumberOfRounds;
 
-    public GameScore(int requiredNumberOfWins)
+    public GameScore(int numberOfRounds, int requiredNumberOfWins)
     {
         PlayerStatistics = new List<PlayerStatistic>();
         CurrentRoundNumber = 1;
         RequiredNumberOfWins = requiredNumberOfWins;
+        NumberOfRounds = numberOfRounds;
     }
 
     public void AddWin(Player player, int roundNumber, string actionType)
@@ -64,13 +66,21 @@ public class GameScore
 
     public bool IsRequiredNumberOfWinsMet()
     {
-        return PlayerStatistics.Any(x => x.NumberOfWins == RequiredNumberOfWins);
+        if (!PlayerStatistics.Any())
+        {
+            return false;
+        }
+        var playerMaxWins = PlayerStatistics.Max(x => x.NumberOfWins);
+        var playerMinWins = PlayerStatistics.Min(x => x.NumberOfWins);
+        return (playerMaxWins - playerMinWins) >= RequiredNumberOfWins;
     }
 
     public IList<Player> GetWinners()
     {
+        var maxWins = PlayerStatistics
+            .Max(x => x.NumberOfWins);
         var winners = PlayerStatistics
-            .Where(x => x.NumberOfWins == RequiredNumberOfWins)
+            .Where(x => x.NumberOfWins == maxWins)
             .Select(x => new Player(x.PlayerId, x.PlayerNickName))
             .ToList();
         return winners;

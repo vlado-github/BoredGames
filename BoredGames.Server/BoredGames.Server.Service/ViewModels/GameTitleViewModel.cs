@@ -9,4 +9,6 @@ public class GameTitleViewModel
     public int Id { get; set; }
     [Id(1)]
     public string Name { get; set; }
+    [Id(2)]
+    public string ThumbnailImageUrl { get; set; }
 }
