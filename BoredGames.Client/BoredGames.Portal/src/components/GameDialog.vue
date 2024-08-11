@@ -70,9 +70,15 @@ export default {
           v-if="showModal"
           >
           <div>
-              <div><button @click="quickPlay" class="modal-dialog-button">Quick Play</button></div>
-              <div><button @click="customGame" class="modal-dialog-button">Custom Game</button></div>
-              <div><button @click="quit" class="modal-dialog-button">Quit</button></div>
+              <div>
+                <button @click="quickPlay" class="modal-dialog-button">Quick Play</button>
+              </div>
+              <div>
+                <button @click="customGame" class="modal-dialog-button">Custom Game</button>
+              </div>
+              <div>
+                <button @click="quit" class="modal-dialog-quit-button">Quit</button>
+              </div>
           </div>
       </div>
     </transition>
@@ -126,6 +132,18 @@ export default {
 
     .modal-dialog-button {
       pointer-events:visible;
+      margin: 15px;
+      padding: 15px;
+      background-color: green;
+      color: white;
+    }
+
+    .modal-dialog-quit-button {
+      pointer-events:visible;
+      margin: 15px;
+      padding: 15px;
+      background-color: goldenrod;
+      color: white;
     }
 
     /* ---------------------------------- */

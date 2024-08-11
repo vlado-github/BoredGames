@@ -21,7 +21,6 @@ export default {
   methods: {
     async show() {
         this.showModal = true;
-        console.log(">>>"+JSON.stringify(this.formSchema))  
     },
 
     quit(event) {
@@ -29,8 +28,7 @@ export default {
       this.$router.push({ name: 'home' })
     },
 
-    async submit(data) {   
-      console.log(">>>submit: "+JSON.stringify(data))   
+    async submit(data) { 
       const response = await apiService.createGame({
         gameTitle: this.titleId,
         numberOfPlayers: 2,
@@ -61,7 +59,7 @@ export default {
          >
       <FormKit type="form" @submit="submit" submit-label="Create">
         <FormKitSchema :schema="this.formSchema"></FormKitSchema>
-        <FormKit type="button" @click="quit">Quit</FormKit>
+        <FormKit type="button" @class="modal-dialog-button" @click="quit">Quit</FormKit>
       </FormKit>
     </div>
   </transition>
@@ -108,8 +106,20 @@ export default {
         opacity: 0.6;
     }
 
-    .modal-dialog-button {
+    button[type="button"] {
       pointer-events:visible;
+      margin: 15px;
+      padding: 15px;
+      background-color: goldenrod;
+      color: white;
+    }
+
+    button[type="submit"] {
+      pointer-events:visible;
+      margin: 15px;
+      padding: 15px;
+      background-color: green;
+      color: white;
     }
 
     /* ---------------------------------- */
