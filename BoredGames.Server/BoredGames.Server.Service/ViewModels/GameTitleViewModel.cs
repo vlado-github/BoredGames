@@ -11,4 +11,6 @@ public class GameTitleViewModel
     public string Name { get; set; }
     [Id(2)]
     public string ThumbnailImageUrl { get; set; }
+    [Id(3)]
+    public string FormSchema { get; set; }
 }

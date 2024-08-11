@@ -60,6 +60,6 @@ public static class MappingConfig
             .Map(dest => dest.RequiredNumberOfPlayers, 
                 src => src.RequiredNumberOfPlayers)
             .Map(dest => dest.RequiredNumberOfWins, 
-                src => src.RequiredNumberOfWins);
+                src => src.RequiredNumberOfConsecutiveWins);
     }
 }

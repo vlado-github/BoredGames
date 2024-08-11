@@ -25,32 +25,34 @@ export default {
 </script>
 
 <template>
-  <div class="gallery">
+  <div class="background">
     <h2 class="header">Bored Games</h2>
-    <div class="container mt-5">
-      <div class="row">
-        <GameTitleTile
-          v-for="title in titles"
-          :id="title.id"
-          :title="title.name"
-          :iconUrl="title.thumbnailImageUrl"
-        />
-      </div>
+    <div class="gallery">
+      <GameTitleTile
+        v-for="title in titles"
+        :titleId="title.id"
+        :titleName="title.name"
+        :iconUrl="title.thumbnailImageUrl"
+        :formSchema="JSON.parse(title.formSchema)"
+      />
     </div>
   </div>
 </template>
 
 <style>
+  .background {
+    background-color: #1b2939;
+    position:fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0; 
+  }
   .header {
     color: whitesmoke;
     text-align: center;
   }
   .gallery {
-    background-color: #1b2939;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0; 
+    display: table-row;
   }
 </style>

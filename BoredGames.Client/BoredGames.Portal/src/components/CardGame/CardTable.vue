@@ -105,9 +105,7 @@ export default {
         :roundNumber="latestRound"
         :playerScore="playersScores.filter(x => x.playerId == this.currentPlayerId)[0]"
     />
-    <GameEndDialog ref="gameEndDialog"
-        :gameInstanceId="gameInstanceId"
-    />
+    <GameEndDialog ref="gameEndDialog" :gameInstanceId="gameInstanceId" />
   </div>
 </template>
 

@@ -35,13 +35,15 @@ namespace BoredGames.Server.API.Controllers
                 {
                     Id = (int) title,
                     Name = title.ToString(),
-                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png"
+                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png",
+                    FormSchema = GameFormSchemaFactory.GetInstance(title).ToJson()
                 });
                 result.Add(new GameTitleViewModel()
                 {
                     Id = (int) title,
                     Name = title.ToString(),
-                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png"
+                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png",
+                    FormSchema =  GameFormSchemaFactory.GetInstance(title).ToJson()
                 });
             }
 
@@ -57,7 +59,7 @@ namespace BoredGames.Server.API.Controllers
             {
                 Title = request.GameTitle,
                 NumberOfPlayers = request.NumberOfPlayers,
-                RequiredNumberOfWins = request.RequiredNumberOfWins,
+                RequiredNumberOfWins = request.RequiredNumberOfConsecutiveWins,
                 NumberOfRounds = request.NumberOfRounds,
                 Description = request.Description,
                 PlayerNickName = request.PlayerNickName
