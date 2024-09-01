@@ -37,7 +37,7 @@ export default {
     playAgain(event) {
       this.showModal = false;
       //todo: restart game on server
-      router.push({ name: 'game', props: { gameInstanceId: this.gameInstanceId } })
+      this.$router.push({ name: 'game', props: { gameInstanceId: this.gameInstanceId } })
     }
   }
 }

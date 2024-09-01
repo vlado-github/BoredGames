@@ -1,6 +1,7 @@
 <script>
 import GameTitleTile from './GameTitleTile.vue'
 import apiService from '../api/api';
+import LocalStorageKeys from '@/consts/localStorageKeys';
 
 export default {
   name: 'gameGallery',
@@ -11,11 +12,15 @@ export default {
   data() {
     return {
       titles: [],
+      playerName: ''
     };
   },
+
   mounted() {
     this.fetchTitles();
+    this.playerName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
   },
+
   methods: {
     async fetchTitles() {
       this.titles = await apiService.getTitles();
@@ -34,6 +39,7 @@ export default {
         :titleName="title.name"
         :iconUrl="title.thumbnailImageUrl"
         :formSchema="JSON.parse(title.formSchema)"
+        :playerName="this.playerName"
       />
     </div>
   </div>

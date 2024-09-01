@@ -79,10 +79,17 @@ public class GameScore
     {
         var maxWins = PlayerStatistics
             .Max(x => x.NumberOfWins);
+        
+        if (maxWins == 0)
+        {
+            return new List<Player>();
+        }
+        
         var winners = PlayerStatistics
             .Where(x => x.NumberOfWins == maxWins)
             .Select(x => new Player(x.PlayerId, x.PlayerNickName))
             .ToList();
+        
         return winners;
     }
 }

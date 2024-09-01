@@ -5,7 +5,7 @@ import LocalStorageKeys from '@/consts/localStorageKeys';
 import CustomGameDialog from './CustomGameDialog.vue'
 
 export default {
-  name: 'gameDialog',
+  name: 'menuDialog',
   expose: ['show'],
   props: {
     titleId: '',

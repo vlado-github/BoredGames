@@ -1,6 +1,7 @@
 <script>
 import PlayerHand from './PlayerHand.vue'
-import GameEndDialog from './GameEndDialog.vue'
+import GameEndDialog from './../GameEndDialog.vue'
+import PlayerDialog from './../PlayerDialog.vue'
 import ScoreBoard from './ScoreBoard.vue'
 import apiService from '@/api/api';
 import LocalStorageKeys from '@/consts/localStorageKeys';
@@ -8,10 +9,11 @@ import LocalStorageKeys from '@/consts/localStorageKeys';
 export default {
   name: 'cardTable',
   props: {
-    gameInstanceId: '',
+    gameInstanceId: ''
   },
   components: {
     PlayerHand,
+    PlayerDialog,
     GameEndDialog,
     ScoreBoard
   },
@@ -28,13 +30,13 @@ export default {
   data() {
     return {
       gameStatusInterval: Number,
-      playerJoined: false,
       gameStatus: 0, //AwaitingPlayers
       currentRound: 1,
       latestRound: 1,
       playersScores: [],
       cardDeck: [],
-      currentPlayerId: ''
+      currentPlayerId: '',
+      currentPlayerNickName: ''
     };
   },
 
@@ -45,15 +47,14 @@ export default {
     },
 
     async joinGame() {
-      if (!this.playerJoined) {
-        //todo: show dialog to input name
+      this.currentPlayerNickName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
+
+      if (!this.currentPlayerNickName) {
+        this.$refs.playerDialog.show();
+      } else {
         apiService.joinGame({
-          gameId: this.gameInstanceId,
-          playerNickName: 'Player'
-        }).then(response => {
-          this.playerJoined = true;
-        }).catch(err => {
-          console.log(err);
+            gameId: this.gameInstanceId,
+            playerNickName: this.currentPlayerNickName
         });
       }
     },
@@ -106,6 +107,8 @@ export default {
         :playerScore="playersScores.filter(x => x.playerId == this.currentPlayerId)[0]"
     />
     <GameEndDialog ref="gameEndDialog" :gameInstanceId="gameInstanceId" />
+    <PlayerDialog ref="playerDialog" 
+      :gameInstanceId="this.gameInstanceId" />
   </div>
 </template>
 

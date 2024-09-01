@@ -1,7 +1,5 @@
 <script>
-import PlayerDialog from './PlayerDialog.vue'
-import GameDialog from './GameDialog.vue'
-import LocalStorageKeys from '@/consts/localStorageKeys';
+import MenuDialog from './MenuDialog.vue'
 
 export default {
   name: "gameTitleTile",
@@ -9,30 +7,17 @@ export default {
     titleId: Number,
     titleName: String,
     iconUrl: String,
-    formSchema: Array
+    formSchema: Array,
+    playerName: ''
   },
 
   components: {
-    PlayerDialog,
-    GameDialog
-  },
-
-  data() {
-    return {
-      playerName: ''
-    }
+    MenuDialog
   },
 
   methods: {
     async pickGame() {
-      this.playerName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
-      if (!this.playerName) {
-        await this.$refs.playerDialog.show();
-
-      }
-      else {
-        await this.$refs.gameDialog.show();
-      }
+      await this.$refs.menuDialog.show();
     }
   }
 }
@@ -44,9 +29,7 @@ export default {
         <img @click="pickGame" v-bind:id="titleId" width="250" height="250" v-bind:src="iconUrl" v-bind:alt="titleName"/>
         <span class="caption">{{ titleName }}</span>
     </div>
-    <PlayerDialog ref="playerDialog" 
-      :titleId="this.titleId" />
-    <GameDialog ref="gameDialog" 
+    <MenuDialog ref="menuDialog" 
       :titleId="this.titleId" 
       :formSchema="this.formSchema"
       :playerName="this.playerName" />

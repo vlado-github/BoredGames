@@ -23,9 +23,7 @@ public static class MappingConfig
             .NewConfig();
         
         TypeAdapterConfig<AddPlayerCommand, PlayerDto>
-            .NewConfig()
-            .Map(dest => dest.NickName, 
-                src => src.NickName ?? faker.Name.FirstName(Name.Gender.Female));
+            .NewConfig();
         
         TypeAdapterConfig<GameState, GameStateViewModel>
             .NewConfig();

@@ -62,6 +62,7 @@ namespace BoredGames.Server.API.Controllers
                 RequiredNumberOfWins = request.RequiredNumberOfConsecutiveWins,
                 NumberOfRounds = request.NumberOfRounds,
                 Description = request.Description,
+                PlayerId = playerId,
                 PlayerNickName = request.PlayerNickName
             });
             return gameDefinition;

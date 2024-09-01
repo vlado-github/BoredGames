@@ -30,6 +30,7 @@ public class PlayerGrain : Grain, IPlayerGrain
             NickName = playerNickName
         };
         var gameDefinition = await gameGrain.AddPlayerToGame(addPlayerCommand);
+        gameDefinition.PlayerId = playerId;
         _nickName = playerNickName;
         return gameDefinition.Adapt<GameDefinitionViewModel>();
     }
@@ -44,6 +45,7 @@ public class PlayerGrain : Grain, IPlayerGrain
             NickName = _nickName
         };
         var gameDefinition = await gameGrain.AddPlayerToGame(addPlayerCommand);
+        gameDefinition.PlayerId = this.GetPrimaryKey();
         return gameDefinition.Adapt<GameDefinitionViewModel>();
     }
 

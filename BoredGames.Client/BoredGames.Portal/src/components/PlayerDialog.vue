@@ -1,25 +1,27 @@
 <script>
-import apiService from '@/api/api';
 import LocalStorageKeys from '@/consts/localStorageKeys';
+import apiService from '@/api/api';
 
 export default {
   name: 'playerDialog',
   expose: ['show'],
   props: {
-    titleId: ''
+    gameInstanceId: ''
   },
 
   data() {
     return {     
         showModal: false,
-        playerName: ''
+        playerName: '',
+        playerJoined: false,
+        onSaveCallback: {}
     }
   },
 
   methods: {
-    async show() {
-        this.showModal = true;
-        this.playerName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
+    show() {
+      this.showModal = true;
+      this.playerName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
     },
 
     quit(event) {
@@ -29,7 +31,11 @@ export default {
 
     save(event) {
       this.showModal = false;
-      this.playerName = localStorage.setItem(LocalStorageKeys.PlayerNickName, this.playerName);
+      localStorage.setItem(LocalStorageKeys.PlayerNickName, this.playerName);
+      apiService.joinGame({
+        gameId: this.gameInstanceId,
+        playerNickName: this.playerName
+      });
     }
   }
 }
@@ -46,12 +52,13 @@ export default {
          v-if="showModal"
          >
         <div>
-            <input v-model="this.playerName" placeholder="{{this.playerName}}" />
+            <input v-model="this.playerName" placeholder="Enter player name..." />
             <div>
                 <button @click="quit" class="modal-dialog-button">Quit</button>
                 <button @click="save" class="modal-dialog-button">Save</button>
             </div>
         </div>
+        
     </div>
   </transition>
 </template>
