@@ -1,60 +1,60 @@
 <script>
 import LocalStorageKeys from '@/consts/localStorageKeys';
-import apiService from '@/api/api';
-import InvitationDialog from './InvitationDialog.vue';
-import GameStatusEnum from '@/consts/gameStatusEnum';
+import { useToast, POSITION } from "vue-toastification";
 
 export default {
-  name: 'playerDialog',
+  name: 'invitationDialog',
   expose: ['show'],
   props: {
     gameInstanceId: ''
   },
 
-  components: {
-    InvitationDialog
-  },
-
   data() {
     return {     
         showModal: false,
-        playerName: '',
-        playerJoined: false,
-        onSaveCallback: {}
+        inviteLinkUrl: ''
     }
   },
 
+  async mounted() {
+    this.inviteLinkUrl = `${import.meta.env.VITE_BASE_URL}/game?gameInstanceId=${this.gameInstanceId}`;
+  },
+
   methods: {
-    show() {
-      this.showModal = true;
-      this.playerName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
+    async show() {
+        this.showModal = true;
     },
 
     quit(event) {
+      localStorage.removeItem(LocalStorageKeys.GameId);
+      //todo: leave game on server
       this.showModal = false;
       this.$router.push({ name: 'home' })
     },
 
-    async save(event) {
+    async copyLink(event) {
       this.showModal = false;
-      localStorage.setItem(LocalStorageKeys.PlayerNickName, this.playerName);
-      apiService.joinGame({
-        gameId: this.gameInstanceId,
-        playerNickName: this.playerName
-      });
+      this.$refs.invitelink.focus();
+      await navigator.clipboard.writeText(this.inviteLinkUrl);
+      this.showToast("Invite link copied.");
+      this.showModal = false;
+    },
 
-      let response = await apiService.getGameState(this.gameInstanceId);
-      if (response.gameStatus == GameStatusEnum.AwaitingPlayers) {
-        this.$refs.invitationDialog.show();
-      }
-    }
+    showToast(message) {          
+      const toast = useToast();   
+      toast.success(message, {
+        timeout: 2000,
+        position: POSITION.BOTTOM_LEFT,
+      });        
+    },
   }
 }
 </script>
 
 <template>
   <transition name="fade" appear>
-    <div class="modal-dialog-overlay" v-if="showModal">
+    <div class="modal-dialog-overlay" 
+         v-if="showModal">
     </div>
   </transition>
   <transition name="pop" appear>
@@ -62,16 +62,14 @@ export default {
          role="dialog" 
          v-if="showModal"
          >
-        <div>
-            <input v-model="this.playerName" placeholder="Enter player name..." />
-            <div>
-                <button @click="quit" class="modal-dialog-button">Quit</button>
-                <button @click="save" class="modal-dialog-button">Save</button>
-            </div>
-        </div>
-        <InvitationDialog ref="invitationDialog" 
-          :gameInstanceId="this.gameInstanceId" />
-        
+    
+      <label>Copy invite link and send it to a friend.</label>
+      <input 
+           v-on:focus="$event.target.select()" 
+           ref="invitelink" 
+           readonly 
+           :value="inviteLinkUrl"/>
+      <button @click="copyLink" class="modal-dialog-button">Copy</button>
     </div>
   </transition>
 </template>

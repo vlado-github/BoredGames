@@ -2,9 +2,11 @@
 import PlayerHand from './PlayerHand.vue'
 import GameEndDialog from './../GameEndDialog.vue'
 import PlayerDialog from './../PlayerDialog.vue'
+import InvitationDialog from './../InvitationDialog.vue'
 import ScoreBoard from './ScoreBoard.vue'
 import apiService from '@/api/api';
 import LocalStorageKeys from '@/consts/localStorageKeys';
+import GameStatusEnum from '@/consts/gameStatusEnum';
 
 export default {
   name: 'cardTable',
@@ -14,6 +16,7 @@ export default {
   components: {
     PlayerHand,
     PlayerDialog,
+    InvitationDialog,
     GameEndDialog,
     ScoreBoard
   },
@@ -56,7 +59,16 @@ export default {
             gameId: this.gameInstanceId,
             playerNickName: this.currentPlayerNickName
         });
+
+        let response = await apiService.getGameState(this.gameInstanceId);
+        if (response.gameStatus == GameStatusEnum.AwaitingPlayers) {
+            await this.$refs.invitationDialog.show();
+        }
       }
+    },
+
+    async showInviteDialog() {
+      await this.$refs.invitationDialog.show();
     },
 
     async refreshGameStatus() {
@@ -89,6 +101,7 @@ export default {
 
 <template>
   <div class="cardtable">
+    <button v-if="this.gameStatus == 0" @click="showInviteDialog" class="invite-dialog-button">Invite</button>
     <PlayerHand
         :cards="cardDeck"
         :player="{ foe: true, joined: this.gameStatus != 0 }"
@@ -109,6 +122,8 @@ export default {
     <GameEndDialog ref="gameEndDialog" :gameInstanceId="gameInstanceId" />
     <PlayerDialog ref="playerDialog" 
       :gameInstanceId="this.gameInstanceId" />
+    <InvitationDialog ref="invitationDialog" 
+      :gameInstanceId="this.gameInstanceId" />
   </div>
 </template>
 
@@ -125,5 +140,16 @@ export default {
         top: 0; 
         align-items: center;
         justify-content: center;
+    }
+
+    .invite-dialog-button {
+      pointer-events:visible;
+      margin: 15px;
+      padding: 15px;
+      background-color: yellow;
+      color: black;
+      position: absolute;
+      top: 0;
+      right: 0;
     }
 </style>

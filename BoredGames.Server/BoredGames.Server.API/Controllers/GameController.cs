@@ -4,11 +4,9 @@ using BoredGames.Server.API.Models;
 using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Base;
-using BoredGames.Server.Domain.Games.Entities;
 using BoredGames.Server.Service.Commands;
 using BoredGames.Server.Service.Grains.Base;
 using BoredGames.Server.Service.ViewModels;
-using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoredGames.Server.API.Controllers
@@ -37,13 +35,6 @@ namespace BoredGames.Server.API.Controllers
                     Name = title.ToString(),
                     ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png",
                     FormSchema = GameFormSchemaFactory.GetInstance(title).ToJson()
-                });
-                result.Add(new GameTitleViewModel()
-                {
-                    Id = (int) title,
-                    Name = title.ToString(),
-                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png",
-                    FormSchema =  GameFormSchemaFactory.GetInstance(title).ToJson()
                 });
             }
 
