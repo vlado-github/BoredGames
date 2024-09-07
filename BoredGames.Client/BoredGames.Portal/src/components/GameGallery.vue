@@ -64,7 +64,6 @@ export default {
   .gallery {
     display: table;
     width: 100%;
-    
   }
   .placement {
     text-align: center;

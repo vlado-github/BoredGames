@@ -75,7 +75,6 @@ export default {
 
       // pause between rounds
       await new Promise(r => setTimeout(r, 2000));
-
       this.resetPlayerHand();
     },
 

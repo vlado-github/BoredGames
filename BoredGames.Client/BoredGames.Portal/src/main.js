@@ -5,7 +5,6 @@ import Toast from "vue-toastification"
 import { plugin, defaultConfig } from '@formkit/vue'
 import formkitConfig from './formkit.config.js'
 
-
 import "vue-toastification/dist/index.css";
 
 const app = createApp(App)
