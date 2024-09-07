@@ -5,15 +5,15 @@ BoredGames platform for creating custom board games.
 Backend server for handling queueing, game state and players actions. 
 
 ## BoredGames.Client
-### Build BoredGames.Client.CLI
+### Build BoredGames.Portal
 1. Run shell or cmd
-2. Position to source folder of solution
+2. Position to source folder of project
 3. Execute command:
-`dotnet build`
+`yarn build`
 
-### Run BoredGame.Client.CLI
+### Run BoredGame.Portal
 1. Run shell or cmd
-2. Position to directory Debug/net7.0 or Release/net7.0 
+2. Position to source folder of project
 3. Execute command:
-`export DOTNET_ENV='Local';export BORED_GAMES_API_KEY='BoredGames';dotnet BoredGames.Client.CLI.dll`
+`yarn dev`
 
