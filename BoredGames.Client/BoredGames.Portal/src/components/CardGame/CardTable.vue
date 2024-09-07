@@ -25,7 +25,6 @@ export default {
     this.loadScore();
     this.currentPlayerId = localStorage.getItem(LocalStorageKeys.PlayerId);
     this.joinGame();
-    console.log('>>> table: ', this.cardDeck)
     this.refreshGameStatus();
   },
 
