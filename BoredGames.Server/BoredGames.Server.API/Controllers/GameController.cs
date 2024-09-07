@@ -1,14 +1,13 @@
 using BoredGames.Server.API.Extensions;
 using BoredGames.Server.API.Filters;
 using BoredGames.Server.API.Models;
+using BoredGames.Server.Common.Consts;
 using BoredGames.Server.Common.Enums;
 using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Base;
-using BoredGames.Server.Domain.Games.Entities;
 using BoredGames.Server.Service.Commands;
 using BoredGames.Server.Service.Grains.Base;
 using BoredGames.Server.Service.ViewModels;
-using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoredGames.Server.API.Controllers
@@ -19,10 +18,12 @@ namespace BoredGames.Server.API.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGrainFactory _grainFactory;
+        private readonly string _appBaseUrl;
         
         public GameController(IGrainFactory grainFactory)
         {
             _grainFactory = grainFactory;
+            _appBaseUrl = Environment.GetEnvironmentVariable(EnvVarNames.AppBaseUrl);
         }
 
         [HttpGet("titles")]
@@ -35,13 +36,8 @@ namespace BoredGames.Server.API.Controllers
                 {
                     Id = (int) title,
                     Name = title.ToString(),
-                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png"
-                });
-                result.Add(new GameTitleViewModel()
-                {
-                    Id = (int) title,
-                    Name = title.ToString(),
-                    ThumbnailImageUrl = "http://localhost:5173/assets/clashofhands-logo.png"
+                    ThumbnailImageUrl = $"{_appBaseUrl}/assets/clashofhands-logo.png",
+                    FormSchema = GameFormSchemaFactory.GetInstance(title).ToJson()
                 });
             }
 
@@ -57,9 +53,10 @@ namespace BoredGames.Server.API.Controllers
             {
                 Title = request.GameTitle,
                 NumberOfPlayers = request.NumberOfPlayers,
-                RequiredNumberOfWins = request.RequiredNumberOfWins,
+                RequiredNumberOfWins = request.RequiredNumberOfConsecutiveWins,
                 NumberOfRounds = request.NumberOfRounds,
                 Description = request.Description,
+                PlayerId = playerId,
                 PlayerNickName = request.PlayerNickName
             });
             return gameDefinition;

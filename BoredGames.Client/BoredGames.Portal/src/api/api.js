@@ -4,15 +4,17 @@ import LocalStorageKeys from '@/consts/localStorageKeys';
 
 class ApiService {
     constructor() {
-        const playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
+        let playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
         if (!playerId){
-            localStorage.setItem(LocalStorageKeys.PlayerId, uuid.v4());
+            playerId = uuid.v4();
+            localStorage.setItem(LocalStorageKeys.PlayerId, playerId);
         }
+
         this.api = axios.create({
-            baseURL: 'https://localhost:7075/api/',
+            baseURL: `${import.meta.env.VITE_BACKEND_API_URL}/api/`,
             accept: 'application/json',
             headers: {
-                'X-BORED-GAMES-API-KEY': 'BoredGames',
+                'X-BORED-GAMES-API-KEY': `${import.meta.env.VITE_BACKEND_API_KEY}`,
                 'X-BORED-GAMES-PLAYER-ID': playerId
             }
         });
@@ -30,6 +32,10 @@ class ApiService {
     async createGame(request) {
         try {
             const response = await this.api.post("game/create", request);
+            let playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
+            if (!playerId){
+                localStorage.setItem(LocalStorageKeys.PlayerId, response.data.playerId);
+            }
             return response.data;
         } catch (error) {
             throw this.handleError(error);
@@ -39,6 +45,10 @@ class ApiService {
     async joinGame(request) {
         try {
             const response = await this.api.put("game/join", request);
+            let playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
+            if (!playerId){
+                localStorage.setItem(LocalStorageKeys.PlayerId, response.data.playerId);
+            }
             return response.data;
         } catch (error) {
             throw this.handleError(error);

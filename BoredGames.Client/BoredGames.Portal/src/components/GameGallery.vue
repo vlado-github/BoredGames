@@ -1,6 +1,7 @@
 <script>
 import GameTitleTile from './GameTitleTile.vue'
 import apiService from '../api/api';
+import LocalStorageKeys from '@/consts/localStorageKeys';
 
 export default {
   name: 'gameGallery',
@@ -11,11 +12,15 @@ export default {
   data() {
     return {
       titles: [],
+      playerName: ''
     };
   },
+
   mounted() {
     this.fetchTitles();
+    this.playerName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
   },
+
   methods: {
     async fetchTitles() {
       this.titles = await apiService.getTitles();
@@ -25,15 +30,17 @@ export default {
 </script>
 
 <template>
-  <div class="gallery">
+  <div class="background">
     <h2 class="header">Bored Games</h2>
-    <div class="container mt-5">
-      <div class="row">
+    <div class="gallery">
+      <div class="placement">
         <GameTitleTile
           v-for="title in titles"
-          :id="title.id"
-          :title="title.name"
+          :titleId="title.id"
+          :titleName="title.name"
           :iconUrl="title.thumbnailImageUrl"
+          :formSchema="JSON.parse(title.formSchema)"
+          :playerName="this.playerName"
         />
       </div>
     </div>
@@ -41,16 +48,24 @@ export default {
 </template>
 
 <style>
+  .background {
+    background-color: #1b2939;
+    position:fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0; 
+    overflow-y: scroll;
+  }
   .header {
     color: whitesmoke;
     text-align: center;
   }
   .gallery {
-    background-color: #1b2939;
-    position: fixed;
+    display: table;
     width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0; 
+  }
+  .placement {
+    text-align: center;
   }
 </style>

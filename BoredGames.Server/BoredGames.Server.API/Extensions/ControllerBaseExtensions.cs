@@ -1,4 +1,5 @@
 using BoredGames.Server.Common.Consts;
+using BoredGames.Server.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoredGames.Server.API.Extensions;
@@ -8,13 +9,11 @@ public static class ControllerBaseExtensions
     public static Guid GetPlayerId(this ControllerBase controller)
     {
         var playerId = controller.Request.Headers[DefaultConsts.PlayerIdHeaderKey];
-        if (!string.IsNullOrEmpty(playerId))
+        if (string.IsNullOrEmpty(playerId))
         {
-            return Guid.Parse(playerId);
+            throw new Exception("Missing PlayerId in request header.");
         }
 
-        var guid = Guid.NewGuid();
-        controller.Response.Headers.Append(DefaultConsts.PlayerIdHeaderKey, guid.ToString());
-        return guid;
+        return Guid.Parse(playerId);
     }
 }

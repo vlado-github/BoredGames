@@ -17,5 +17,17 @@ public class RockPaperScissorsConfiguration : GameConfigurationBase
         RequiredNumberOfWins = requiredNumberOfWins ?? MinimumRequiredNumberOfWins;
         NumberOfRounds = numberOfRounds ?? MinimumRequiredNumberOfRounds;
         Description = description ?? string.Empty;
+        Assets = new Dictionary<string, object>()
+        {
+            { 
+                "card_deck", 
+                new []
+                {
+                    RockPaperScissorsRuleEngine.RockAction,
+                    RockPaperScissorsRuleEngine.ScissorsAction,
+                    RockPaperScissorsRuleEngine.PaperAction
+                } 
+            }
+        };
     }
 }

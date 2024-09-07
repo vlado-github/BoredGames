@@ -34,7 +34,7 @@ export default {
 
 <template>
   <div v-if="this.playersScores.some(x => x)" class="scoreboard">
-    <label>{{ this.foeName }} {{ this.foeWins }} : {{ this.myWins }} {{ this.myName }}</label>
+    <h1><b>{{ this.foeName }} {{ this.foeWins }} : {{ this.myWins }} {{ this.myName }}</b></h1>
   </div>
 </template>
 

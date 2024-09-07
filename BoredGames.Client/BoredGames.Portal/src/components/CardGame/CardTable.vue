@@ -1,25 +1,28 @@
 <script>
 import PlayerHand from './PlayerHand.vue'
-import GameEndDialog from './GameEndDialog.vue'
+import GameEndDialog from './../GameEndDialog.vue'
+import PlayerDialog from './../PlayerDialog.vue'
+import InvitationDialog from './../InvitationDialog.vue'
 import ScoreBoard from './ScoreBoard.vue'
 import apiService from '@/api/api';
 import LocalStorageKeys from '@/consts/localStorageKeys';
+import GameStatusEnum from '@/consts/gameStatusEnum';
 
 export default {
   name: 'cardTable',
   props: {
-    gameInstanceId: '',
+    gameInstanceId: ''
   },
   components: {
     PlayerHand,
+    PlayerDialog,
+    InvitationDialog,
     GameEndDialog,
     ScoreBoard
   },
 
   async mounted() {
     this.loadScore();
-    //todo: card deck should be received as server response
-    this.cardDeck = ['rock','paper','scissors'];
     this.currentPlayerId = localStorage.getItem(LocalStorageKeys.PlayerId);
     this.joinGame();
     this.refreshGameStatus();
@@ -28,13 +31,13 @@ export default {
   data() {
     return {
       gameStatusInterval: Number,
-      playerJoined: false,
       gameStatus: 0, //AwaitingPlayers
       currentRound: 1,
       latestRound: 1,
       playersScores: [],
       cardDeck: [],
-      currentPlayerId: ''
+      currentPlayerId: '',
+      currentPlayerNickName: ''
     };
   },
 
@@ -45,17 +48,26 @@ export default {
     },
 
     async joinGame() {
-      if (!this.playerJoined) {
-        //todo: show dialog to input name
-        apiService.joinGame({
-          gameId: this.gameInstanceId,
-          playerNickName: 'Player'
-        }).then(response => {
-          this.playerJoined = true;
-        }).catch(err => {
-          console.log(err);
+      this.currentPlayerNickName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
+
+      if (!this.currentPlayerNickName) {
+        this.$refs.playerDialog.show();
+      } else {
+        let response = await apiService.joinGame({
+            gameId: this.gameInstanceId,
+            playerNickName: this.currentPlayerNickName
         });
+        this.cardDeck = response.assets["card_deck"];
+
+        response = await apiService.getGameState(this.gameInstanceId);
+        if (response.gameStatus == GameStatusEnum.AwaitingPlayers) {
+            await this.$refs.invitationDialog.show();
+        }
       }
+    },
+
+    async showInviteDialog() {
+      await this.$refs.invitationDialog.show();
     },
 
     async refreshGameStatus() {
@@ -88,8 +100,9 @@ export default {
 
 <template>
   <div class="cardtable">
+    <button v-if="this.gameStatus == 0" @click="showInviteDialog" class="invite-dialog-button">Invite</button>
     <PlayerHand
-        :cards="cardDeck"
+        :cards="this.cardDeck"
         :player="{ foe: true, joined: this.gameStatus != 0 }"
         :gameInstanceId="gameInstanceId"
         :roundNumber="latestRound"
@@ -99,15 +112,17 @@ export default {
       :playersScores="playersScores"
       :currentPlayerId="currentPlayerId"/>
     <PlayerHand
-        :cards="cardDeck"
+        :cards="this.cardDeck"
         :player="{ foe: false, joined: true}"
         :gameInstanceId="gameInstanceId"
         :roundNumber="latestRound"
         :playerScore="playersScores.filter(x => x.playerId == this.currentPlayerId)[0]"
     />
-    <GameEndDialog ref="gameEndDialog"
-        :gameInstanceId="gameInstanceId"
-    />
+    <GameEndDialog ref="gameEndDialog" :gameInstanceId="gameInstanceId" />
+    <PlayerDialog ref="playerDialog" 
+      :gameInstanceId="this.gameInstanceId" />
+    <InvitationDialog ref="invitationDialog" 
+      :gameInstanceId="this.gameInstanceId" />
   </div>
 </template>
 
@@ -124,5 +139,16 @@ export default {
         top: 0; 
         align-items: center;
         justify-content: center;
+    }
+
+    .invite-dialog-button {
+      pointer-events:visible;
+      margin: 15px;
+      padding: 15px;
+      background-color: yellow;
+      color: black;
+      position: absolute;
+      top: 0;
+      right: 0;
     }
 </style>
