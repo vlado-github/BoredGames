@@ -39,10 +39,8 @@ export default {
         description: "test",
         playerNickName: this.playerName
       });
-
-      localStorage.setItem(LocalStorageKeys.GameId, response.gameId);
       
-      router.push({ name: 'game', query: { gameInstanceId: response.gameId } })
+      router.push({ name: 'game', query: { gameInstanceId: response.gameId} })
     },
 
     async customGame(event) {

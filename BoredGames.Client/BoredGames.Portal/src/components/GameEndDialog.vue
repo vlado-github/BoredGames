@@ -28,8 +28,6 @@ export default {
     },
 
     quit(event) {
-      localStorage.removeItem(LocalStorageKeys.GameId);
-      //todo: leave game on server
       this.showModal = false;
       this.$router.push({ name: 'home' })
     },

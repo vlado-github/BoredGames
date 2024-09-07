@@ -23,10 +23,9 @@ export default {
 
   async mounted() {
     this.loadScore();
-    //todo: card deck should be received as server response
-    this.cardDeck = ['rock','paper','scissors'];
     this.currentPlayerId = localStorage.getItem(LocalStorageKeys.PlayerId);
     this.joinGame();
+    console.log('>>> table: ', this.cardDeck)
     this.refreshGameStatus();
   },
 
@@ -55,12 +54,13 @@ export default {
       if (!this.currentPlayerNickName) {
         this.$refs.playerDialog.show();
       } else {
-        apiService.joinGame({
+        let response = await apiService.joinGame({
             gameId: this.gameInstanceId,
             playerNickName: this.currentPlayerNickName
         });
+        this.cardDeck = response.assets["card_deck"];
 
-        let response = await apiService.getGameState(this.gameInstanceId);
+        response = await apiService.getGameState(this.gameInstanceId);
         if (response.gameStatus == GameStatusEnum.AwaitingPlayers) {
             await this.$refs.invitationDialog.show();
         }
@@ -103,7 +103,7 @@ export default {
   <div class="cardtable">
     <button v-if="this.gameStatus == 0" @click="showInviteDialog" class="invite-dialog-button">Invite</button>
     <PlayerHand
-        :cards="cardDeck"
+        :cards="this.cardDeck"
         :player="{ foe: true, joined: this.gameStatus != 0 }"
         :gameInstanceId="gameInstanceId"
         :roundNumber="latestRound"
@@ -113,7 +113,7 @@ export default {
       :playersScores="playersScores"
       :currentPlayerId="currentPlayerId"/>
     <PlayerHand
-        :cards="cardDeck"
+        :cards="this.cardDeck"
         :player="{ foe: false, joined: true}"
         :gameInstanceId="gameInstanceId"
         :roundNumber="latestRound"

@@ -9,11 +9,12 @@ class ApiService {
             playerId = uuid.v4();
             localStorage.setItem(LocalStorageKeys.PlayerId, playerId);
         }
+
         this.api = axios.create({
-            baseURL: 'https://localhost:7075/api/',
+            baseURL: `${import.meta.env.VITE_BACKEND_API_URL}/api/`,
             accept: 'application/json',
             headers: {
-                'X-BORED-GAMES-API-KEY': 'BoredGames',
+                'X-BORED-GAMES-API-KEY': `${import.meta.env.VITE_BACKEND_API_KEY}`,
                 'X-BORED-GAMES-PLAYER-ID': playerId
             }
         });

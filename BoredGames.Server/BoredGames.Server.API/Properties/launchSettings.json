@@ -24,7 +24,7 @@
       "applicationUrl": "https://localhost:7075;http://localhost:5208",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "BORED_GAMES_API_KEY": "BoredGames"
+        "BORED_GAMES_API_KEY": "b0r3dg4meSScr3am1nGV0iD!"
       }
     },
     "local": {
@@ -34,7 +34,7 @@
       "applicationUrl": "https://localhost:7075;http://localhost:5208",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Local",
-        "BORED_GAMES_API_KEY": "BoredGames"
+        "BORED_GAMES_API_KEY": "b0r3dg4meSScr3am1nGV0iD!"
       }
     },
     "IIS Express": {

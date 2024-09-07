@@ -39,8 +39,6 @@ export default {
 
       this.showModal = false;
       
-      localStorage.setItem(LocalStorageKeys.GameId, response.gameId);
-      
       router.push({ name: 'game', query: { gameInstanceId: response.gameId } });
     }
   }
