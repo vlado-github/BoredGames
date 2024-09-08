@@ -51,11 +51,12 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: boredgames-api
+            path: boredgames-api
 
         - name: Deploy to Vultr
           uses: nogsantos/scp-deploy@master
           with:
-            src: ./boredgames-api*
+            src: boredgames-api/*
             host: ${{ secrets.HOST }}
             remote: /boredgames-api
             port: ${{ secrets.PORT }}
