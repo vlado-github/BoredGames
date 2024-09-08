@@ -24,13 +24,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore --project BoredGames.Server.API 
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --project BoredGames.Server.API --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ../boredgames-api
+        run: dotnet publish --project BoredGames.Server.API -c Release -o ../boredgames-api
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
