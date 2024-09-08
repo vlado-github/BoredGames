@@ -53,8 +53,12 @@ jobs:
             name: boredgames-api
   
         - name: Deploy to Vultr
-          id: deploy-webapi
-          uses: techknowlogick/action-vultr@v2
+          uses: appleboy/scp-action@v0.1.7
           with:
-            token: ${{ secrets.VULTR_API_KEY }}
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            password: ${{ secrets.PASSWORD }}
+            port: ${{ secrets.PORT }}
+            source: "boredgames-api/*"
+            target: "boredgames-api"
 
