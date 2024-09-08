@@ -2,6 +2,7 @@ using System.Configuration;
 using BoredGames.Server.API.Extensions;
 using BoredGames.Server.API.Middlewares;
 using BoredGames.Server.API.Models;
+using BoredGames.Server.Common.Utils;
 using BoredGames.Server.Service.Mappings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -30,7 +31,10 @@ if (!app.Environment.IsProduction())
     });
 }
 app.UseCors(CorsPolicyExtensions.CorsPolicyName);
-app.UseHttpsRedirection();
+if (CurrentEnvironment.IsLocal())
+{
+    app.UseHttpsRedirection();
+}
 app.UseAuthorization();
 
 //Adding Middlewares
