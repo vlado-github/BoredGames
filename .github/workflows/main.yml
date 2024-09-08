@@ -1,4 +1,4 @@
-name: Build and deploy BoredGames backend API
+name: Build and deploy API
 
 env:
   DOTNET_VERSION: '7'                 # set this to the .NET Core version to use
@@ -24,19 +24,19 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Install dependencies
-        run: dotnet restore --project BoredGames.Server.API 
+        run: dotnet restore ./BoredGames.Server/BoredGames.Server.sln
 
       - name: Build with dotnet
-        run: dotnet build --project BoredGames.Server.API --configuration Release
+        run: dotnet build ./BoredGames.Server/BoredGames.Server.sln --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish --project BoredGames.Server.API -c Release -o ../boredgames-api
+        run: dotnet publish ./BoredGames.Server/BoredGames.Server.sln -c Release -o ./boredgames-api
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: boredgames-api
-          path: ../boredgames-api
+          path: ./boredgames-api
           
   deploy:
       permissions:
