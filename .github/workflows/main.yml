@@ -58,7 +58,7 @@ jobs:
           with:
             src: boredgames-api/*
             host: ${{ secrets.HOST }}
-            remote: /release/v0.0.1
+            remote: /home/boredgames/release/v0.0.1
             port: ${{ secrets.PORT }}
             user: ${{ secrets.USERNAME }}
             key: ${{ secrets.SSH_KEY }}
