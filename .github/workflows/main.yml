@@ -1,4 +1,4 @@
-name: BoredGames API
+asname: BoredGames API
 
 env:
   DOTNET_VERSION: '7'                 # set this to the .NET Core version to use
@@ -58,7 +58,7 @@ jobs:
           with:
             src: boredgames-api/*
             host: ${{ secrets.HOST }}
-            remote: /deploy
+            remote: /release/v0.0.1
             port: ${{ secrets.PORT }}
             user: ${{ secrets.USERNAME }}
             key: ${{ secrets.SSH_KEY }}
