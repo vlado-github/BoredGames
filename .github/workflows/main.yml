@@ -54,13 +54,13 @@ jobs:
             path: ./boredgames-api
             
         - name: Deploy to Vultr
-          uses: nogsantos/scp-deploy@master
+          uses: appleboy/scp-action@v0.1.7
           with:
-            src: boredgames-api/*
             host: ${{ secrets.HOST }}
-            remote: /home/boredgames/release/v0.0.1
+            username: ${{ secrets.USERNAME }}
             port: ${{ secrets.PORT }}
-            user: ${{ secrets.USERNAME }}
+            source: boredgames-api/*
+            target: /home/boredgames/release/v0.0.1
             key: ${{ secrets.SSH_KEY }}
 
 
