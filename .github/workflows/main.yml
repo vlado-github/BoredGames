@@ -53,15 +53,11 @@ jobs:
             name: boredgames-api
             path: ./boredgames-api
 
-        - name: List artifact
-          run: ls -la boredgames-api/*
-
         - name: Deploy to Vultr
           uses: appleboy/scp-action@v0.1.7
           with:
             host: ${{ secrets.HOST }}
             username: ${{ secrets.USERNAME }}
-            password: ${{ secrets.PASSWORD }}
             port: ${{ secrets.PORT }}
             source: boredgames-api/*
             target: /boredgames-api
