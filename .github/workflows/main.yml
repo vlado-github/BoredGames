@@ -60,7 +60,7 @@ jobs:
             username: ${{ secrets.USERNAME }}
             port: ${{ secrets.PORT }}
             source: boredgames-api/*
-            target: /boredgames-api
+            target: /deploy/boredgames-api
             key: ${{ secrets.SSH_KEY }}
 
 
