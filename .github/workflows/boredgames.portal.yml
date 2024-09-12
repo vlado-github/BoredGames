@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: boredgames-portal
-          path: ./BoredGames.Client/BoredGames.Portal/dist
+          path: ./BoredGames.Client/BoredGames.Portal
           
   deploy:
       permissions:
