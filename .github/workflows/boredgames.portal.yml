@@ -2,6 +2,9 @@ name: BoredGames Portal
 
 on:
   push:
+    paths:
+    - 'BoredGames.Client/BoredGames.Portal'
+    - '.github/workflows'
     branches: [ "main" ]
   workflow_dispatch:
 
@@ -24,14 +27,14 @@ jobs:
           working-directory: BoredGames.Client/BoredGames.Portal
 
       - name: Build with npm
-        run: npm run build && cp -r dist boredgames-portal
+        run: npm run build
         working-directory: BoredGames.Client/BoredGames.Portal
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: boredgames-portal
-          path: ./boredgames-portal
+          path: ./BoredGames.Client/BoredGames.Portal/dist
           
   deploy:
       permissions:
