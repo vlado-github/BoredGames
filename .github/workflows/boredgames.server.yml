@@ -1,7 +1,7 @@
 name: BoredGames API
 
 env:
-  DOTNET_VERSION: '7'                 # set this to the .NET Core version to use
+  DOTNET_VERSION: '8'                 # set this to the .NET Core version to use
 
 on:
   push:

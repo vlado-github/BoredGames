@@ -19,7 +19,7 @@ public class PlayerGrain : Grain, IPlayerGrain
     {
         var gameId = Guid.NewGuid();
         var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId);
-        gameGrain.Setup(command);
+        await gameGrain.Setup(command);
 
         var playerId = this.GetPrimaryKey();
         var playerNickName = command.PlayerNickName;
