@@ -55,7 +55,7 @@ jobs:
             username: ${{ secrets.USERNAME }}
             port: ${{ secrets.PORT }}
             source: boredgames-portal/*
-            target: /home/boredgames/release/v0.0.1
+            target: /home/boredgames/release
             key: ${{ secrets.SSH_KEY }}
 
 
