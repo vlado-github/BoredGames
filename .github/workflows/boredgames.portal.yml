@@ -2,9 +2,6 @@ name: BoredGames Portal
 
 on:
   push:
-    paths:
-    - 'BoredGames.Client/BoredGames.Portal'
-    - '.github/workflows'
     branches: [ "main" ]
   workflow_dispatch:
 
