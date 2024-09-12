@@ -13,5 +13,5 @@ public interface IGameGrain : IGrainWithGuidKey
     Task<GameStateViewModel> GetState();
     Task<GameScoreViewModel> GetScore();
     Task<GameDefinitionViewModel> GetConfig();
-    void Setup(CreateGameCommand command);
+    Task Setup(CreateGameCommand command);
 }

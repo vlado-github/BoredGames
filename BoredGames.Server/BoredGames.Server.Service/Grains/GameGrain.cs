@@ -28,7 +28,7 @@ public class GameGrain : Grain, IGameGrain
         return base.OnActivateAsync(token);
     }
 
-    public void Setup(CreateGameCommand command)
+    public async Task Setup(CreateGameCommand command)
     {
         var dto = command.Adapt<GameDto>();
         _gameRuleEngine = GameRuleEngineFactory.GetInstance(dto);
