@@ -20,9 +20,12 @@ jobs:
 
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
+        with:
+          working-directory: BoredGames.Client/BoredGames.Portal
 
       - name: Build with npm
-        run: npm --prefix ./boredgames.client/boredgames.portal run build 
+        run: npm run build 
+        working-directory: BoredGames.Client/BoredGames.Portal
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
