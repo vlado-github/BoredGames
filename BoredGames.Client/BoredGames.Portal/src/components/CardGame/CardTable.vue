@@ -52,27 +52,27 @@ export default {
 
       if (!this.currentPlayerNickName) {
         this.$refs.playerDialog.show();
-      } else {
-        let response = await apiService.joinGame({
-            gameId: this.gameInstanceId,
-            playerNickName: this.currentPlayerNickName
-        });
-        this.cardDeck = response.assets["card_deck"];
+      } 
 
-        response = await apiService.getGameState(this.gameInstanceId);
-        if (response.gameStatus == GameStatusEnum.AwaitingPlayers) {
-            await this.$refs.invitationDialog.show();
-        }
+      let response = await apiService.joinGame({
+          gameId: this.gameInstanceId,
+          playerNickName: this.currentPlayerNickName
+      });
+      this.cardDeck = response.assets["card_deck"];
+
+      response = await apiService.getGameState(this.gameInstanceId);
+      if (response.gameStatus == GameStatusEnum.AwaitingPlayers) {
+        this.showInviteDialog();
       }
     },
 
-    async showInviteDialog() {
-      await this.$refs.invitationDialog.show();
+    showInviteDialog() {
+      this.$refs.invitationDialog.show();
     },
 
     async refreshGameStatus() {
-      this.gameStatusInterval = setInterval(() => {
-          apiService.getGameState(this.gameInstanceId)
+      this.gameStatusInterval = setInterval(async () => {
+          await apiService.getGameState(this.gameInstanceId)
             .then(async (response) => {
               this.gameStatus = response.gameStatus;
               this.latestRound = response.roundNumber;
@@ -105,6 +105,7 @@ export default {
         :cards="this.cardDeck"
         :player="{ foe: true, joined: this.gameStatus != 0 }"
         :gameInstanceId="gameInstanceId"
+        :gameStatus="gameStatus"
         :roundNumber="latestRound"
         :playerScore="playersScores.filter(x => x.playerId != this.currentPlayerId)[0]"
     />
@@ -115,6 +116,7 @@ export default {
         :cards="this.cardDeck"
         :player="{ foe: false, joined: true}"
         :gameInstanceId="gameInstanceId"
+        :gameStatus="gameStatus"
         :roundNumber="latestRound"
         :playerScore="playersScores.filter(x => x.playerId == this.currentPlayerId)[0]"
     />

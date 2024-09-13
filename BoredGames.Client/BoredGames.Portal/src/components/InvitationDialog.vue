@@ -21,8 +21,8 @@ export default {
   },
 
   methods: {
-    async show() {
-        this.showModal = true;
+    show() {
+      this.showModal = true;
     },
 
     quit(event) {

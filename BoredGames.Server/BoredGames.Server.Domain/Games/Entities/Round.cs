@@ -53,7 +53,7 @@ public class Rounds
     {
         if (!AreFinished())
         {
-            throw new OperationNotAllowedException(
+            throw new InvalidActionException("Extra round",
                 $"Extra round is not allowed until all rounds are finished.");
         }
         _rounds.Add(new Round(_rounds.Count + 1));
@@ -80,7 +80,7 @@ public class Round
     {
         if (MovesStack.Any(x => x.PlayerId == dto.PlayerId))
         {
-            throw new OperationNotAllowedException(
+            throw new InvalidActionException("Make move",
                 $"Player with ID {dto.PlayerId} has already made a move for round {Number}.");
         }
         MovesStack.Add(dto);
