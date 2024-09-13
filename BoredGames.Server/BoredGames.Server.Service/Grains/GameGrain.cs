@@ -25,6 +25,7 @@ public class GameGrain : Grain, IGameGrain
             GameId = this.GetPrimaryKey(),
             GameStatus = GameStatus.AwaitingPlayers
         };
+        GameRuleEngineFactory.GetInstance(GameDto.Default);
         return base.OnActivateAsync(token);
     }
 
@@ -40,16 +41,11 @@ public class GameGrain : Grain, IGameGrain
 
     public Task<GameDefinitionViewModel> AddPlayerToGame(AddPlayerCommand command)
     {
-        if (_gameState.GameStatus is GameStatus.Finished)
+        if (_players.Count == _gameRuleEngine.GetConfiguration().RequiredNumberOfPlayers)
         {
-            throw new OperationNotAllowedException("Player can't joined to finished game.");
+            throw new InvalidActionException("Join game", "Game already has required number of players.");
         }
         
-        if (_gameState.GameStatus is GameStatus.InPlay)
-        {
-            throw new OperationNotAllowedException("Player can't joined during play.");
-        }
-
         var dto = command.Adapt<PlayerDto>();
         if (!_players.Select(x => x.Id).Contains(dto.Id))
         {

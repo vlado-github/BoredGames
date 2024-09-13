@@ -38,15 +38,10 @@ export default {
     async save(event) {
       this.showModal = false;
       localStorage.setItem(LocalStorageKeys.PlayerNickName, this.playerName);
-      apiService.joinGame({
+      await apiService.joinGame({
         gameId: this.gameInstanceId,
         playerNickName: this.playerName
       });
-
-      let response = await apiService.getGameState(this.gameInstanceId);
-      if (response.gameStatus == GameStatusEnum.AwaitingPlayers) {
-        this.$refs.invitationDialog.show();
-      }
     }
   }
 }
@@ -69,9 +64,6 @@ export default {
                 <button @click="save" class="modal-dialog-button">Save</button>
             </div>
         </div>
-        <InvitationDialog ref="invitationDialog" 
-          :gameInstanceId="this.gameInstanceId" />
-        
     </div>
   </transition>
 </template>

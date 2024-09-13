@@ -10,4 +10,12 @@ public class GameDto
     public int NumberOfRounds { get; set; }
     public string? Description { get; set; }
     public string? PlayerNickName { get; set; }
+
+    public static GameDto Default => new GameDto()
+    {
+        Title = GameTitle.RockPaperScissors,
+        NumberOfPlayers = 2,
+        RequiredNumberOfWins = 1,
+        NumberOfRounds = 10
+    };
 }

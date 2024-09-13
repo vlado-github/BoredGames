@@ -83,7 +83,8 @@ namespace BoredGames.Server.API.Controllers
 
             if (gameState.GameStatus != GameStatus.InPlay)
             {
-                throw new ActionValidationException($"Can't make move since game status is {gameState.GameStatus}.");
+                throw new InvalidActionException("Make move",
+                    $"Can't make move since game status is {gameState.GameStatus}.");
             }
 
             var playerId = this.GetPlayerId();

@@ -26,6 +26,9 @@ jobs:
       - name: Build with npm
         run: npm run build --prod
         working-directory: BoredGames.Client/BoredGames.Portal
+      
+      - name: Add .env config
+        run: mv .env.production .env
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3

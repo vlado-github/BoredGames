@@ -13,6 +13,7 @@ export default {
       joined: false
     },
     gameInstanceId: '',
+    gameStatus: 0,
     roundNumber: 0,
     playerScore: Object
   },
@@ -119,6 +120,7 @@ export default {
       :cardType="card"
       :isAgainstPlayer="player.foe"
       :gameInstanceId="gameInstanceId"
+      :gameStatus="gameStatus"
       :isRoundCompleted="isRoundCompleted"
       :isSelected="selectedCard == card"
       :hide="selectedCard == '' || selectedCard == card"

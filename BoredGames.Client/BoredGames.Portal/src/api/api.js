@@ -21,78 +21,55 @@ class ApiService {
     }
 
     async getTitles() {
-        try {
-            const response = await this.api.get("game/titles");
-            return response.data;
-        } catch (error) {
-            throw this.handleError(error);
-        }
+        const response = await this.api.get("game/titles").catch(this.handleError);
+        return response.data;
     }
 
     async createGame(request) {
-        try {
-            const response = await this.api.post("game/create", request);
-            let playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
-            if (!playerId){
-                localStorage.setItem(LocalStorageKeys.PlayerId, response.data.playerId);
-            }
-            return response.data;
-        } catch (error) {
-            throw this.handleError(error);
+        const response = await this.api.post("game/create", request).catch(this.handleError);
+        let playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
+        if (!playerId){
+            localStorage.setItem(LocalStorageKeys.PlayerId, response.data.playerId);
         }
+        return response.data;
     }
 
     async joinGame(request) {
-        try {
-            const response = await this.api.put("game/join", request);
-            let playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
-            if (!playerId){
-                localStorage.setItem(LocalStorageKeys.PlayerId, response.data.playerId);
-            }
-            return response.data;
-        } catch (error) {
-            throw this.handleError(error);
+        const response = await this.api.put("game/join", request).catch(this.handleError);
+        let playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
+        if (!playerId){
+            localStorage.setItem(LocalStorageKeys.PlayerId, response.data.playerId);
         }
+        return response.data;
     }
 
     async getGameState(gameId) {
-        try {
-            const response = await this.api.get(`game/${gameId}/state`);
-            return response.data;
-        } catch (error) {
-            throw this.handleError(error);
-        }
+        const response = await this.api.get(`game/${gameId}/state`).catch(this.handleError);
+        return response.data;
     }
 
     async makeMove(request) {
-        try {
-            const response = await this.api.post("game/makemove", request);
-            return response.data;
-        } catch (error) {
-            throw this.handleError(error);
-        }
+        const response = await this.api.post("game/makemove", request).catch(this.handleError);
+        return response.data;
     }
 
     async getGameScore(gameId) {
-        try {
-            const response = await this.api.get(`game/${gameId}/score`);
-            return response.data;
-        } catch (error) {
-            throw this.handleError(error);
-        }
+        const response = await this.api.get(`game/${gameId}/score`).catch(this.handleError);
+        return response.data;
     }
 
     async getGameWinner(gameId) {
-        try {
-            const response = await this.api.get(`game/${gameId}/winners`);
-            return response.data;
-        } catch (error) {
-            throw this.handleError(error);
-        }
+        const response = await this.api.get(`game/${gameId}/winners`).catch(this.handleError);
+        return response.data;
     }
 
     handleError(error) {
-        console.error('API Request Error:', error);
+        if (error.status == 400) {
+            console.log(error.response.title);
+        }
+        else {
+            console.error('API Request Error:', error);
+        }
         throw error;
     }
 }

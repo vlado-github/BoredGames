@@ -28,10 +28,10 @@ public class ExceptionMiddleware
             await HandleUnauthorizedAccessExceptionAsync(context, exception);
             _logger.LogWarning(exception, exception.Message, exception.StackTrace);
         }
-        catch (OperationNotAllowedException exception)
+        catch (InvalidActionException exception)
         {
-            await HandleOperationExceptionAsync(context, exception);
-            _logger.LogWarning(exception, exception.Message, exception.StackTrace);
+            await HandleInvalidActionExceptionAsync(context, exception);
+            _logger.LogInformation(exception, exception.Message, exception.StackTrace);
         }
         catch (ValidationException exception)
         {
@@ -53,14 +53,11 @@ public class ExceptionMiddleware
         }
     }
 
-    private async Task HandleOperationExceptionAsync(HttpContext context, OperationNotAllowedException exception)
+    private async Task HandleInvalidActionExceptionAsync(HttpContext context, InvalidActionException exception)
     {
         var errors = new List<ValidationFailure>
         {
-            new ValidationFailure 
-            { 
-                ErrorMessage = exception.Message
-            }
+            new ValidationFailure(propertyName: exception.Action, exception.Message)
         };
         var validationDetails = new CustomValidationErrorDetails(exception.Message, errors);
         context.Response.ContentType = "application/json";

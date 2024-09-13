@@ -1,4 +1,5 @@
 <script>
+import GameStatusEnum from '@/consts/gameStatusEnum';
 
 export default {
   name: 'card',
@@ -6,6 +7,7 @@ export default {
     cardType: '',
     isAgainstPlayer: false,
     gameInstanceId: '',
+    gameStatus: 0,
     isRoundCompleted: false,
     isSelected: false,
     hide: true,
@@ -41,7 +43,9 @@ export default {
 
   methods: {
     async onClick() {
-      this.$emit('cardSelected', this.cardType);
+      if (this.gameStatus == GameStatusEnum.InPlay) {
+        this.$emit('cardSelected', this.cardType);
+      }
     }
   }
 }
