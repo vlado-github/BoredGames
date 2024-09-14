@@ -60,6 +60,7 @@ export default {
   .header {
     color: whitesmoke;
     text-align: center;
+    font-size: 35pt;
   }
   .gallery {
     display: table;
