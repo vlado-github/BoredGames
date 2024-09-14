@@ -47,24 +47,15 @@ jobs:
           with:
             name: boredgames-portal
             path: ./boredgames-portal
-       
+            
         - name: Deploy to Vultr
-          uses: garygrossgarten/github-action-scp@release
+          uses: appleboy/scp-action@v0.1.7
           with:
-            local: boredgames-portal/*
-            remote: /home/boredgames/release
             host: ${{ secrets.HOST }}
             username: ${{ secrets.USERNAME }}
-            privateKey: ${{ secrets.SSH_KEY }}
-            
-        #- name: Deploy to Vultr
-         # uses: appleboy/scp-action@v0.1.7
-          #with:
-           # host: ${{ secrets.HOST }}
-            #username: ${{ secrets.USERNAME }}
-            #port: ${{ secrets.PORT }}
-            #source: boredgames-portal/*
-            #target: /home/boredgames/release
-            #key: ${{ secrets.SSH_KEY }}
+            port: ${{ secrets.PORT }}
+            source: boredgames-portal/*
+            target: /home/boredgames/release
+            key: ${{ secrets.SSH_KEY }}
 
 
