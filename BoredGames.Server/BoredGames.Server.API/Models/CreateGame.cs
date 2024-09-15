@@ -10,7 +10,6 @@ public class CreateGame
     public int RequiredNumberOfConsecutiveWins { get; set; }
     public int NumberOfRounds { get; set; } = 100;
     public string? Description { get; set; }
-    public string? PlayerNickName { get; set; }
 }
 
 public class CreateGameValidator : AbstractValidator<CreateGame>

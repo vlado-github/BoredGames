@@ -17,8 +17,4 @@ public class CreateGameCommand : CommandBase
     public int NumberOfRounds { get; set; }
     [Id(4)]
     public string? Description { get; set; }
-    [Id(5)]
-    public string? PlayerNickName { get; set; }
-    [Id(6)]
-    public Guid PlayerId { get; set; }
 }

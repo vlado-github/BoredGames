@@ -8,7 +8,8 @@ export default {
   name: 'playerDialog',
   expose: ['show'],
   props: {
-    gameInstanceId: ''
+    gameInstanceId: '',
+    onSaveCallback: Function
   },
 
   components: {
@@ -19,13 +20,12 @@ export default {
     return {     
         showModal: false,
         playerName: '',
-        playerJoined: false,
-        onSaveCallback: {}
+        playerJoined: false
     }
   },
 
   methods: {
-    show() {
+    async show() {
       this.showModal = true;
       this.playerName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
     },
@@ -38,10 +38,13 @@ export default {
     async save(event) {
       this.showModal = false;
       localStorage.setItem(LocalStorageKeys.PlayerNickName, this.playerName);
+
       await apiService.joinGame({
         gameId: this.gameInstanceId,
         playerNickName: this.playerName
       });
+
+      await this.onSaveCallback();
     }
   }
 }
@@ -58,7 +61,7 @@ export default {
          v-if="showModal"
          >
         <div>
-            <input v-model="this.playerName" placeholder="Enter player name..." />
+            <input v-model="this.playerName" placeholder="Enter player name..." required />
             <div>
                 <button @click="quit" class="modal-dialog-button">Quit</button>
                 <button @click="save" class="modal-dialog-button">Save</button>

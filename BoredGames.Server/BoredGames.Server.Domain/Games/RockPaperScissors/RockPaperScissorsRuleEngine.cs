@@ -30,7 +30,7 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
             roundNumber: _rounds.Current.Number);
     }
 
-    public override RockPaperScissorsConfiguration GetConfiguration()
+    public override RockPaperScissorsConfiguration GetDefinition()
     {
         return _settings;
     }
