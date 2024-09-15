@@ -7,11 +7,11 @@ namespace BoredGames.Server.Service.Grains.Base;
 
 public interface IGameGrain : IGrainWithGuidKey
 {
-    Task<GameDefinitionViewModel> AddPlayerToGame(AddPlayerCommand command);
+    Task AddPlayerToGame(AddPlayerCommand command);
     Task<GameStateViewModel> MakeMove(MakeMoveCommand command);
     Task<IList<PlayerViewModel>> GetWinners();
     Task<GameStateViewModel> GetState();
     Task<GameScoreViewModel> GetScore();
-    Task<GameDefinitionViewModel> GetConfig();
+    Task<GameDefinitionViewModel> GetDefinition();
     Task Setup(CreateGameCommand command);
 }

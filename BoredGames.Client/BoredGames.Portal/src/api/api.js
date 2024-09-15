@@ -27,19 +27,31 @@ class ApiService {
 
     async createGame(request) {
         const response = await this.api.post("game/create", request).catch(this.handleError);
-        let playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
-        if (!playerId){
-            localStorage.setItem(LocalStorageKeys.PlayerId, response.data.playerId);
-        }
+
+        const playerDetails = await this.getMyDetails();
+        localStorage.setItem(LocalStorageKeys.PlayerId, playerDetails.id);
+        localStorage.setItem(LocalStorageKeys.PlayerNickName, playerDetails.nickName);
+        
         return response.data;
     }
 
     async joinGame(request) {
         const response = await this.api.put("game/join", request).catch(this.handleError);
-        let playerId = localStorage.getItem(LocalStorageKeys.PlayerId);
-        if (!playerId){
-            localStorage.setItem(LocalStorageKeys.PlayerId, response.data.playerId);
-        }
+
+        const playerDetails = await this.getMyDetails();
+        localStorage.setItem(LocalStorageKeys.PlayerId, playerDetails.id);
+        localStorage.setItem(LocalStorageKeys.PlayerNickName, playerDetails.nickName);
+
+        return response.data;
+    }
+
+    async getGameDefinition(gameId) {
+        const response = await this.api.get(`game/${gameId}/definition`).catch(this.handleError);
+        return response.data;
+    }
+
+    async getMyDetails() {
+        const response = await this.api.get(`player/details`).catch(this.handleError);
         return response.data;
     }
 

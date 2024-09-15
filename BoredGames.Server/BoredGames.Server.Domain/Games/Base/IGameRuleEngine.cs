@@ -8,7 +8,7 @@ public interface IGameRuleEngine
     RoundResult Handle(MoveDto dto);
     IList<Player> GetWinners();
     GameScore GetScore();
-    GameConfigurationBase GetConfiguration();
+    GameConfigurationBase GetDefinition();
     RoundResult GetCurrentRoundResult();
     bool AreAllRoundsFinished();
 }

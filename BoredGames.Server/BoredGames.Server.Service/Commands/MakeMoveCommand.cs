@@ -11,5 +11,5 @@ public class MakeMoveCommand : CommandBase
     [Id(1)]
     public string ActionType { get; set; }
     [Id(2)]
-    public string PlayerNickName { get; set; }
+    public string? PlayerNickName { get; set; }
 }

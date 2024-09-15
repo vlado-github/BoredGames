@@ -8,5 +8,5 @@ public interface IPlayerGrain : IGrainWithGuidKey
 {
     Task<PlayerViewModel> GetDetails();
     Task<GameDefinitionViewModel> CreateGame(CreateGameCommand command);
-    Task<GameDefinitionViewModel> JoinGame(JoinGameCommand command);
+    Task<PlayerViewModel> JoinGame(JoinGameCommand command);
 }

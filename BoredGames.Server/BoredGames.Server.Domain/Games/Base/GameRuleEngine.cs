@@ -19,7 +19,7 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
 
     public abstract RoundResult Handle(MoveDto dto);
     
-    public abstract GameConfigurationBase GetConfiguration();
+    public abstract GameConfigurationBase GetDefinition();
     
     public RoundResult GetCurrentRoundResult()
     {

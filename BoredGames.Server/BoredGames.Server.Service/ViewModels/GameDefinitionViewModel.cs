@@ -16,7 +16,5 @@ public class GameDefinitionViewModel
     [Id(4)]
     public string? Description { get; set; }
     [Id(5)]
-    public Guid PlayerId { get; set; }
-    [Id(6)]
     public IDictionary<string, object> Assets { get; set; } = new Dictionary<string, object>();
 }
