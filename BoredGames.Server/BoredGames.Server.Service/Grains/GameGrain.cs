@@ -25,7 +25,7 @@ public class GameGrain : Grain, IGameGrain
             GameId = this.GetPrimaryKey(),
             GameStatus = GameStatus.AwaitingPlayers
         };
-        GameRuleEngineFactory.GetInstance(GameDto.Default);
+        _gameRuleEngine = GameRuleEngineFactory.GetInstance(GameDto.Default);
         return base.OnActivateAsync(token);
     }
 
