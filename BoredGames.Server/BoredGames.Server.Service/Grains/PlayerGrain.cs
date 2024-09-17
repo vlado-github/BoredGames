@@ -8,7 +8,7 @@ namespace BoredGames.Server.Service.Grains;
 
 public class PlayerGrain : Grain, IPlayerGrain
 {
-    private string? _nickName;
+    private string _nickName = string.Empty;
     
     public override Task OnActivateAsync(CancellationToken token)
     {
@@ -20,21 +20,12 @@ public class PlayerGrain : Grain, IPlayerGrain
         var gameId = Guid.NewGuid();
         var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId);
         await gameGrain.Setup(command);
-
-        var playerId = this.GetPrimaryKey();
-        var playerNickName = command.PlayerNickName;
-        var addPlayerCommand = new AddPlayerCommand
-        {
-            Id = playerId,
-            NickName = playerNickName
-        };
-        var gameDefinition = await gameGrain.AddPlayerToGame(addPlayerCommand);
-        gameDefinition.PlayerId = playerId;
-        _nickName = playerNickName;
+        
+        var gameDefinition = await gameGrain.GetDefinition();
         return gameDefinition.Adapt<GameDefinitionViewModel>();
     }
 
-    public async Task<GameDefinitionViewModel> JoinGame(JoinGameCommand command)
+    public async Task<PlayerViewModel> JoinGame(JoinGameCommand command)
     {
         var gameGrain = GrainFactory.GetGrain<IGameGrain>(command.GameId);
         _nickName = command.PlayerNickName;
@@ -43,9 +34,12 @@ public class PlayerGrain : Grain, IPlayerGrain
             Id = this.GetPrimaryKey(),
             NickName = _nickName
         };
-        var gameDefinition = await gameGrain.AddPlayerToGame(addPlayerCommand);
-        gameDefinition.PlayerId = this.GetPrimaryKey();
-        return gameDefinition.Adapt<GameDefinitionViewModel>();
+        await gameGrain.AddPlayerToGame(addPlayerCommand);
+        return new PlayerViewModel()
+        {
+            Id = this.GetPrimaryKey(),
+            NickName = _nickName
+        };
     }
 
     public Task<PlayerViewModel> GetDetails()

@@ -11,7 +11,7 @@ public static class ControllerBaseExtensions
         var playerId = controller.Request.Headers[DefaultConsts.PlayerIdHeaderKey];
         if (string.IsNullOrEmpty(playerId))
         {
-            throw new Exception("Missing PlayerId in request header.");
+            return Guid.NewGuid();
         }
 
         return Guid.Parse(playerId);

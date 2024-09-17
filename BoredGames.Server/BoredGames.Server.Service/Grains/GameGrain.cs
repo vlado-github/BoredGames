@@ -1,5 +1,4 @@
 ﻿using BoredGames.Server.Common.Enums;
-using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
@@ -39,11 +38,11 @@ public class GameGrain : Grain, IGameGrain
         _gameState.RoundStatus = roundResult.RoundStatus;
     }
 
-    public Task<GameDefinitionViewModel> AddPlayerToGame(AddPlayerCommand command)
+    public Task AddPlayerToGame(AddPlayerCommand command)
     {
-        if (_players.Count == _gameRuleEngine.GetConfiguration().RequiredNumberOfPlayers)
+        if (_players.Count == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
-            throw new InvalidActionException("Join game", "Game already has required number of players.");
+            return Task.CompletedTask;
         }
         
         var dto = command.Adapt<PlayerDto>();
@@ -53,12 +52,12 @@ public class GameGrain : Grain, IGameGrain
         }
 
         if (_gameState.GameStatus is GameStatus.AwaitingPlayers 
-            && _players.Count == _gameRuleEngine.GetConfiguration().RequiredNumberOfPlayers)
+            && _players.Count == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
             _gameState.GameStatus = GameStatus.InPlay;
         }
 
-        var settings = _gameRuleEngine.GetConfiguration();
+        var settings = _gameRuleEngine.GetDefinition();
 
         var result = settings.Adapt<GameDefinitionViewModel>();
         result.GameId = this.GetPrimaryKey();
@@ -94,9 +93,9 @@ public class GameGrain : Grain, IGameGrain
         return Task.FromResult(result.Adapt<GameScoreViewModel>());
     }
 
-    public Task<GameDefinitionViewModel> GetConfig()
+    public Task<GameDefinitionViewModel> GetDefinition()
     {
-        var config = _gameRuleEngine.GetConfiguration();
+        var config = _gameRuleEngine.GetDefinition();
         var definition = config.Adapt<GameDefinitionViewModel>();
         definition.GameId = this.GetPrimaryKey();
         return Task.FromResult(definition);

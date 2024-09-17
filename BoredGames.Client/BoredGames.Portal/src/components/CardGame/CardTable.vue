@@ -23,9 +23,21 @@ export default {
 
   async mounted() {
     this.loadScore();
+    this.startGameStatusCheck();
+
     this.currentPlayerId = localStorage.getItem(LocalStorageKeys.PlayerId);
-    this.joinGame();
-    this.refreshGameStatus();
+    this.currentPlayerNickName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
+
+    if (!this.currentPlayerNickName) {
+      await this.$refs.playerDialog.show();
+    }
+    else {
+      this.joinGame();
+      this.setTable();
+    }
+
+   
+    
   },
 
   data() {
@@ -48,16 +60,14 @@ export default {
     },
 
     async joinGame() {
-      this.currentPlayerNickName = localStorage.getItem(LocalStorageKeys.PlayerNickName);
-
-      if (!this.currentPlayerNickName) {
-        this.$refs.playerDialog.show();
-      } 
-
-      let response = await apiService.joinGame({
+      await apiService.joinGame({
           gameId: this.gameInstanceId,
           playerNickName: this.currentPlayerNickName
       });
+    },
+
+    async setTable() {
+      let response = await apiService.getGameDefinition(this.gameInstanceId);
       this.cardDeck = response.assets["card_deck"];
 
       response = await apiService.getGameState(this.gameInstanceId);
@@ -70,7 +80,7 @@ export default {
       this.$refs.invitationDialog.show();
     },
 
-    async refreshGameStatus() {
+    async startGameStatusCheck() {
       this.gameStatusInterval = setInterval(async () => {
           await apiService.getGameState(this.gameInstanceId)
             .then(async (response) => {
@@ -121,10 +131,8 @@ export default {
         :playerScore="playersScores.filter(x => x.playerId == this.currentPlayerId)[0]"
     />
     <GameEndDialog ref="gameEndDialog" :gameInstanceId="gameInstanceId" />
-    <PlayerDialog ref="playerDialog" 
-      :gameInstanceId="this.gameInstanceId" />
-    <InvitationDialog ref="invitationDialog" 
-      :gameInstanceId="this.gameInstanceId" />
+    <PlayerDialog ref="playerDialog" :gameInstanceId="gameInstanceId" :onSaveCallback="this.setTable" />
+    <InvitationDialog ref="invitationDialog" :gameInstanceId="gameInstanceId" />
   </div>
 </template>
 

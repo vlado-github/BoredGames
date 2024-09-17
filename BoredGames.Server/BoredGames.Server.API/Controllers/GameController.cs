@@ -56,23 +56,21 @@ namespace BoredGames.Server.API.Controllers
                 RequiredNumberOfWins = request.RequiredNumberOfConsecutiveWins,
                 NumberOfRounds = request.NumberOfRounds,
                 Description = request.Description,
-                PlayerId = playerId,
-                PlayerNickName = request.PlayerNickName
             });
             return gameDefinition;
         }
 
         [HttpPut("join")]
-        public async Task<GameDefinitionViewModel> Join(JoinGame request)
+        public async Task<PlayerViewModel> Join(JoinGame request)
         {
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
-            var gameDefinition = await player.JoinGame(new JoinGameCommand()
+            var playerDetails = await player.JoinGame(new JoinGameCommand()
             {
                 GameId = request.GameId,
                 PlayerNickName = request.PlayerNickName
             });
-            return gameDefinition;
+            return playerDetails;
         }
 
         [HttpPost("makemove")]
@@ -106,11 +104,11 @@ namespace BoredGames.Server.API.Controllers
             return await game.GetState();
         }
 
-        [HttpGet("{gameId:guid}/config")]
-        public async Task<GameDefinitionViewModel> GetConfig(Guid gameId)
+        [HttpGet("{gameId:guid}/definition")]
+        public async Task<GameDefinitionViewModel> GetDefinition(Guid gameId)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(gameId);
-            return await game.GetConfig();
+            return await game.GetDefinition();
         }
         
         [HttpGet("{gameId:guid}/winners")]
