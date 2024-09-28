@@ -3,11 +3,17 @@
 export default {
   name: 'scoreBoard',
   props: {
+    cardDeckSize: 0,
     playersScores: Array,
     currentPlayerId: ''
   },
 
   computed: {
+    cssProps() {
+      return {
+        '--deck-size': (this.cardDeckSize + 1)
+      }
+    },
     foeName: function() {
         return this.playersScores.filter(x => x.playerId != this.currentPlayerId)[0].playerNickName;
     },
@@ -33,14 +39,23 @@ export default {
 </script>
 
 <template>
-  <div v-if="this.playersScores.some(x => x)" class="scoreboard">
-    <h1><b>{{ this.foeName }} {{ this.foeWins }} : {{ this.myWins }} {{ this.myName }}</b></h1>
+  <div class="scoreboard" :style="cssProps">
+    <div v-if="this.playersScores.some(x => x)">
+      <h1><b>{{ this.foeName }} {{ this.foeWins }} : {{ this.myWins }} {{ this.myName }}</b></h1>
+    </div>
+    <div v-else>
+      <h1><b>0 : 0</b></h1>
+    </div>
   </div>
 </template>
 
 <style>
     .scoreboard {
+      border: solid;
+      border-color: gold;
+      grid-column-start: 1;
+      grid-column-end: var(--deck-size);
       text-align: center;
-      align-items: center;
+      align-content: center;
     }
 </style>

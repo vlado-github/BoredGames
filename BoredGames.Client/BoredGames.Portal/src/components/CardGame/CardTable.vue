@@ -109,27 +109,30 @@ export default {
 </script>
 
 <template>
-  <div class="cardtable">
+  <div class="cardtablewrapper">
     <button v-if="this.gameStatus == 0" @click="showInviteDialog" class="invite-dialog-button">Invite</button>
-    <PlayerHand
-        :cards="this.cardDeck"
-        :player="{ foe: true, joined: this.gameStatus != 0 }"
-        :gameInstanceId="gameInstanceId"
-        :gameStatus="gameStatus"
-        :roundNumber="latestRound"
-        :playerScore="playersScores.filter(x => x.playerId != this.currentPlayerId)[0]"
-    />
-    <ScoreBoard 
-      :playersScores="playersScores"
-      :currentPlayerId="currentPlayerId"/>
-    <PlayerHand
-        :cards="this.cardDeck"
-        :player="{ foe: false, joined: true}"
-        :gameInstanceId="gameInstanceId"
-        :gameStatus="gameStatus"
-        :roundNumber="latestRound"
-        :playerScore="playersScores.filter(x => x.playerId == this.currentPlayerId)[0]"
-    />
+    <div class="cardtable">
+      <PlayerHand
+          :cards="this.cardDeck"
+          :player="{ foe: true, joined: this.gameStatus != 0 }"
+          :gameInstanceId="gameInstanceId"
+          :gameStatus="gameStatus"
+          :roundNumber="latestRound"
+          :playerScore="playersScores.filter(x => x.playerId != this.currentPlayerId)[0]"
+      />
+      <ScoreBoard 
+          :cardDeckSize="this.cardDeck.length"
+          :playersScores="playersScores"
+          :currentPlayerId="currentPlayerId"/>
+      <PlayerHand
+          :cards="this.cardDeck"
+          :player="{ foe: false, joined: true}"
+          :gameInstanceId="gameInstanceId"
+          :gameStatus="gameStatus"
+          :roundNumber="latestRound"
+          :playerScore="playersScores.filter(x => x.playerId == this.currentPlayerId)[0]"
+      />
+    </div>
     <GameEndDialog ref="gameEndDialog" :gameInstanceId="gameInstanceId" />
     <PlayerDialog ref="playerDialog" :gameInstanceId="gameInstanceId" :onSaveCallback="this.setTable" />
     <InvitationDialog ref="invitationDialog" :gameInstanceId="gameInstanceId" />
@@ -137,18 +140,28 @@ export default {
 </template>
 
 <style>
+    .cardtablewrapper {
+      width: 100%;
+      height: 100%;
+      padding-left: 10%;
+      padding-right: 10%;
+      background: #56a87e;
+    }
+
     .cardtable {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #56a87e;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0; 
-        align-items: center;
-        justify-content: center;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 15% 1fr;
+      justify-content: center;
+      align-content: center;
+      width: 80%;
+      height: 100%;
+      row-gap: 2%;
+      column-gap: 2%;
+      padding-top: 2%;
+      padding-bottom: 2%;
+      justify-content: center;
+      align-items: center;
     }
 
     .invite-dialog-button {

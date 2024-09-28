@@ -4,6 +4,7 @@ import GameStatusEnum from '@/consts/gameStatusEnum';
 export default {
   name: 'card',
   props: {
+    cardDeckSize: 0,
     cardType: '',
     isAgainstPlayer: false,
     gameInstanceId: '',
@@ -34,6 +35,14 @@ export default {
     }
   },
 
+  computed: {
+    cssProps() {
+      return {
+        '--deck-size': (this.cardDeckSize + 1)
+      }
+    }
+  },
+
   data() {
     return {
       render: true,
@@ -52,51 +61,72 @@ export default {
 </script>
 
 <template>
-  <div v-if="render && hide"
-    v-bind:id="cardType" 
-    v-bind:isAgainstPlayer="isAgainstPlayer" 
-    v-bind:isSelected="isSelected" 
-    class="cardbox" 
-    @click="onClick">
-    <div class='cardframe'>
+  <div class="cardplaceholder" 
+    :style="cssProps"
+    v-if="render && hide"
+    v-bind:isAgainstPlayer="isAgainstPlayer"
+    v-bind:isSelected="isSelected">
+    <div class='cardframe' 
+      v-bind:id="cardType" 
+      v-bind:isAgainstPlayer="isAgainstPlayer"
+      v-bind:isSelected="isSelected"
+      @click="onClick">
       <div class='cardcontent'>
-          <img  width="100" height="100" 
+          <img class="img-responsive"
             v-if="showType === true"
             v-bind:src="`/assets/${cardType}.png`" 
             v-bind:alt="cardType"/>
+          <img class="img-responsive"
+            v-if="showType === false"
+            v-bind:src="`/assets/backside.png`" 
+            alt="card's backside"/>
       </div>
     </div>
   </div>
 </template>
 
 <style>
-    .cardbox {
-      display: table-cell;
-    }
+  .cardframe[isAgainstPlayer=false]:hover  {
+    cursor: pointer;
+  }
 
-    .cardbox[isAgainstPlayer=false]:hover  {
-      cursor: pointer;
-    }
+  .cardframe[isAgainstPlayer=true] {
+    pointer-events: none;
+  }
 
-    .cardframe {
-      display: flex;
-      margin: 15px;
-      padding:15px;
-      width: 150px;
-      height: 200px;
-      border-radius: 5%;
-      border: 2px solid #41CEE2;
-      background-color: #F1ECE8;
-    }
+  .cardplaceholder {
+    align-content: center;
+  }
 
-    .cardcontent {
-      display: flex;
-      margin: 2%;
-      width: 98%;
-      border-radius: 5%;
-      border: 2px solid #41CEE2;
-      background-color: #FFFFFF;
-      align-items: center;
-      justify-content: center;
-    }
+  .cardplaceholder[isSelected=true] {
+    grid-column-start: 1;
+    grid-column-end: var(--deck-size);
+  }
+
+  .cardframe {
+    display: flex;
+    padding:15px;
+    height: auto;
+    max-width: 150px;
+    max-height: 200px;
+    border-radius: 5%;
+    border: 2px solid #41CEE2;
+    background-color: #F1ECE8;
+    margin-left: auto;
+    margin-right: auto;
+    aspect-ratio: 3/4;
+  }
+
+  .cardcontent {
+    display: block;
+    border-radius: 5%;
+    border: 2px solid #41CEE2;
+    background-color: #FFFFFF;
+    align-content: center;
+  }
+
+  .img-responsive {
+    width: 100%;
+    height: auto;
+  }
 </style>
