@@ -33,7 +33,7 @@ jobs:
         run: dotnet publish ./BoredGames.Server/BoredGames.Server.sln -c Release -o ./boredgames-api
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: boredgames-api
           path: ./boredgames-api
@@ -48,7 +48,7 @@ jobs:
 
       steps:
         - name: Download artifact from build job
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: boredgames-api
             path: ./boredgames-api
