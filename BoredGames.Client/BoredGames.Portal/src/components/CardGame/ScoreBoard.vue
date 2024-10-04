@@ -1,4 +1,5 @@
 <script>
+import DefaultConsts from '@/consts/defaultContsts';
 
 export default {
   name: 'scoreBoard',
@@ -10,6 +11,11 @@ export default {
 
   computed: {
     cssProps() {
+      if (this.cardDeckSize == 0) {
+        return {
+          '--deck-size': (DefaultConsts.CardDeckSize + 1)
+        }
+      }
       return {
         '--deck-size': (this.cardDeckSize + 1)
       }

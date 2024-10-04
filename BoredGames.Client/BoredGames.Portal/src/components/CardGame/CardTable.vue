@@ -35,9 +35,6 @@ export default {
       this.joinGame();
       this.setTable();
     }
-
-   
-    
   },
 
   data() {

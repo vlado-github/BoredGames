@@ -1,5 +1,6 @@
 <script>
 import GameStatusEnum from '@/consts/gameStatusEnum';
+import DefaultConsts from '@/consts/defaultContsts';
 
 export default {
   name: 'card',
@@ -37,6 +38,11 @@ export default {
 
   computed: {
     cssProps() {
+      if (this.cardDeckSize == 0) {
+        return {
+          '--deck-size': (DefaultConsts.CardDeckSize + 1)
+        }
+      }
       return {
         '--deck-size': (this.cardDeckSize + 1)
       }

@@ -3,6 +3,7 @@ import Card from './Card.vue'
 import apiService from '@/api/api';
 import { useToast, POSITION } from "vue-toastification";
 import GameResultEnum from '@/consts/gameResultEnum';
+import DefaultConsts from '@/consts/defaultContsts';
 
 export default {
   name: 'playerHand',
@@ -17,6 +18,7 @@ export default {
     roundNumber: 0,
     playerScore: Object
   },
+
   watch: { 
     playerScore: function(newValue, oldValue) {
       this.onRoundCompleted(newValue);
@@ -27,6 +29,11 @@ export default {
   },
   computed: {
     cssProps() {
+      if (this.cards.length == 0) {
+        return {
+          '--deck-size': (DefaultConsts.CardDeckSize + 1)
+        }
+      }
       return {
         '--deck-size': (this.cards.length + 1)
       }
