@@ -1,4 +1,5 @@
 using BoredGames.Server.Domain.Games.Entities;
+using Newtonsoft.Json;
 
 namespace BoredGames.Server.Domain.Games.RockPaperScissors;
 
@@ -13,6 +14,7 @@ public class RockPaperScissorsFormSchema : GameFormSchema
                 Element = "h1",
                 Children = "Create game",
             },
+            
             new FormElement("requiredNumberOfConsecutiveWins")
             {
                 Type = "range",
@@ -22,13 +24,20 @@ public class RockPaperScissorsFormSchema : GameFormSchema
                 Validation =  "required|max:10",
                 Min = "1",
                 Max = "10",
-                Label = "Required number of consecutive wins:"
+                Label = "Required number of consecutive wins:",
             },
             new FormElement("requiredWinsValue")
             {
-                Element = "div",
+                Element = "pre",
                 Children = "$get(requiredNumberOfConsecutiveWins).value",
-            },
+                Attributes = new
+                {
+                    style = new Dictionary<string, string>()
+                    {
+                        { "font-size", "2em" }
+                    }
+                }
+            }
         };
     }
 }

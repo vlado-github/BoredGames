@@ -10,7 +10,7 @@
     "prod": "vite"
   },
   "dependencies": {
-    "@formkit/vue": "^1.6.5",
+    "@formkit/vue": "^1.6.7",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.3",
     "babel-polyfill": "^6.26.0",

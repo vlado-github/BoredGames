@@ -37,6 +37,9 @@ public class FormElement
     [JsonProperty("$formkit")]
     public string Type { get; set; }
     
+    [JsonProperty("attrs")]
+    public object Attributes { get; set; }
+    
     [JsonProperty("id")]
     public string Id { get; set; }
     
