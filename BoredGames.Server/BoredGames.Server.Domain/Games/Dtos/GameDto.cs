@@ -1,4 +1,4 @@
-using BoredGames.Server.Common.Enums;
+using BoredGames.Common.Enums;
 
 namespace BoredGames.Server.Domain.Games.Dtos;
 

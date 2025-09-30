@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BoredGames.Server.Common\BoredGames.Server.Common.csproj" />
+      <ProjectReference Include="..\BoredGames.Common\BoredGames.Common.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,3 @@
-using BoredGames.Server.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
 

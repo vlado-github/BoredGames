@@ -1,4 +1,4 @@
-using BoredGames.Server.API.Extensions;
+using BoredGames.Server.GameServer.Extensions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Hosting;
 
