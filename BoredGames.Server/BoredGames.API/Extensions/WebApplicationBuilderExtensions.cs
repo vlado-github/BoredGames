@@ -12,20 +12,8 @@ public static class WebApplicationBuilderExtensions
     {
         if (builder != null)
         {
-            if (CurrentEnvironment.IsLocal())
+            if (CurrentEnvironment.IsProduction())
             {
-                var logger = new LoggerConfiguration()
-                    .ReadFrom.Configuration(builder.Configuration)
-                    .Enrich.FromLogContext()
-                    .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions())
-                    .Enrich.WithCorrelationId()
-                    .CreateLogger();
-                builder.Logging.ClearProviders();
-                builder.Logging.AddSerilog(logger);
-            }
-            else
-            {
-    
                 var logger= new LoggerConfiguration()
                     .WriteTo.Sentry(options =>
                     {
@@ -40,6 +28,17 @@ public static class WebApplicationBuilderExtensions
                         options.MinimumBreadcrumbLevel = LogEventLevel.Debug;
                         options.MinimumEventLevel = LogEventLevel.Warning;
                     })
+                    .Enrich.FromLogContext()
+                    .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions())
+                    .Enrich.WithCorrelationId()
+                    .CreateLogger();
+                builder.Logging.ClearProviders();
+                builder.Logging.AddSerilog(logger);
+            }
+            else
+            {
+                var logger = new LoggerConfiguration()
+                    .ReadFrom.Configuration(builder.Configuration)
                     .Enrich.FromLogContext()
                     .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions())
                     .Enrich.WithCorrelationId()

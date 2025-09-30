@@ -3,18 +3,11 @@
 using BoredGames.Server.GameServer.Extensions;
 using Microsoft.Extensions.Hosting;
 
-using (var host = Host.CreateDefaultBuilder(args).SetupOrleans())
+var builder = Host.CreateDefaultBuilder(args)
+    .SetupDependencies()
+    .SetupOrleans();
+using (var host = builder.Build())
 {
     // Start the host
-    await host.StartAsync();
-
-    Console.WriteLine("Setup completed.");
-    Console.WriteLine("Now you can launch the API.");
-
-    // Exit when any key is pressed
-    Console.WriteLine("Press any key to exit.");
-    Console.ReadKey();
-    await host.StopAsync();
-
-    return 0;
+    await host.RunAsync();
 }

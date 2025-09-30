@@ -1,0 +1,125 @@
+﻿services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: boredgames_nginx_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./.nginx/config/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - boredgames-network
+
+  redis:
+    image: redis:6
+    container_name: boredgames_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - boredgames-network
+
+  api:
+    image: boredgames.api
+    container_name: boredgames_api
+    build:
+      context: .
+      dockerfile: BoredGames.Server/BoredGames.API/Dockerfile
+    ports:
+      - "5008:8080"
+    restart: always
+    depends_on:
+      - gameserver-silo1
+      - gameserver-silo2
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - BORED_GAMES_CORS_ORIGIN_URL=${BORED_GAMES_CORS_ORIGIN_URL}
+      - BORED_GAMES_APP_BASE_URL=${BORED_GAMES_APP_BASE_URL}
+      - BORED_GAMES_API_KEY=${BORED_GAMES_API_KEY}
+    networks:
+      - boredgames-network
+
+  gameserver-silo1:
+    image: boredgames.gameserver
+    container_name: gameserver_silo1
+    build:
+      context: .
+      dockerfile: BoredGames.Server/BoredGames.Server.GameServer/Dockerfile
+    depends_on:
+      - redis
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - INSTANCE_ID=1
+      - REDIS_HOST=redis
+    ports:
+      - "11111:11111"   # Orleans silo port
+      - "30000:30000"   # Orleans gateway port (client)
+    networks:
+      - boredgames-network
+
+  gameserver-silo2:
+    image: boredgames.gameserver
+    container_name: gameserver_silo2
+    build:
+      context: .
+      dockerfile: BoredGames.Server/BoredGames.Server.GameServer/Dockerfile
+    depends_on:
+      - redis
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - INSTANCE_ID=2
+      - REDIS_HOST=redis
+    ports:
+      - "11112:11111"   # Orleans silo port
+      - "30001:30000"   # Orleans gateway port (client)
+    networks:
+      - boredgames-network
+
+  database:
+    image: postgres
+    container_name: boredgames_${DB_SERVER}
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5438:5432"
+    networks:
+      - boredgames-network
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.4
+    container_name: boredgames_keycloak
+    command: start --import-realm
+    environment:
+      KC_HOSTNAME: ${KEYCLOAK_SERVER_NAME}
+      KC_PROXY_HEADERS: "xforwarded"
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false" 
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin-temp
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin-temp
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://${DB_SERVER}/keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: admin
+    volumes:
+      - ./.keycloak/imports:/opt/keycloak/data/import
+      - ./.keycloak/keycloak-theme-for-kc-all-other-versions.jar:/opt/keycloak/providers/keycloak-theme.jar
+    ports:
+      - 5555:8080
+    restart: always
+    networks:
+      boredgames-network:
+        aliases:
+          - keycloak.local
+ 
+networks:
+  boredgames-network:
+    driver: bridge
+
+volumes:
+    postgres:
