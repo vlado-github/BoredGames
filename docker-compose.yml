@@ -4,8 +4,9 @@
     container_name: boredgames_nginx_proxy
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./.nginx/config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${BORED_GAMES_API_KEY}:/etc/nginx/nginx.conf:ro
     networks:
       - boredgames-network
 
