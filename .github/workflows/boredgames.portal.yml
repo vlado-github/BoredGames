@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  checks: write
   contents: read
 
 jobs:
@@ -25,37 +26,20 @@ jobs:
 
       - name: Build with npm
         run: npm run build --prod
-        working-directory: BoredGames.Client/BoredGames.Portal
+          working-directory: BoredGames.Client/BoredGames.Portal
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: boredgames-portal
-          path: ./BoredGames.Client/BoredGames.Portal/dist
           
   deploy:
-      permissions:
-        contents: none
       runs-on: self-hosted
       needs: build
       environment:
         name: 'Production'
 
       steps:
-        - name: Download artifact from build job
-          uses: actions/download-artifact@v4
+        - name: Deploy artifacts
+          uses: actions/upload-artifact@v4
           with:
             name: boredgames-portal
-            path: ./boredgames-portal
-            
-        - name: Deploy to Vultr
-          uses: appleboy/scp-action@v0.1.7
-          with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            port: ${{ secrets.PORT }}
-            source: boredgames-portal/*
-            target: /home/boredgames/release
-            key: ${{ secrets.SSH_KEY }}
+            path: ./BoredGames.Client/BoredGames.Portal/dist
 
 
