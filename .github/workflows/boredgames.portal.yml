@@ -36,10 +36,9 @@ jobs:
         name: 'Production'
 
       steps:
-        - name: Deploy artifacts
-          uses: actions/upload-artifact@v4
-          with:
-            name: boredgames-portal
-            path: ./BoredGames.Client/BoredGames.Portal/dist
+      - name: Copy built files to release directory
+        run: |
+          rm -rf /home/boredgames/release/boredgames-portal/*
+          cp -r BoredGames.Client/BoredGames.Portal/dist/* /home/boredgames/release/boredgames-portal/
 
 
