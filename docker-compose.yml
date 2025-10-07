@@ -8,6 +8,7 @@
     volumes:
       - ${NGINX_CONFIG_PATH}:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro 
+      - /home/boredgames/release:/home/boredgames/release:ro
     networks:
       - boredgames-network
 
