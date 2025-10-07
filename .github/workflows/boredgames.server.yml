@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Solution (BoredGames.GameServer)
         run: |
-          docker build -f BoredGames.Server/BoredGames.Server.GameServer -t boredgames-gameserver .
+          docker build -f BoredGames.Server/BoredGames.Server.GameServer/Dockerfile -t boredgames-gameserver .
           
   deploy:
     runs-on: self-hosted
