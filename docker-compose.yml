@@ -6,7 +6,7 @@
       - "80:80"
       - "443:443"
     volumes:
-      - ${BORED_GAMES_API_KEY}:/etc/nginx/nginx.conf:ro
+      - ${NGINX_CONFIG_PATH}:/etc/nginx/nginx.conf:ro
     networks:
       - boredgames-network
 

@@ -1,4 +1,4 @@
-name: BoredGames API
+name: BoredGames Backend
 
 env:
   DOTNET_VERSION: '8'                 # set this to the .NET Core version to use
@@ -14,7 +14,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -23,10 +23,12 @@ jobs:
 
       - name: Build Solution (BoredGames.API)
         run: |
+          cd ./BoredGames.Server/BoredGames.API
           sudo docker build -t boredgames-api-build ./BoredGames.Server/BoredGames.API
 
       - name: Build Solution (BoredGames.GameServer)
         run: |
+          cd ./BoredGames.Server/BoredGames.Server.GameServer
           sudo docker build -t boredgames-gameserver-build ./BoredGames.Server/BoredGames.Server.GameServer
           
   deploy:
