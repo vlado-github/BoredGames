@@ -24,8 +24,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BoredGames.Server.API\BoredGames.Server.API.csproj" />
-      <ProjectReference Include="..\BoredGames.Server.Common\BoredGames.Server.Common.csproj" />
+      <ProjectReference Include="..\BoredGames.API\BoredGames.API.csproj" />
+      <ProjectReference Include="..\BoredGames.Common\BoredGames.Common.csproj" />
+      <ProjectReference Include="..\BoredGames.Server.GameServer\BoredGames.Server.GameServer.csproj" />
     </ItemGroup>
 
     <ItemGroup>

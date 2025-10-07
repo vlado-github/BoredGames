@@ -1,5 +1,5 @@
-using BoredGames.Server.Common.Enums;
-using BoredGames.Server.Common.Exceptions;
+using BoredGames.Common.Enums;
+using BoredGames.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Dtos;
 
 namespace BoredGames.Server.Domain.Games.Entities;

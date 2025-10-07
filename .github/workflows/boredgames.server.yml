@@ -14,29 +14,20 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          fetch-depth: 0
 
-      - name: Install dependencies
-        run: dotnet restore ./BoredGames.Server/BoredGames.Server.sln
+      - name: Build Solution (BoredGames.API)
+        run: |
+          sudo docker build -t boredgames-api-build ./BoredGames.Server/BoredGames.API
 
-      - name: Build with dotnet
-        run: dotnet build ./BoredGames.Server/BoredGames.Server.sln --configuration Release
-
-      - name: dotnet publish
-        run: dotnet publish ./BoredGames.Server/BoredGames.Server.sln -c Release -o ./boredgames-api
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: boredgames-api
-          path: ./boredgames-api
+      - name: Build Solution (BoredGames.GameServer)
+        run: |
+          sudo docker build -t boredgames-gameserver-build ./BoredGames.Server/BoredGames.Server.GameServer
           
   deploy:
       permissions:
@@ -47,20 +38,10 @@ jobs:
         name: 'Production'
 
       steps:
-        - name: Download artifact from build job
-          uses: actions/download-artifact@v4
-          with:
-            name: boredgames-api
-            path: ./boredgames-api
-            
-        - name: Deploy to Vultr
-          uses: appleboy/scp-action@v0.1.7
-          with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            port: ${{ secrets.PORT }}
-            source: boredgames-api/*
-            target: /home/boredgames/release
-            key: ${{ secrets.SSH_KEY }}
+        - name: Deploy API
+          run: |
+            sudo docker-compose up -d --force-recreate 
+
+
 
 
