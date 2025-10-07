@@ -24,11 +24,11 @@ jobs:
 
       - name: Build Solution (BoredGames.API)
         run: |
-          sudo docker build -f BoredGames.Server/BoredGames.API/Dockerfile -t boredgames-api
+          docker build -f BoredGames.Server/BoredGames.API/Dockerfile -t boredgames-api
 
       - name: Build Solution (BoredGames.GameServer)
         run: |
-          sudo docker build -f BoredGames.Server/BoredGames.Server.GameServer -t boredgames-gameserver
+          docker build -f BoredGames.Server/BoredGames.Server.GameServer -t boredgames-gameserver
           
   deploy:
     runs-on: self-hosted
@@ -43,7 +43,7 @@ jobs:
           fetch-depth: 0
       - name: Deploy API
         run: |
-          sudo docker-compose up -d --force-recreate 
+          docker-compose up -d --force-recreate 
 
 
 
