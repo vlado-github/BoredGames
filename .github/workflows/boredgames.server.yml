@@ -24,11 +24,11 @@ jobs:
 
       - name: Build Solution (BoredGames.API)
         run: |
-          sudo docker build -t boredgames-api-build ./BoredGames.Server/BoredGames.API
+          sudo docker build -f BoredGames.Server/BoredGames.API/Dockerfile -t boredgames-api
 
       - name: Build Solution (BoredGames.GameServer)
         run: |
-          sudo docker build -t boredgames-gameserver-build ./BoredGames.Server/BoredGames.Server.GameServer
+          sudo docker build -f BoredGames.Server/BoredGames.Server.GameServer -t boredgames-gameserver
           
   deploy:
     runs-on: self-hosted
