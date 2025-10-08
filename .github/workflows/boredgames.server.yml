@@ -9,11 +9,12 @@ on:
   workflow_dispatch:
 
 permissions:
+  checks: write
   contents: read
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     
     steps:
       - name: Checkout repo
@@ -23,26 +24,27 @@ jobs:
 
       - name: Build Solution (BoredGames.API)
         run: |
-          cd ./BoredGames.Server/BoredGames.API
-          sudo docker build -t boredgames-api-build ./BoredGames.Server/BoredGames.API
+          docker build -f BoredGames.Server/BoredGames.API/Dockerfile -t boredgames-api .
 
       - name: Build Solution (BoredGames.GameServer)
         run: |
-          cd ./BoredGames.Server/BoredGames.Server.GameServer
-          sudo docker build -t boredgames-gameserver-build ./BoredGames.Server/BoredGames.Server.GameServer
+          docker build -f BoredGames.Server/BoredGames.Server.GameServer/Dockerfile -t boredgames-gameserver .
           
   deploy:
-      permissions:
-        contents: none
-      runs-on: ubuntu-latest
-      needs: build
-      environment:
-        name: 'Production'
+    runs-on: self-hosted
+    needs: build
+    environment:
+      name: 'Production'
 
-      steps:
-        - name: Deploy API
-          run: |
-            sudo docker-compose up -d --force-recreate 
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Deploy (all)
+        run: |
+          docker-compose up -d --force-recreate 
 
 
 
