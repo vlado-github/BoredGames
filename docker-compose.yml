@@ -19,6 +19,10 @@
       - "6379:6379"
     networks:
       - boredgames-network
+    deploy:
+      resources:
+        limits:
+          memory: 100M
 
   api:
     image: boredgames.api
