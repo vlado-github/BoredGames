@@ -18,7 +18,7 @@
     ports:
       - "6379:6379"
     volumes:
-      - ./redis_data:/data
+      - /home/boredgames/redis_data:/data
     networks:
       - boredgames-network
     deploy:
