@@ -96,7 +96,7 @@
     volumes:
        - postgres:/data/postgres
     ports:
-      - "5438:5432"
+      - "5432:5432"
     networks:
       - boredgames-network
     restart: unless-stopped
