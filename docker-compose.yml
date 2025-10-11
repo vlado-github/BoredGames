@@ -19,6 +19,7 @@
       - "6379:6379"
     volumes:
       - /home/boredgames/redis_data:/data
+    command: ["redis-server", "--dir", "/data"]
     networks:
       - boredgames-network
     deploy:
