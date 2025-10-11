@@ -88,7 +88,7 @@
 
   database:
     image: postgres
-    container_name: boredgames_${DB_SERVER}
+    container_name: ${DB_SERVER}
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: postgres
