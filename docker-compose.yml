@@ -2,7 +2,6 @@
   nginx:
     image: nginx:stable-alpine
     container_name: boredgames_nginx_proxy
-    restart: always
     ports:
       - "80:80"
       - "443:443"
