@@ -2,6 +2,7 @@
   nginx:
     image: nginx:stable-alpine
     container_name: boredgames_nginx_proxy
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -15,6 +16,7 @@
   redis:
     image: redis:6
     container_name: boredgames_redis
+    restart: always
     ports:
       - "6379:6379"
     volumes:
@@ -55,6 +57,7 @@
       dockerfile: BoredGames.Server/BoredGames.Server.GameServer/Dockerfile
     depends_on:
       - redis
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - INSTANCE_ID=1
@@ -77,6 +80,7 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - INSTANCE_ID=2
       - REDIS_HOST=redis
+    restart: always
     ports:
       - "11113:11113"   # Orleans silo port
       - "30002:30002"   # Orleans gateway port (client)
