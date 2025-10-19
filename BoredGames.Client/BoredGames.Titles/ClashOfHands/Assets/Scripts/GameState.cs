@@ -20,8 +20,9 @@ namespace Assets.Scripts.GamePlay
             }
         }
 
-        public string Id { get; set; } = string.Empty;
+        public string GameId { get; set; } = string.Empty;
         public GameStatus Status { get; set; } = GameStatus.WaitingForPlayer;
+        public string PlayerId { get; set; }
         public string PlayerName { get; set; }
     }
 }

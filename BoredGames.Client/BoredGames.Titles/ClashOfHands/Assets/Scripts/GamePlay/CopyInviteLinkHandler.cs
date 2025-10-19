@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CopyInviteLinkHandler : MonoBehaviour
 {
+    [SerializeField] Canvas _inviteLinkDialog;
     private Button copyInviteLinkButton; // Assign in Inspector
 
     void Start()
@@ -21,7 +21,7 @@ public class CopyInviteLinkHandler : MonoBehaviour
 
     void OnButtonClick()
     {
-        SceneManager.LoadScene("InviteScene");
+        _inviteLinkDialog.gameObject.SetActive(true);
     }
 
     void OnDestroy()
