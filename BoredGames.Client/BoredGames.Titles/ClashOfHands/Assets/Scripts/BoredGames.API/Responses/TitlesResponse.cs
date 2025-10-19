@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assets.BoredGames.API.Responses
+﻿namespace Assets.Scripts.BoredGames.API.Responses
 {
     [System.Serializable]
-    public class TitleResponse
+    public class TitleResponse : IResponse
     {
         public long id;
         public string name;
@@ -15,7 +9,7 @@ namespace Assets.BoredGames.API.Responses
     }
 
     [System.Serializable]
-    public class TitlesResponse
+    public class TitlesResponse : IResponse
     {
         public TitleResponse[] titles;
     }

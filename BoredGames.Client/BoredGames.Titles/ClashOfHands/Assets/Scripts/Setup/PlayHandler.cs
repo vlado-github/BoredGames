@@ -1,3 +1,5 @@
+using Assets.Scripts.BoredGames.API;
+using Assets.Scripts.GamePlay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,10 +23,12 @@ public class PlayHandler : MonoBehaviour
 
     void OnButtonClick()
     {
-        //GameManager.Instance.CreateGame();
-
-
-        SceneManager.LoadScene("GamePlayScene");
+        StartCoroutine(BoredGamesClient.Instance.CreateGame((response) =>
+        {
+            GameState.Instance.GameId = response.gameId;
+            GameState.Instance.Status = Assets.Scripts.GameStatus.AwaitingPlayers;
+            SceneManager.LoadScene("GamePlayScene");
+        }));
     }
 
     void OnDestroy()

@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Assets.Scripts.GamePlay;
 using UnityEngine.Networking;
 
 namespace Assets.BoredGames.API
 {
     static class AuthHelper
     {
-        public static void SetAuth(this UnityWebRequest request, ApiConfig apiConfig)
+        public static void SetHeaders(this UnityWebRequest request)
         {
-            request.SetRequestHeader(apiConfig.HeaderKey, apiConfig.ApiKey);
+            request.SetRequestHeader("Accept", "application/json");
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader(ApiConfig.HeaderKey, ApiConfig.ApiKey);
+            if (!string.IsNullOrEmpty(GameState.Instance.PlayerId))
+            {
+                request.SetRequestHeader(ApiConfig.HeaderPlayerKey, GameState.Instance.PlayerId);
+            }
         }
     }
 }

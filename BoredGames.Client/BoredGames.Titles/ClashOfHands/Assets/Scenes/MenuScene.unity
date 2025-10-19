@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 173981913}
   - component: {fileID: 173981912}
   - component: {fileID: 173981911}
+  - component: {fileID: 173981915}
   m_Layer: 5
   m_Name: Menu
   m_TagString: Untagged
@@ -224,6 +225,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &173981915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173981910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73771ebc3bfb6cc42ab286e36094c9ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -851,7 +864,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 014e1e1af27dac942be291e49ae8e3d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quitGameButton: {fileID: 0}
 --- !u!1 &1579597551
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,7 +1134,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d7b2ae5a2c5b2439c67c8eb63aab86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customGameButton: {fileID: 0}
 --- !u!1 &1753731768
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,7 +1268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6fcec31e70b9b4d9721ecf06c58f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quickPlayButton: {fileID: 0}
 --- !u!1 &1804342828
 GameObject:
   m_ObjectHideFlags: 0

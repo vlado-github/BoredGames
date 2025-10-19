@@ -1,9 +1,9 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using TMPro;
+using Assets.Scripts;
+using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
-using Unity.VisualScripting;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerNameHandler : MonoBehaviour
 {
@@ -49,15 +49,39 @@ public class PlayerNameHandler : MonoBehaviour
         }
         else
         {
-            _validationMessage.gameObject.SetActive(false);
             GameState.Instance.PlayerName = playerName;
-            _playerNameDialog.gameObject.SetActive(false);
-            _inviteLinkDialog.gameObject.SetActive(true);
+
+            StartCoroutine(BoredGamesClient.Instance.GetPlayerDetails((response) =>
+            {
+                GameState.Instance.PlayerId = response.id;
+            }));
+
+            StartCoroutine(BoredGamesClient.Instance.JoinGame((response) =>
+            {
+                _validationMessage.gameObject.SetActive(false);
+                _playerNameDialog.gameObject.SetActive(false);
+            }));
+
+            StartCoroutine(BoredGamesClient.Instance.GetGameState((response) => {
+                GameState.Instance.Status = (GameStatus)response.gameStatus;
+                GameState.Instance.CurrentRoundNumber = response.roundNumber;
+                GameState.Instance.CurrentRoundStatus = response.roundStatus;
+            }));
+
+            if (GameState.Instance.Status == GameStatus.AwaitingPlayers)
+            {
+                _inviteLinkDialog.gameObject.SetActive(true);
+            }
+            else
+            {
+                _inviteLinkDialog.gameObject.SetActive(false);
+            }
         }
     }
 
     void OnDestroy()
     {
         saveButton.onClick.RemoveListener(OnButtonClick);
+        _playerNameInput.onValueChanged.RemoveListener(OnInputValueChanged);
     }
 }

@@ -1,12 +1,9 @@
-﻿using UnityEditor;
-using UnityEngine;
-
-namespace Assets.Scripts
+﻿namespace Assets.Scripts
 {
     public enum GameStatus
     {
-        WaitingForPlayer,
-        Playing,
-        GameOver
+        AwaitingPlayers,
+        InPlay,
+        Finished
     }
 }

@@ -1,8 +1,9 @@
 ﻿using Assets.BoredGames.API;
-using Assets.BoredGames.API.Responses;
+using Assets.Scripts.BoredGames.API.Requests;
+using Assets.Scripts.BoredGames.API.Responses;
+using Assets.Scripts.GamePlay;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -11,44 +12,120 @@ namespace Assets.Scripts.BoredGames.API
     public class BoredGamesClient
     {
         private static BoredGamesClient _instance = null;
-        private readonly ApiConfig _apiConfig;
 
-        private BoredGamesClient()
+        public static BoredGamesClient Instance
         {
-            _apiConfig = new ApiConfig();
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new BoredGamesClient();
+                }
+                return _instance;
+            }
         }
 
-        public static BoredGamesClient GetInstance()
+        private IEnumerator HandleRequest<T>(UnityWebRequest request, Action<T> onSuccess) where T : IResponse
         {
-            if (_instance == null)
+            request.SetHeaders();
+
+            // Send the request and wait for the response
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError ||
+                request.result == UnityWebRequest.Result.ProtocolError)
             {
-                _instance = new BoredGamesClient();
+                var errorMessage = $"[{ApiConfig.BaseUrl}] {request.uri} Request error: {request.error}]";
+                Debug.LogError(errorMessage);
             }
-            return _instance;
+            else
+            {
+                var response = JsonUtility.FromJson<T>(request.downloadHandler.text);
+                onSuccess(response);
+            }
         }
 
         public IEnumerator GetTitles(Action<TitlesResponse> onSuccess)
         {
-            var url = new Uri(_apiConfig.BaseUrl, "/api/game/titles");
+            var url = new Uri(ApiConfig.BaseUrl, "/api/game/titles");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
-                request.SetAuth(_apiConfig);
+                yield return HandleRequest(request, onSuccess);
+            }
+        }
 
-                // Send the request and wait for the response
-                yield return request.SendWebRequest();
+        public IEnumerator CreateGame(Action<CreateGameResponse> onSuccess)
+        {
+            var url = new Uri(ApiConfig.BaseUrl, "/api/game/create");
 
-                if (request.result == UnityWebRequest.Result.ConnectionError ||
-                    request.result == UnityWebRequest.Result.ProtocolError)
+            var data = new CreateGameRequest
+            {
+                gameTitle = GameConfiguration.Instance.GameTitle,
+                numberOfPlayers = GameConfiguration.Instance.NumberOfPlayers,
+                requiredNumberOfConsecutiveWins = GameConfiguration.Instance.RequiredNumberOfConsecutiveWins,
+                numberOfRounds = GameConfiguration.Instance.NumberOfRounds,
+            };
+
+            using (UnityWebRequest request = UnityWebRequest.Post(url, JsonUtility.ToJson(data), ApiConfig.DefaultContentType))
+            {
+                yield return HandleRequest(request, onSuccess);
+            }
+        }
+
+        public IEnumerator JoinGame(Action<JoinGameResponse> onSuccess)
+        {
+            var url = new Uri(ApiConfig.BaseUrl, "/api/game/join");
+            var isValid = true;
+
+            if (string.IsNullOrEmpty(GameState.Instance.GameId))
+            {
+                Debug.LogWarning($"{nameof(GameState.Instance.GameId)} has no value set.");
+                isValid = false;
+            }
+            if (string.IsNullOrEmpty(GameState.Instance.PlayerId))
+            {
+                Debug.LogWarning($"{nameof(GameState.Instance.PlayerId)} has no value set.");
+                isValid = false;
+            }
+            if (string.IsNullOrEmpty(GameState.Instance.PlayerName))
+            {
+                Debug.LogWarning($"{nameof(GameState.Instance.PlayerName)} has no value set.");
+                isValid = false;
+            }
+
+            if (isValid)
+            {
+                var data = new JoinGameRequest
                 {
-                    var errorMessage = $"[{_apiConfig.BaseUrl}] Request error: {request.error}";
-                    Debug.LogError(errorMessage);
-                }
-                else
+                    gameId = GameState.Instance.GameId,
+                    playerNickName = GameState.Instance.PlayerName
+                };
+
+                using (UnityWebRequest request = UnityWebRequest.Put(url, JsonUtility.ToJson(data)))
                 {
-                    var response = JsonUtility.FromJson<TitlesResponse>(request.downloadHandler.text);
-                    onSuccess(response);
+                    yield return HandleRequest(request, onSuccess);
                 }
+            }
+        }
+
+        public IEnumerator GetGameState(Action<GameStateResponse> onSuccess)
+        {
+            var url = new Uri(ApiConfig.BaseUrl, $"/api/game/{GameState.Instance.GameId}/state");
+
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                yield return HandleRequest(request, onSuccess);
+            }
+        }
+
+        public IEnumerator GetPlayerDetails(Action<PlayerDetailsResponse> onSuccess)
+        {
+            var url = new Uri(ApiConfig.BaseUrl, $"/api/player/details");
+
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                yield return HandleRequest(request, onSuccess);
             }
         }
     }

@@ -1,9 +1,8 @@
+using Assets.Scripts;
+using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -47,14 +46,44 @@ public class GameManager : MonoBehaviour
 
     private void CheckGameStatus()
     {
-        if (GameState.Instance.Status == Assets.Scripts.GameStatus.WaitingForPlayer)
+        StartCoroutine(BoredGamesClient.Instance.GetPlayerDetails((response) =>
         {
-            _score.gameObject.SetActive(false);
-            GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
-            foreach (GameObject objectToHide in objectsToHideAtStart)
-            {
-                objectToHide.SetActive(false);
-            }
+            GameState.Instance.PlayerId = response.id;
+        }));
+
+        StartCoroutine(BoredGamesClient.Instance.JoinGame((response) =>{}));
+        
+
+        StartCoroutine(BoredGamesClient.Instance.GetGameState((response) => {
+            GameState.Instance.Status = (GameStatus)response.gameStatus;
+            GameState.Instance.CurrentRoundNumber = response.roundNumber;
+            GameState.Instance.CurrentRoundStatus = response.roundStatus;
+        }));
+
+
+
+        switch (GameState.Instance.Status)
+        {
+            case GameStatus.AwaitingPlayers:
+                {
+                    _score.gameObject.SetActive(false);
+                    GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
+                    foreach (GameObject objectToHide in objectsToHideAtStart)
+                    {
+                        objectToHide.SetActive(false);
+                    }
+                    break;
+                }
+            case GameStatus.InPlay:
+                {
+                    _score.gameObject.SetActive(true);
+                    GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
+                    foreach (GameObject objectToHide in objectsToHideAtStart)
+                    {
+                        objectToHide.SetActive(true);
+                    }
+                    break;
+                }
         }
     }
 

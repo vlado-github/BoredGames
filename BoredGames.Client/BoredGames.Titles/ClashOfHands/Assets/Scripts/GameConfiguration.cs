@@ -1,8 +1,4 @@
-﻿using Unity.VisualScripting;
-using UnityEditor;
-using UnityEngine;
-
-namespace Assets.Scripts.GamePlay
+﻿namespace Assets.Scripts.GamePlay
 {
     public sealed class GameConfiguration
     {
@@ -23,8 +19,6 @@ namespace Assets.Scripts.GamePlay
         public int GameTitle { get; private set; } = 0;
         public int NumberOfPlayers { get; private set; } = 2;
         public int RequiredNumberOfConsecutiveWins { get; set; } = 1;
-        public int NumberOfRounds { get; private set; } = 100;
-
-        public string BaseUrl = "https://boredgames.lol";
+        public int NumberOfRounds { get; private set; } = 99;
     }
 }

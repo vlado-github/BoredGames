@@ -1,8 +1,7 @@
+using Assets.BoredGames.API;
 using Assets.Scripts.GamePlay;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class InviteLinkHandler : MonoBehaviour
@@ -17,7 +16,7 @@ public class InviteLinkHandler : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _inviteLink.text = $"{GameConfiguration.Instance.BaseUrl}/game?gameInstanceId={GameState.Instance.GameId}";
+        _inviteLink.text = $"{ApiConfig.BaseUrl}game?gameInstanceId={GameState.Instance.GameId}";
 
         GameObject copyInviteButtonObject = GameObject.Find("CopyLinkButton");
         if (copyInviteButtonObject != null)
@@ -32,7 +31,7 @@ public class InviteLinkHandler : MonoBehaviour
 
     void OnButtonClick()
     {
-        GUIUtility.systemCopyBuffer = $"{GameConfiguration.Instance.BaseUrl}/game?gameInstanceId={GameState.Instance.GameId}";
+        GUIUtility.systemCopyBuffer = _inviteLink.text;
         _inviteLinkCanvas.gameObject.SetActive(false);
         _waitingForPlayerCanvas.gameObject.SetActive(true);
     }
