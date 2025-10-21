@@ -66,16 +66,16 @@ public class PlayerNameHandler : MonoBehaviour
                 GameState.Instance.Status = (GameStatus)response.gameStatus;
                 GameState.Instance.CurrentRoundNumber = response.roundNumber;
                 GameState.Instance.CurrentRoundStatus = response.roundStatus;
-            }));
 
-            if (GameState.Instance.Status == GameStatus.AwaitingPlayers)
-            {
-                _inviteLinkDialog.gameObject.SetActive(true);
-            }
-            else
-            {
-                _inviteLinkDialog.gameObject.SetActive(false);
-            }
+                if (GameState.Instance.Status == GameStatus.AwaitingPlayers)
+                {
+                    _inviteLinkDialog.gameObject.SetActive(true);
+                }
+                else
+                {
+                    _inviteLinkDialog.gameObject.SetActive(false);
+                }
+            }));
         }
     }
 

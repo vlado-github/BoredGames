@@ -3,7 +3,7 @@ export default {
   name: 'gamePlayer',
   props: {
     gameTitle: '',
-    gameInstanceId: ''
+    gameInstanceId: '' | undefined
   },
 
   data() {
@@ -13,13 +13,17 @@ export default {
   },
 
   async mounted() {
-    this.linkToGameUrl = `${import.meta.env.VITE_BASE_URL}/games/${this.gameTitle}/index.html`;
+    if (this.gameInstanceId) {
+      this.linkToGameUrl = `${import.meta.env.VITE_BASE_URL}/games/${this.gameTitle}/index.html?gameInstanceId=${this.gameInstanceId}`;
+    } else {
+      this.linkToGameUrl = `${import.meta.env.VITE_BASE_URL}/games/${this.gameTitle}/index.html`;
+    }
   }
 }
 </script>
 
 <template>
-  <iframe class="gameplayer-container" :src="linkToGameUrl" /> 
+  <iframe id="gameplayer" class="gameplayer-container" :src="linkToGameUrl" /> 
 </template>
 
 <style>

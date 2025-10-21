@@ -53,38 +53,35 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(BoredGamesClient.Instance.JoinGame((response) =>{}));
         
-
         StartCoroutine(BoredGamesClient.Instance.GetGameState((response) => {
             GameState.Instance.Status = (GameStatus)response.gameStatus;
             GameState.Instance.CurrentRoundNumber = response.roundNumber;
             GameState.Instance.CurrentRoundStatus = response.roundStatus;
+
+            switch (GameState.Instance.Status)
+            {
+                case GameStatus.AwaitingPlayers:
+                    {
+                        _score.gameObject.SetActive(false);
+                        GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
+                        foreach (GameObject objectToHide in objectsToHideAtStart)
+                        {
+                            objectToHide.SetActive(false);
+                        }
+                        break;
+                    }
+                case GameStatus.InPlay:
+                    {
+                        _score.gameObject.SetActive(true);
+                        GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
+                        foreach (GameObject objectToHide in objectsToHideAtStart)
+                        {
+                            objectToHide.SetActive(true);
+                        }
+                        break;
+                    }
+            }
         }));
-
-
-
-        switch (GameState.Instance.Status)
-        {
-            case GameStatus.AwaitingPlayers:
-                {
-                    _score.gameObject.SetActive(false);
-                    GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
-                    foreach (GameObject objectToHide in objectsToHideAtStart)
-                    {
-                        objectToHide.SetActive(false);
-                    }
-                    break;
-                }
-            case GameStatus.InPlay:
-                {
-                    _score.gameObject.SetActive(true);
-                    GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
-                    foreach (GameObject objectToHide in objectsToHideAtStart)
-                    {
-                        objectToHide.SetActive(true);
-                    }
-                    break;
-                }
-        }
     }
 
 }

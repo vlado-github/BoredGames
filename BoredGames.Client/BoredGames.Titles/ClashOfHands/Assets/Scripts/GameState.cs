@@ -19,7 +19,7 @@ namespace Assets.Scripts.GamePlay
             }
         }
 
-        public string GameId { get; set; }
+        public string GameId { get; set; } = "439c00b7-453b-44ef-a27c-152a66e6785e";
         public GameStatus Status { get; set; } = GameStatus.AwaitingPlayers;
         public string PlayerId { get; set; }
         public string PlayerName { get; set; }
