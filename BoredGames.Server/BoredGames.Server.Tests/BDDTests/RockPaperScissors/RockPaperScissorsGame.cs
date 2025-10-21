@@ -33,7 +33,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
         var player01 = _grainFactory.GetGrain<IPlayerGrain>(_player01);
         var command = new CreateGameCommand
         {
-            Title = GameTitle.RockPaperScissors,
+            Title = GameTitle.ClashOfHands,
             NumberOfPlayers = 2,
             RequiredNumberOfWins = 1,
             NumberOfRounds = 1
