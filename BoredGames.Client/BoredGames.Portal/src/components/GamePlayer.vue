@@ -23,7 +23,7 @@ export default {
 </script>
 
 <template>
-  <iframe id="gameplayer" class="gameplayer-container" :src="linkToGameUrl" /> 
+  <iframe id="gameplayer" allow="clipboard-read; clipboard-write self http://localhost:5173/game?gameTitle=ClashOfHands" class="gameplayer-container" :src="linkToGameUrl" /> 
 </template>
 
 <style>

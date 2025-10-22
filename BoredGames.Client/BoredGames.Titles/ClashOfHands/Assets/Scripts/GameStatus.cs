@@ -2,7 +2,7 @@
 {
     public enum GameStatus
     {
-        AwaitingPlayers,
+        AwaitingPlayers = 0,
         InPlay,
         Finished
     }

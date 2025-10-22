@@ -41,6 +41,7 @@ namespace Assets.Scripts.BoredGames.API
             else
             {
                 var response = JsonUtility.FromJson<T>(request.downloadHandler.text);
+                Debug.LogWarning($"[server] {request.uri} response: "+ JsonUtility.ToJson(response));
                 onSuccess(response);
             }
         }

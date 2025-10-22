@@ -1,6 +1,9 @@
 using Assets.Scripts;
 using Assets.Scripts.BoredGames.API;
+using Assets.Scripts.BoredGames.API.Responses;
 using Assets.Scripts.GamePlay;
+using System.Collections;
+using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,23 +52,34 @@ public class PlayerNameHandler : MonoBehaviour
         }
         else
         {
+            Debug.LogWarning("[client] playernamehandler - OnButtonClick: " + GameState.Instance.GameId);
             GameState.Instance.PlayerName = playerName;
 
             StartCoroutine(BoredGamesClient.Instance.GetPlayerDetails((response) =>
             {
+                Debug.LogWarning("[client] GetPlayerDetails: " + GameState.Instance.GameId);
                 GameState.Instance.PlayerId = response.id;
             }));
 
             StartCoroutine(BoredGamesClient.Instance.JoinGame((response) =>
             {
-                _validationMessage.gameObject.SetActive(false);
-                _playerNameDialog.gameObject.SetActive(false);
+                Debug.LogWarning("[client] JoinGame: " + GameState.Instance.GameId);
             }));
 
             StartCoroutine(BoredGamesClient.Instance.GetGameState((response) => {
                 GameState.Instance.Status = (GameStatus)response.gameStatus;
                 GameState.Instance.CurrentRoundNumber = response.roundNumber;
                 GameState.Instance.CurrentRoundStatus = response.roundStatus;
+
+
+                Debug.LogWarning("[client] GameId: " + GameState.Instance.GameId);
+                Debug.LogWarning("[client] GameStatus: " + GameState.Instance.Status);
+                Debug.LogWarning("[client] RoundStatus: " + GameState.Instance.CurrentRoundStatus);
+                Debug.LogWarning("[client] RoundNumber: " + GameState.Instance.CurrentRoundNumber);
+                Debug.LogWarning("[client] GameStatus: " + GameState.Instance.Status);
+
+                _validationMessage.gameObject.SetActive(false);
+                _playerNameDialog.gameObject.SetActive(false);
 
                 if (GameState.Instance.Status == GameStatus.AwaitingPlayers)
                 {
