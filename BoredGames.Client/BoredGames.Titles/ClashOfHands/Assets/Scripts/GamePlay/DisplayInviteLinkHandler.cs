@@ -4,13 +4,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InviteLinkHandler : MonoBehaviour
+public class DisplayInviteLinkHandler : MonoBehaviour
 {
-    private Button copyInviteButton;
-
     [SerializeField] public TMP_InputField _inviteLink;
-    [SerializeField] public Canvas _inviteLinkCanvas;
-    [SerializeField] public Canvas _waitingForPlayerCanvas;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

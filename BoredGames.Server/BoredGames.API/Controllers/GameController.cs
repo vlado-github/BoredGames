@@ -65,10 +65,11 @@ namespace BoredGames.API.Controllers
         {
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
-            var playerDetails = await player.JoinGame(new JoinGameCommand()
+            var playerDetails = await player.GetProfile();
+            var result = await player.JoinGame(new JoinGameCommand()
             {
                 GameId = request.GameId,
-                PlayerNickName = request.PlayerNickName
+                PlayerNickName = playerDetails.NickName
             });
             return playerDetails;
         }
@@ -87,7 +88,7 @@ namespace BoredGames.API.Controllers
 
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
-            var playerDetails= await player.GetDetails();
+            var playerDetails= await player.GetProfile();
             gameState = await game.MakeMove(new MakeMoveCommand
             {
                 ActionType = request.ActionType,

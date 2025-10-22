@@ -19,7 +19,7 @@ namespace Assets.Scripts.GamePlay
             }
         }
 
-        public string GameId { get; set; } = "439c00b7-453b-44ef-a27c-152a66e6785e";
+        public string GameId { get; set; }
         public GameStatus Status { get; set; } = GameStatus.AwaitingPlayers;
         public string PlayerId { get; set; }
         public string PlayerName { get; set; }
@@ -30,9 +30,9 @@ namespace Assets.Scripts.GamePlay
         {
             GameId = gameId;
             
-            SceneManager.LoadScene("GamePlayScene");
-            
             Debug.Log("Received gameInstanceId: " + gameId);
         }
+
+        public bool IsGameCreated => !string.IsNullOrEmpty(GameId);
     }
 }

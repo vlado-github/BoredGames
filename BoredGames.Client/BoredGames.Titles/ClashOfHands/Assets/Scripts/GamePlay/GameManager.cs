@@ -8,9 +8,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [SerializeField] TextMeshProUGUI _waitingMessage;
-    [SerializeField] TextMeshProUGUI _score;
-    [SerializeField] string _tagToHide;
+    [SerializeField] Canvas _waitingForPlayerCanvas;
+    [SerializeField] Canvas _scoreCanvas;
+
+    [SerializeField] string _playersCardsTag;
+    [SerializeField] string _opponentsCardsTag;
 
     private void Awake()
     {
@@ -28,13 +30,14 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _waitingMessage.gameObject.SetActive(true);
-
-        _score.gameObject.SetActive(false);
-        GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
-        foreach (GameObject objectToHide in objectsToHideAtStart)
+        if (GameState.Instance.IsGameCreated)
         {
-            objectToHide.SetActive(false);
+            Debug.LogWarning(">> gameplay <<<");
+            _waitingForPlayerCanvas.gameObject.SetActive(true);
+            _scoreCanvas.gameObject.SetActive(false);
+
+            ShowOpponentsSide(false);
+            ShowPlayerSide(true);
         }
     }
 
@@ -44,14 +47,30 @@ public class GameManager : MonoBehaviour
         
     }
 
+    private void ShowOpponentsSide(bool show = true)
+    {
+        GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_opponentsCardsTag);
+        foreach (GameObject objectToHide in objectsToHideAtStart)
+        {
+            objectToHide.SetActive(show);
+        }
+    }
+
+    private void ShowPlayerSide(bool show = true)
+    {
+        GameObject[] objectsToShowAtStart = GameObject.FindGameObjectsWithTag(_playersCardsTag);
+        foreach (GameObject objectToShow in objectsToShowAtStart)
+        {
+            objectToShow.SetActive(show);
+        }
+    }
+
     private void CheckGameStatus()
     {
-        StartCoroutine(BoredGamesClient.Instance.GetPlayerDetails((response) =>
+        if (string.IsNullOrEmpty(GameState.Instance.GameId))
         {
-            GameState.Instance.PlayerId = response.id;
-        }));
-
-        StartCoroutine(BoredGamesClient.Instance.JoinGame((response) =>{}));
+            return;
+        }
         
         StartCoroutine(BoredGamesClient.Instance.GetGameState((response) => {
             GameState.Instance.Status = (GameStatus)response.gameStatus;
@@ -62,22 +81,14 @@ public class GameManager : MonoBehaviour
             {
                 case GameStatus.AwaitingPlayers:
                     {
-                        _score.gameObject.SetActive(false);
-                        GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
-                        foreach (GameObject objectToHide in objectsToHideAtStart)
-                        {
-                            objectToHide.SetActive(false);
-                        }
+                        _scoreCanvas.gameObject.SetActive(false);
+                        ShowOpponentsSide(false);
                         break;
                     }
                 case GameStatus.InPlay:
                     {
-                        _score.gameObject.SetActive(true);
-                        GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_tagToHide);
-                        foreach (GameObject objectToHide in objectsToHideAtStart)
-                        {
-                            objectToHide.SetActive(true);
-                        }
+                        _scoreCanvas.gameObject.SetActive(true);
+                        ShowOpponentsSide(true);
                         break;
                     }
             }

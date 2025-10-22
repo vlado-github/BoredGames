@@ -15,11 +15,20 @@ namespace Assets.Scripts.Menu
         // Use this for initialization
         private void Awake()
         {
+            StartCoroutine(BoredGamesClient.Instance.GetPlayerDetails((response) =>
+            {
+                GameState.Instance.PlayerId = response.id;
+            }));
+
             Dictionary<string, string> queryParams = GetQueryParams();
 
             if (queryParams.ContainsKey(GameInstanceIdParamKey))
             {
                 string value = queryParams[GameInstanceIdParamKey];
+                if (string.IsNullOrEmpty(value))
+                {
+                    return;
+                }
                 GameState.Instance.GameId = value;
                 
                 StartCoroutine(BoredGamesClient.Instance.GetGameState((response) => {

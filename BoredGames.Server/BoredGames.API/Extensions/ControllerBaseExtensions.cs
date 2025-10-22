@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using BoredGames.Common.Consts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +9,11 @@ public static class ControllerBaseExtensions
     public static Guid GetPlayerId(this ControllerBase controller)
     {
         var playerId = controller.Request.Headers[DefaultConsts.PlayerIdHeaderKey];
-        if (string.IsNullOrEmpty(playerId))
+        if (string.IsNullOrEmpty(playerId.ToString()))
         {
-            return Guid.NewGuid();
+            throw new ApplicationException("No player ID was provided in request header.");
         }
-
-        return Guid.Parse(playerId);
+        
+        return Guid.Parse(playerId.ToString());
     }
 }

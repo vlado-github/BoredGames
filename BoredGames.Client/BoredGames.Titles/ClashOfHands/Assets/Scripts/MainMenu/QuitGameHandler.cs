@@ -1,9 +1,14 @@
+using Assets.Scripts.GamePlay;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class QuitGameHandler : MonoBehaviour
 {
     private Button quitGameButton;
+
+    [DllImport("__Internal")]
+    private static extern void QuitToHome();
 
     void Start()
     {
@@ -22,6 +27,7 @@ public class QuitGameHandler : MonoBehaviour
     {
         Debug.Log("Quit game");
         Application.Quit();
+        QuitToHome(); //redirects to portal's home page 
     }
 
     void OnDestroy()

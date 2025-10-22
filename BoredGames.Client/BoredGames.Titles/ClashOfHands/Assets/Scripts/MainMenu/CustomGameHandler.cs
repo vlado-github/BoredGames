@@ -4,7 +4,10 @@ using UnityEngine.UI;
 
 public class CustomGameHandler : MonoBehaviour
 {
-    private Button customGameButton; // Assign in Inspector
+    private Button customGameButton;
+
+    [SerializeField] Canvas _mainMenuCanvas;
+    [SerializeField] Canvas _customMenuCanvas;
 
     void Start()
     {
@@ -21,7 +24,8 @@ public class CustomGameHandler : MonoBehaviour
 
     void OnButtonClick()
     {
-        SceneManager.LoadScene("SetupScene");
+        _mainMenuCanvas.gameObject.SetActive(false);
+        _customMenuCanvas.gameObject.SetActive(true);
     }
 
     void OnDestroy()

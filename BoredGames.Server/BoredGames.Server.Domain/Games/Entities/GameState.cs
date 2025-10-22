@@ -8,4 +8,5 @@ public class GameState
     public GameStatus GameStatus { get; set; }
     public RoundStatus RoundStatus { get; set; }
     public int RoundNumber { get; set; }
+    public int PlayersNumber { get; set; }
 }

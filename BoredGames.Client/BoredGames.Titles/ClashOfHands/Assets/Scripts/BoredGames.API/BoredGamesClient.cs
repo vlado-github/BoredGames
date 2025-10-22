@@ -74,7 +74,7 @@ namespace Assets.Scripts.BoredGames.API
             }
         }
 
-        public IEnumerator JoinGame(Action<JoinGameResponse> onSuccess)
+        public IEnumerator JoinGame(Action<GameStateResponse> onSuccess)
         {
             var url = new Uri(ApiConfig.BaseUrl, "/api/game/join");
             var isValid = true;
@@ -115,6 +115,34 @@ namespace Assets.Scripts.BoredGames.API
             var url = new Uri(ApiConfig.BaseUrl, $"/api/game/{GameState.Instance.GameId}/state");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                yield return HandleRequest(request, onSuccess);
+            }
+        }
+
+        public IEnumerator CreatePlayerProfile(Action<PlayerDetailsResponse> onSuccess)
+        {
+            var url = new Uri(ApiConfig.BaseUrl, $"/api/player");
+            var data = new CreatePlayerProfileRequest
+            {
+                nickname = GameState.Instance.PlayerName
+            };
+
+            using (UnityWebRequest request = UnityWebRequest.Post(url, JsonUtility.ToJson(data), ApiConfig.DefaultContentType))
+            {
+                yield return HandleRequest(request, onSuccess);
+            }
+        }
+
+        public IEnumerator UpdatePlayerProfile(Action<PlayerDetailsResponse> onSuccess)
+        {
+            var url = new Uri(ApiConfig.BaseUrl, $"/api/player");
+            var data = new UpdatePlayerProfileRequest
+            {
+                nickname = GameState.Instance.PlayerName
+            };
+
+            using (UnityWebRequest request = UnityWebRequest.Put(url, JsonUtility.ToJson(data)))
             {
                 yield return HandleRequest(request, onSuccess);
             }

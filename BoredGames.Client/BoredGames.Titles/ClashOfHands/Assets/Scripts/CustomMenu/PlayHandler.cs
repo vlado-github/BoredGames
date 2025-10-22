@@ -8,6 +8,9 @@ public class PlayHandler : MonoBehaviour
 {
     private Button playButton; // Assign in Inspector
 
+    [SerializeField] Canvas _customMenuCanvas;
+    [SerializeField] Canvas _gamePlayCanvas;
+
     void Start()
     {
         GameObject playButtonObject = GameObject.Find("PlayButton");
@@ -27,7 +30,8 @@ public class PlayHandler : MonoBehaviour
         {
             GameState.Instance.GameId = response.gameId;
             GameState.Instance.Status = Assets.Scripts.GameStatus.AwaitingPlayers;
-            SceneManager.LoadScene("GamePlayScene");
+            _customMenuCanvas.gameObject.SetActive(false);
+            _gamePlayCanvas.gameObject.SetActive(true);
         }));
     }
 

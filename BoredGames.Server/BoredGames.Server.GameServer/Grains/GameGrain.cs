@@ -48,6 +48,7 @@ public class GameGrain : Grain, IGameGrain
         if (!_players.Select(x => x.Id).Contains(dto.Id))
         {
             _players.Add(dto);
+            _gameState.PlayersNumber = _players.Count;
         }
 
         if (_gameState.GameStatus is GameStatus.AwaitingPlayers 

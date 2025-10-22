@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
 using UnityEngine;
@@ -7,6 +8,9 @@ using UnityEngine.UI;
 public class QuickPlayHandler : MonoBehaviour
 {
     private Button quickPlayButton; // Assign in Inspector
+
+    [SerializeField] Canvas _mainMenuCanvas;
+    [SerializeField] Canvas _gamePlayCanvas;
 
     void Start()
     {
@@ -26,9 +30,13 @@ public class QuickPlayHandler : MonoBehaviour
         StartCoroutine(BoredGamesClient.Instance.CreateGame((response) =>
         { 
             GameState.Instance.GameId = response.gameId;
-            GameState.Instance.Status = Assets.Scripts.GameStatus.AwaitingPlayers;
-            SceneManager.LoadScene("GamePlayScene");
+            GameState.Instance.Status = GameStatus.AwaitingPlayers;
+
+            _mainMenuCanvas.gameObject.SetActive(false);
+            _gamePlayCanvas.gameObject.SetActive(true);
         }));
+
+        
     }
 
     void OnDestroy()
