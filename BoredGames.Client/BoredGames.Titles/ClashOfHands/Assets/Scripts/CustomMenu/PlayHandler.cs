@@ -10,6 +10,7 @@ public class PlayHandler : MonoBehaviour
 
     [SerializeField] Canvas _customMenuCanvas;
     [SerializeField] Canvas _gamePlayCanvas;
+    [SerializeField] Canvas _inviteLinkDialog;
 
     void Start()
     {
@@ -30,8 +31,12 @@ public class PlayHandler : MonoBehaviour
         {
             GameState.Instance.GameId = response.gameId;
             GameState.Instance.Status = Assets.Scripts.GameStatus.AwaitingPlayers;
+
             _customMenuCanvas.gameObject.SetActive(false);
             _gamePlayCanvas.gameObject.SetActive(true);
+            _inviteLinkDialog.gameObject.SetActive(true);
+
+            GameManager.Instance.CheckGameStatus();
         }));
     }
 

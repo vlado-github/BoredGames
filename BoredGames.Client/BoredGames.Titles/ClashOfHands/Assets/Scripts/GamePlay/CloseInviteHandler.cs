@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Assets.Scripts.BoredGames.API;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +26,7 @@ namespace Assets.Scripts.GamePlay
 
         void OnButtonClick()
         {
-            _inviteLinkCanvas.gameObject.SetActive(true);
+            _inviteLinkCanvas.gameObject.SetActive(false);
         }
 
         void OnDestroy()

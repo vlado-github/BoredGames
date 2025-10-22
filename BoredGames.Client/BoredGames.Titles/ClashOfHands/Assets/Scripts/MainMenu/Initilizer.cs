@@ -15,11 +15,6 @@ namespace Assets.Scripts.Menu
         // Use this for initialization
         private void Awake()
         {
-            StartCoroutine(BoredGamesClient.Instance.GetPlayerDetails((response) =>
-            {
-                GameState.Instance.PlayerId = response.id;
-            }));
-
             Dictionary<string, string> queryParams = GetQueryParams();
 
             if (queryParams.ContainsKey(GameInstanceIdParamKey))
@@ -30,20 +25,8 @@ namespace Assets.Scripts.Menu
                     return;
                 }
                 GameState.Instance.GameId = value;
-                
-                StartCoroutine(BoredGamesClient.Instance.GetGameState((response) => {
-                    GameState.Instance.Status = (GameStatus)response.gameStatus;
-                    GameState.Instance.CurrentRoundNumber = response.roundNumber;
-                    GameState.Instance.CurrentRoundStatus = response.roundStatus;
 
-                    SceneManager.LoadScene("GamePlayScene");
-                }));
-            }
-            
-
-            if (GameState.Instance.Status == GameStatus.InPlay)
-            {
-                SceneManager.LoadScene("GamePlayScene");
+                //StartCoroutine(BoredGamesClient.Instance.CreatePlayerProfile())
             }
         }
 

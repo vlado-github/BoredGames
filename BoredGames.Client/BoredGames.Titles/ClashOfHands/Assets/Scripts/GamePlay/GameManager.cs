@@ -14,9 +14,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] string _playersCardsTag;
     [SerializeField] string _opponentsCardsTag;
 
+    GameObject[] objectsToHideAtStart;
+    GameObject[] objectsToShowAtStart;
+
     private void Awake()
     {
-        CheckGameStatus();
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -30,15 +32,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (GameState.Instance.IsGameCreated)
-        {
-            Debug.LogWarning(">> gameplay <<<");
-            _waitingForPlayerCanvas.gameObject.SetActive(true);
-            _scoreCanvas.gameObject.SetActive(false);
+        objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_opponentsCardsTag);
+        objectsToShowAtStart = GameObject.FindGameObjectsWithTag(_playersCardsTag);
 
-            ShowOpponentsSide(false);
-            ShowPlayerSide(true);
-        }
+        ShowOpponentsSide(false);
+        ShowPlayerSide(false);
+        CheckGameStatus();
     }
 
     // Update is called once per frame
@@ -49,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     private void ShowOpponentsSide(bool show = true)
     {
-        GameObject[] objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_opponentsCardsTag);
+        Debug.Log($"{_opponentsCardsTag} {objectsToHideAtStart.Length}");
         foreach (GameObject objectToHide in objectsToHideAtStart)
         {
             objectToHide.SetActive(show);
@@ -58,14 +57,14 @@ public class GameManager : MonoBehaviour
 
     private void ShowPlayerSide(bool show = true)
     {
-        GameObject[] objectsToShowAtStart = GameObject.FindGameObjectsWithTag(_playersCardsTag);
+        Debug.Log($"{_playersCardsTag} {objectsToShowAtStart.Length}");
         foreach (GameObject objectToShow in objectsToShowAtStart)
         {
             objectToShow.SetActive(show);
         }
     }
 
-    private void CheckGameStatus()
+    public void CheckGameStatus()
     {
         if (string.IsNullOrEmpty(GameState.Instance.GameId))
         {
@@ -81,14 +80,20 @@ public class GameManager : MonoBehaviour
             {
                 case GameStatus.AwaitingPlayers:
                     {
+                        Debug.Log($">>> gameplay {GameState.Instance.Status} {_playersCardsTag} <<<");
+                        _waitingForPlayerCanvas.gameObject.SetActive(true);
                         _scoreCanvas.gameObject.SetActive(false);
                         ShowOpponentsSide(false);
+                        ShowPlayerSide(true);
                         break;
                     }
                 case GameStatus.InPlay:
                     {
+                        Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
+                        _waitingForPlayerCanvas.gameObject.SetActive(false);
                         _scoreCanvas.gameObject.SetActive(true);
                         ShowOpponentsSide(true);
+                        ShowPlayerSide(true);
                         break;
                     }
             }
