@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Canvas _waitingForPlayerCanvas;
     [SerializeField] Canvas _scoreCanvas;
+    [SerializeField] Canvas _playerNameCanvas;
 
     [SerializeField] string _playersCardsTag;
     [SerializeField] string _opponentsCardsTag;
@@ -92,6 +93,7 @@ public class GameManager : MonoBehaviour
                         Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
                         _waitingForPlayerCanvas.gameObject.SetActive(false);
                         _scoreCanvas.gameObject.SetActive(true);
+                        _playerNameCanvas.gameObject.SetActive(false);
                         ShowOpponentsSide(true);
                         ShowPlayerSide(true);
                         break;

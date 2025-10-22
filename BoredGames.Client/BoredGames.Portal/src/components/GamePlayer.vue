@@ -23,7 +23,11 @@ export default {
 </script>
 
 <template>
-  <iframe id="gameplayer"  class="gameplayer-container" :src="linkToGameUrl" /> 
+  <iframe 
+    sandbox="allow-scripts allow-same-origin"
+    allow="clipboard-write" 
+    class="gameplayer-container" 
+    :src="linkToGameUrl" /> 
 </template>
 
 <style>
