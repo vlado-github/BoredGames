@@ -1,36 +1,13 @@
-﻿using Assets.Scripts.BoredGames.API;
-using Assets.Scripts.GamePlay;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 
-namespace Assets.Scripts.Menu
+namespace Assets.Scripts
 {
-    public class Initilizer : MonoBehaviour
+    public static class Utils
     {
-        public static string GameInstanceIdParamKey = "gameInstanceId";
-
-        // Use this for initialization
-        private void Awake()
-        {
-            Dictionary<string, string> queryParams = GetQueryParams();
-
-            if (queryParams.ContainsKey(GameInstanceIdParamKey))
-            {
-                string value = queryParams[GameInstanceIdParamKey];
-                if (string.IsNullOrEmpty(value))
-                {
-                    return;
-                }
-                GameState.Instance.GameId = value;
-
-                //StartCoroutine(BoredGamesClient.Instance.CreatePlayerProfile())
-            }
-        }
-
-        private Dictionary<string, string> GetQueryParams()
+        public static Dictionary<string, string> GetQueryParams()
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             string url = Application.absoluteURL;

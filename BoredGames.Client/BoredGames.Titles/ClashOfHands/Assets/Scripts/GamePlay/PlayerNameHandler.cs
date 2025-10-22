@@ -1,9 +1,7 @@
 using Assets.Scripts;
 using Assets.Scripts.BoredGames.API;
-using Assets.Scripts.BoredGames.API.Responses;
 using Assets.Scripts.GamePlay;
-using System.Collections;
-using System.Security.Cryptography;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +12,24 @@ public class PlayerNameHandler : MonoBehaviour
     [SerializeField] public Canvas _mainMenuCanvas;
     [SerializeField] public TMP_InputField _playerNameInput;
     [SerializeField] public TextMeshProUGUI _validationMessage;
-    private Button saveButton; 
+    
+    private Button saveButton;
+    public static string GameInstanceIdParamKey = "gameInstanceId";
+
+    private void Awake()
+    {
+        Dictionary<string, string> queryParams = Utils.GetQueryParams();
+
+        if (queryParams.ContainsKey(GameInstanceIdParamKey))
+        {
+            string value = queryParams[GameInstanceIdParamKey];
+            if (string.IsNullOrEmpty(value))
+            {
+                return;
+            }
+            GameState.Instance.GameId = value;
+        }
+    }
 
     void Start()
     {
@@ -59,8 +74,19 @@ public class PlayerNameHandler : MonoBehaviour
                 GameState.Instance.PlayerId = response.id;
                 GameState.Instance.PlayerName = response.nickName;
 
-                _playerNameDialog.gameObject.SetActive(false);
-                _mainMenuCanvas.gameObject.SetActive(true);
+                if (GameState.Instance.IsGameCreated)
+                {
+                    StartCoroutine(BoredGamesClient.Instance.JoinGame((response) => { }));
+                    _playerNameDialog.gameObject.SetActive(false);
+                    _mainMenuCanvas.gameObject.SetActive(false);
+
+                    GameManager.Instance.CheckGameStatus();
+                }
+                else
+                {
+                    _playerNameDialog.gameObject.SetActive(false);
+                    _mainMenuCanvas.gameObject.SetActive(true);
+                }
             }));
         }
     }

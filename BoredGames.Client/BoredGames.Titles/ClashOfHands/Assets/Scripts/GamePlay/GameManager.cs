@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
 
     public void CheckGameStatus()
     {
-        if (string.IsNullOrEmpty(GameState.Instance.GameId))
+        if (!GameState.Instance.IsGameCreated)
         {
             return;
         }

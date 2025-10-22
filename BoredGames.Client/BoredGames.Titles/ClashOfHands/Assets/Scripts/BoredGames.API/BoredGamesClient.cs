@@ -79,7 +79,7 @@ namespace Assets.Scripts.BoredGames.API
             var url = new Uri(ApiConfig.BaseUrl, "/api/game/join");
             var isValid = true;
 
-            if (string.IsNullOrEmpty(GameState.Instance.GameId))
+            if (!GameState.Instance.IsGameCreated)
             {
                 Debug.LogWarning($"{nameof(GameState.Instance.GameId)} has no value set.");
                 isValid = false;
