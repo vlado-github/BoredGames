@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.BoredGames.API.Requests
+﻿using System;
+
+namespace Assets.Scripts.BoredGames.API.Requests
 {
     [System.Serializable]
     public class JoinGameRequest

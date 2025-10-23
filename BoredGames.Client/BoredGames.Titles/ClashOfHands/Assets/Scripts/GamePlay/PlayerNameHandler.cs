@@ -1,6 +1,7 @@
 using Assets.Scripts;
 using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -69,14 +70,14 @@ public class PlayerNameHandler : MonoBehaviour
         {
             GameState.Instance.PlayerName = playerName;
 
-            StartCoroutine(BoredGamesClient.Instance.CreatePlayerProfile((response) =>
+            StartCoroutine(BoredGamesAPIClient.Instance.CreatePlayerProfile((response) =>
             {
                 GameState.Instance.PlayerId = response.id;
                 GameState.Instance.PlayerName = response.nickName;
 
                 if (GameState.Instance.IsGameCreated)
                 {
-                    StartCoroutine(BoredGamesClient.Instance.JoinGame((response) => { }));
+                    StartCoroutine(BoredGamesAPIClient.Instance.JoinGame((response) => { }));
                     _playerNameDialog.gameObject.SetActive(false);
                     _mainMenuCanvas.gameObject.SetActive(false);
 

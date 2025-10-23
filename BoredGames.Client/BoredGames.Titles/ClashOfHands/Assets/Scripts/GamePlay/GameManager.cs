@@ -44,12 +44,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     private void ShowOpponentsSide(bool show = true)
     {
-        Debug.Log($"{_opponentsCardsTag} {objectsToHideAtStart.Length}");
         foreach (GameObject objectToHide in objectsToHideAtStart)
         {
             objectToHide.SetActive(show);
@@ -58,7 +56,6 @@ public class GameManager : MonoBehaviour
 
     private void ShowPlayerSide(bool show = true)
     {
-        Debug.Log($"{_playersCardsTag} {objectsToShowAtStart.Length}");
         foreach (GameObject objectToShow in objectsToShowAtStart)
         {
             objectToShow.SetActive(show);
@@ -71,35 +68,35 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        
-        StartCoroutine(BoredGamesClient.Instance.GetGameState((response) => {
-            GameState.Instance.Status = (GameStatus)response.gameStatus;
-            GameState.Instance.CurrentRoundNumber = response.roundNumber;
-            GameState.Instance.CurrentRoundStatus = response.roundStatus;
 
-            switch (GameState.Instance.Status)
-            {
-                case GameStatus.AwaitingPlayers:
-                    {
-                        Debug.Log($">>> gameplay {GameState.Instance.Status} {_playersCardsTag} <<<");
-                        _waitingForPlayerCanvas.gameObject.SetActive(true);
-                        _scoreCanvas.gameObject.SetActive(false);
-                        ShowOpponentsSide(false);
-                        ShowPlayerSide(true);
-                        break;
-                    }
-                case GameStatus.InPlay:
-                    {
-                        Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
-                        _waitingForPlayerCanvas.gameObject.SetActive(false);
-                        _scoreCanvas.gameObject.SetActive(true);
-                        _playerNameCanvas.gameObject.SetActive(false);
-                        ShowOpponentsSide(true);
-                        ShowPlayerSide(true);
-                        break;
-                    }
-            }
-        }));
+        if (!BoredGamesSocketClient.IsConnected())
+        {
+            BoredGamesSocketClient.SetupConnection();
+        }
+
+        switch (GameState.Instance.Status)
+        {
+            case GameStatus.AwaitingPlayers:
+                {
+                    Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
+                    _waitingForPlayerCanvas.gameObject.SetActive(true);
+                    _scoreCanvas.gameObject.SetActive(false);
+                    ShowOpponentsSide(false);
+                    ShowPlayerSide(true);
+                    break;
+                }
+            case GameStatus.InPlay:
+                {
+                    Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
+                    
+                    _waitingForPlayerCanvas.gameObject.SetActive(false);
+                    _scoreCanvas.gameObject.SetActive(true);
+                    _playerNameCanvas.gameObject.SetActive(false);
+                    ShowOpponentsSide(true);
+                    ShowPlayerSide(true);
+                    break;
+                }
+        }
     }
 
 }

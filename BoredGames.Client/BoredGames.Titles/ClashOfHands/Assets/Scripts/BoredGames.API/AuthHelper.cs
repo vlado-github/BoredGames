@@ -12,7 +12,7 @@ namespace Assets.BoredGames.API
             request.SetRequestHeader(ApiConfig.HeaderKey, ApiConfig.ApiKey);
             if (!string.IsNullOrEmpty(GameState.Instance.PlayerId))
             {
-                request.SetRequestHeader(ApiConfig.HeaderPlayerKey, GameState.Instance.PlayerId);
+                request.SetRequestHeader(ApiConfig.HeaderPlayerKey, GameState.Instance.PlayerId.ToString());
             }
         }
     }

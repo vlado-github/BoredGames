@@ -9,17 +9,17 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.BoredGames.API
 {
-    public class BoredGamesClient
+    public class BoredGamesAPIClient
     {
-        private static BoredGamesClient _instance = null;
+        private static BoredGamesAPIClient _instance = null;
 
-        public static BoredGamesClient Instance
+        public static BoredGamesAPIClient Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new BoredGamesClient();
+                    _instance = new BoredGamesAPIClient();
                 }
                 return _instance;
             }

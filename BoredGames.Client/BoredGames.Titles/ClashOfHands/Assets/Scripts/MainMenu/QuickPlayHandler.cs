@@ -28,8 +28,8 @@ public class QuickPlayHandler : MonoBehaviour
 
     void OnButtonClick()
     {
-        StartCoroutine(BoredGamesClient.Instance.CreateGame((response) =>
-        { 
+        StartCoroutine(BoredGamesAPIClient.Instance.CreateGame((response) =>
+        {
             GameState.Instance.GameId = response.gameId;
             GameState.Instance.Status = GameStatus.AwaitingPlayers;
 

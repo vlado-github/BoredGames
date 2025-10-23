@@ -6,6 +6,9 @@ TagManager:
   tags:
   - opponent_card
   - player_card
+  - ship
+  - asteroid
+  - rock
   layers:
   - Default
   - TransparentFX

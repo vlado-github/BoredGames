@@ -1,4 +1,5 @@
 using BoredGames.API.Extensions;
+using BoredGames.API.Hubs;
 using BoredGames.API.Middlewares;
 using BoredGames.API.Models;
 using BoredGames.Common.Utils;
@@ -14,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCustomCors();
+builder.Services.AddSignalR();
 
 
 var app = builder.Build();
@@ -38,6 +40,7 @@ app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
+app.MapHub<GameHub>($"/{nameof(GameHub)}");
 app.Run();
 
 // In order to enable tests to run a test instance of a host

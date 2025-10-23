@@ -9,5 +9,6 @@ namespace Assets.BoredGames.API
         public static string HeaderKey = "X-BORED-GAMES-API-KEY";
         public static string HeaderPlayerKey = "X-BORED-GAMES-PLAYER-ID";
         public static string DefaultContentType = "application/json";
+        public static string SocketHub = "GameHub";
     }
 }

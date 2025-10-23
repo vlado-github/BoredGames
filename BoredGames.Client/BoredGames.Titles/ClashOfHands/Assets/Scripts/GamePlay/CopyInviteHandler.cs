@@ -40,6 +40,7 @@ namespace Assets.Scripts.GamePlay
                 GUIUtility.systemCopyBuffer = _inviteUrlField.text;
             #endif
             _inviteLinkCanvas.gameObject.SetActive(false);
+            GameManager.Instance.CheckGameStatus();
         }
 
         void OnDestroy()

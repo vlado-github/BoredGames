@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.BoredGames.API.Responses
+﻿using System;
+
+namespace Assets.Scripts.BoredGames.API.Responses
 {
     [System.Serializable]
     public class CreateGameResponse : IResponse

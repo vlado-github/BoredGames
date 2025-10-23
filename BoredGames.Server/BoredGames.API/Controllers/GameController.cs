@@ -1,5 +1,6 @@
 using BoredGames.API.Extensions;
 using BoredGames.API.Filters;
+using BoredGames.API.Hubs;
 using BoredGames.API.Models;
 using BoredGames.Common.Consts;
 using BoredGames.Common.Enums;
@@ -9,6 +10,7 @@ using BoredGames.Server.GameServer.Commands;
 using BoredGames.Server.GameServer.Grains.Base;
 using BoredGames.Server.GameServer.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BoredGames.API.Controllers
 {
@@ -19,10 +21,12 @@ namespace BoredGames.API.Controllers
     {
         private readonly IGrainFactory _grainFactory;
         private readonly string _appBaseUrl;
+        private readonly IHubContext<GameHub> _hubContext;
         
-        public GameController(IGrainFactory grainFactory)
+        public GameController(IGrainFactory grainFactory, IHubContext<GameHub> hubContext)
         {
             _grainFactory = grainFactory;
+            _hubContext = hubContext;
             _appBaseUrl = Environment.GetEnvironmentVariable(EnvVarNames.AppBaseUrl);
         }
 
@@ -72,30 +76,6 @@ namespace BoredGames.API.Controllers
                 PlayerNickName = playerDetails.NickName
             });
             return playerDetails;
-        }
-
-        [HttpPost("makemove")]
-        public async Task<GameStateViewModel> MakeMove(MakeMove request)
-        {
-            var game = _grainFactory.GetGrain<IGameGrain>(request.GameId);
-            var gameState = await game.GetState();
-
-            if (gameState.GameStatus != GameStatus.InPlay)
-            {
-                throw new InvalidActionException("Make move",
-                    $"Can't make move since game status is {gameState.GameStatus}.");
-            }
-
-            var playerId = this.GetPlayerId();
-            var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
-            var playerDetails= await player.GetProfile();
-            gameState = await game.MakeMove(new MakeMoveCommand
-            {
-                ActionType = request.ActionType,
-                PlayerId = playerId,
-                PlayerNickName = playerDetails.NickName
-            });
-            return gameState;
         }
 
         [HttpGet("{gameId:guid}/state")]

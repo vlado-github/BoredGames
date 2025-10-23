@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.GamePlay
@@ -21,17 +22,10 @@ namespace Assets.Scripts.GamePlay
 
         public string GameId { get; set; }
         public GameStatus Status { get; set; } = GameStatus.AwaitingPlayers;
-        public string PlayerId { get; set; }
+        public string PlayerId { get; set; } = null;
         public string PlayerName { get; set; }
         public int CurrentRoundNumber { get; set; }
-        public int CurrentRoundStatus { get; set; }
-
-        public void SetGameInstanceId(string gameId)
-        {
-            GameId = gameId;
-            
-            Debug.Log("Received gameInstanceId: " + gameId);
-        }
+        public RoundStatus CurrentRoundStatus { get; set; }
 
         public bool IsGameCreated => !string.IsNullOrEmpty(GameId);
     }
