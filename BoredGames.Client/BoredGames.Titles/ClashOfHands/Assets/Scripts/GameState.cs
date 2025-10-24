@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.BoredGames.API;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -28,7 +29,7 @@ namespace Assets.Scripts.GamePlay
         public bool CurrentRoundCardSelected { get; set; } = false;
         public int CurrentRoundNumber { get; set; }
         public RoundStatus CurrentRoundStatus { get; set; }
-        public GameScore Score { get; set; } = new GameScore();
+        public GameScore Score { get; set; }
 
         public bool IsGameCreated => !string.IsNullOrEmpty(GameId);
         public bool IsPlayerSet => !string.IsNullOrEmpty(PlayerId);

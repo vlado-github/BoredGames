@@ -7,7 +7,7 @@ namespace Assets.Scripts.BoredGames.API
     {
         public int CurrentRound;
         public int RequiredNumberOfWins;
-        public IList<PlayerScore> PlayerScores;
+        public PlayerScore[] PlayerScores;
     }
 
     [System.Serializable]
@@ -15,9 +15,9 @@ namespace Assets.Scripts.BoredGames.API
     {
         public string PlayerId;
         public string PlayerNickName;
-        public IList<RoundResult> RoundWins;
-        public IList<RoundResult> RoundLosses;
-        public IList<RoundResult> RoundDraws;
+        public RoundResult[] RoundWins;
+        public RoundResult[] RoundLosses;
+        public RoundResult[] RoundDraws;
     }
 
     [System.Serializable]

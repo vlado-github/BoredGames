@@ -23,8 +23,8 @@ public class ScoreHandler : MonoBehaviour
                 var playerScore = GameState.Instance.Score.PlayerScores.First(x => x.PlayerId == GameState.Instance.PlayerId);
                 var opponentScore = GameState.Instance.Score.PlayerScores.First(x => x.PlayerId != GameState.Instance.PlayerId);
 
-                var displayPlayerScore = $"{playerScore.PlayerNickName} {playerScore.RoundWins.Count}";
-                var displayOpponentScore = $"{opponentScore.RoundWins.Count} {opponentScore.PlayerNickName}";
+                var displayPlayerScore = $"{playerScore.PlayerNickName} {playerScore.RoundWins.Count()}";
+                var displayOpponentScore = $"{opponentScore.RoundWins.Count()} {opponentScore.PlayerNickName}";
 
                 _scoreText.text = $"{displayPlayerScore} : {displayOpponentScore}";
                 _roundText.text = $"Round: {GameState.Instance.Score.CurrentRound}";
