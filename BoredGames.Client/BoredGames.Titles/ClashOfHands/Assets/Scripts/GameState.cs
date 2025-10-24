@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.BoredGames.API;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,13 +21,15 @@ namespace Assets.Scripts.GamePlay
             }
         }
 
-        public string GameId { get; set; }
+        public string GameId { get; set; } = null;
         public GameStatus Status { get; set; } = GameStatus.AwaitingPlayers;
         public string PlayerId { get; set; } = null;
         public string PlayerName { get; set; }
         public int CurrentRoundNumber { get; set; }
         public RoundStatus CurrentRoundStatus { get; set; }
+        public GameScore Score { get; set; } = new GameScore();
 
         public bool IsGameCreated => !string.IsNullOrEmpty(GameId);
+        public bool IsPlayerSet => !string.IsNullOrEmpty(PlayerId);
     }
 }

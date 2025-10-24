@@ -27,7 +27,8 @@ public static class CorsPolicyExtensions
 
                         policy.WithOrigins(corsOriginUrlString)
                             .AllowAnyHeader()
-                            .AllowAnyMethod();
+                            .AllowAnyMethod()
+                            .AllowCredentials();
                     });
             }
             else
@@ -35,9 +36,10 @@ public static class CorsPolicyExtensions
                 options.AddPolicy(name: CorsPolicyName,
                     policy =>
                     {
-                        policy.AllowAnyOrigin()
+                        policy.WithOrigins("http://localhost:5173")
+                            .AllowAnyMethod()
                             .AllowAnyHeader()
-                            .AllowAnyMethod();
+                            .AllowCredentials();
                     });
             }
         });

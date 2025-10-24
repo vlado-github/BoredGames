@@ -10,5 +10,6 @@ namespace Assets.Scripts.BoredGames.API
         public int RoundNumber;
         public RoundStatus RoundStatus;
         public int PlayersNumber;
+        public GameScore Score;
     }
 }

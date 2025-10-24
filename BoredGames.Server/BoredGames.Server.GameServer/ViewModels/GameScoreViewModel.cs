@@ -7,6 +7,7 @@ public class GameScoreViewModel
     public int CurrentRound { get; set; }
     [Id(1)]
     public int RequiredNumberOfWins { get; set; }
-    [Id(2)]
-    public IList<PlayerScoreViewModel> PlayerScores { get; set; }
+
+    [Id(2)] 
+    public IList<PlayerScoreViewModel> PlayerScores { get; set; } = new List<PlayerScoreViewModel>();
 }

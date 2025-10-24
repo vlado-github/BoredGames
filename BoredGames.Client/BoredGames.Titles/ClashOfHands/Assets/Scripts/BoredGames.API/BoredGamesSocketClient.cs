@@ -9,15 +9,31 @@ namespace Assets.Scripts.BoredGames.API
 {
     public class BoredGamesSocketClient
     {
-        private static SignalR signalR = new SignalR();
-        private static bool isConnected = false;
+        private static BoredGamesSocketClient _instance = null;
 
-        public static void SetupConnection()
+        public static BoredGamesSocketClient Instance
         {
-            if (isConnected)
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new BoredGamesSocketClient();
+                }
+                return _instance;
+            }
+        }
+
+        private bool isConnected = false;
+        private SignalR signalR = null;
+
+        public void SetupConnection()
+        {
+            if (isConnected && signalR != null)
             {
                 return;
             }
+
+            signalR = new SignalR();
 
             // Initialize SignalR
             var socketHubUrl = new Uri(ApiConfig.BaseUrl, ApiConfig.SocketHub);
@@ -31,14 +47,15 @@ namespace Assets.Scripts.BoredGames.API
 
             signalR.On("OnGameStateReceived", (string payload) =>
             {
-                Log($"OnGameStateReceived: {payload}");
+                Log($">>> OnGameStateReceived: {payload}");
                 var data = JsonUtility.FromJson<GameStateMessage>(payload);
-
+                Log($"<<< OnGameStateReceived: {JsonUtility.ToJson(data)}");
                 var previousStatus = GameState.Instance.Status;
 
                 GameState.Instance.Status = data.GameStatus;
                 GameState.Instance.CurrentRoundStatus = data.RoundStatus;
                 GameState.Instance.CurrentRoundNumber = data.RoundNumber;
+                GameState.Instance.Score = data.Score;
 
                 if (previousStatus != GameState.Instance.Status)
                 {
@@ -59,6 +76,7 @@ namespace Assets.Scripts.BoredGames.API
                 }
 
                 // Send payload to hub as JSON
+                Log($"JoinGameGroup: GameId={GameState.Instance.GameId} Player={GameState.Instance.PlayerName}");
                 signalR.Invoke("JoinGameGroup", GameState.Instance.GameId, GameState.Instance.PlayerName);
             };
 
@@ -71,17 +89,17 @@ namespace Assets.Scripts.BoredGames.API
             signalR.Connect();
         }
 
-        public static void MakeMove(string gameId, MakeMoveMessage command)
+        public void MakeMove(string gameId, MakeMoveMessage command)
         {
             signalR.Invoke("MakeMove", gameId, JsonUtility.ToJson(command));
         }
 
-        public static void CloseConnection()
+        public void CloseConnection()
         {
             signalR.Stop();
         }
 
-        public static bool IsConnected()
+        public bool IsConnected()
         {
             return isConnected;
         }

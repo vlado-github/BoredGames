@@ -11,6 +11,7 @@ using BoredGames.Server.GameServer.Grains.Base;
 using BoredGames.Server.GameServer.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace BoredGames.API.Controllers
 {
@@ -65,17 +66,19 @@ namespace BoredGames.API.Controllers
         }
 
         [HttpPut("join")]
-        public async Task<PlayerViewModel> Join(JoinGame request)
+        public async Task Join(JoinGame request)
         {
             var playerId = this.GetPlayerId();
             var player = _grainFactory.GetGrain<IPlayerGrain>(playerId);
             var playerDetails = await player.GetProfile();
-            var result = await player.JoinGame(new JoinGameCommand()
+            var gameState = await player.JoinGame(new JoinGameCommand()
             {
                 GameId = request.GameId,
                 PlayerNickName = playerDetails.NickName
             });
-            return playerDetails;
+            await _hubContext.Clients
+                .Group(gameState.GameId.ToString())
+                .SendAsync("OnGameStateReceived", JsonConvert.SerializeObject(gameState));
         }
 
         [HttpGet("{gameId:guid}/state")]

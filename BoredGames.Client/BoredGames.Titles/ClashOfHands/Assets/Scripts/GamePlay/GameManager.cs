@@ -64,14 +64,14 @@ public class GameManager : MonoBehaviour
 
     public void CheckGameStatus()
     {
-        if (!GameState.Instance.IsGameCreated)
+        if (!GameState.Instance.IsGameCreated || !GameState.Instance.IsPlayerSet)
         {
             return;
         }
 
-        if (!BoredGamesSocketClient.IsConnected())
+        if (!BoredGamesSocketClient.Instance.IsConnected())
         {
-            BoredGamesSocketClient.SetupConnection();
+            BoredGamesSocketClient.Instance.SetupConnection();
         }
 
         switch (GameState.Instance.Status)

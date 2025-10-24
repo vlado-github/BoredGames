@@ -28,7 +28,7 @@ public class CardClickHandler : MonoBehaviour
             return;
         }
 
-        BoredGamesSocketClient.MakeMove(GameState.Instance.GameId, new MakeMoveMessage
+        BoredGamesSocketClient.Instance.MakeMove(GameState.Instance.GameId, new MakeMoveMessage
         {
             gameId = GameState.Instance.GameId,
             playerId = GameState.Instance.PlayerId,

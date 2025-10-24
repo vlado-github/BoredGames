@@ -107,8 +107,10 @@ public class GameGrain : Grain, IGameGrain
         return Task.FromResult(result.Adapt<IList<PlayerViewModel>>());
     }
 
-    public Task<GameStateViewModel> GetState()
+    public async Task<GameStateViewModel> GetState()
     {
-        return Task.FromResult(_gameState.Adapt<GameStateViewModel>());
+        var gameState = _gameState.Adapt<GameStateViewModel>();
+        gameState.Score = await GetScore();
+        return gameState;
     }
 }

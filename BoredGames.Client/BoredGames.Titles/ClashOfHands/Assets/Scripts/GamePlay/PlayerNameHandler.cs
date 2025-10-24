@@ -77,6 +77,7 @@ public class PlayerNameHandler : MonoBehaviour
 
                 if (GameState.Instance.IsGameCreated)
                 {
+                    Debug.Log($"JoinGame {response.nickName}");
                     StartCoroutine(BoredGamesAPIClient.Instance.JoinGame((response) => { }));
                     _playerNameDialog.gameObject.SetActive(false);
                     _mainMenuCanvas.gameObject.SetActive(false);
@@ -85,6 +86,7 @@ public class PlayerNameHandler : MonoBehaviour
                 }
                 else
                 {
+                    Debug.Log($"JoinGame {GameState.Instance.IsGameCreated}");
                     _playerNameDialog.gameObject.SetActive(false);
                     _mainMenuCanvas.gameObject.SetActive(true);
                 }

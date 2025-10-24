@@ -15,4 +15,6 @@ public class GameStateViewModel
     public RoundStatus RoundStatus { get; set; }
     [Id(4)]
     public int PlayersNumber { get; set; }
+    [Id(5)]
+    public GameScoreViewModel Score { get; set; } = new ();
 }

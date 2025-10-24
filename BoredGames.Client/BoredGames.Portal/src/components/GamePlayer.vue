@@ -33,7 +33,7 @@ export default {
 <style>
   .gameplayer-container {
     display: flex;
-    min-height: 100vh;
+    min-height: 80vh;
     min-width: 100vw;
     margin:auto;
     border-style:none;
