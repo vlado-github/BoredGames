@@ -25,6 +25,7 @@ namespace Assets.Scripts.GamePlay
         public GameStatus Status { get; set; } = GameStatus.AwaitingPlayers;
         public string PlayerId { get; set; } = null;
         public string PlayerName { get; set; }
+        public bool CurrentRoundCardSelected { get; set; } = false;
         public int CurrentRoundNumber { get; set; }
         public RoundStatus CurrentRoundStatus { get; set; }
         public GameScore Score { get; set; } = new GameScore();

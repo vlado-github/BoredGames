@@ -9,6 +9,8 @@ TagManager:
   - ship
   - asteroid
   - rock
+  - paper
+  - scissors
   layers:
   - Default
   - TransparentFX

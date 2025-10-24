@@ -1,6 +1,8 @@
 using Assets.Scripts;
 using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -12,11 +14,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] Canvas _scoreCanvas;
     [SerializeField] Canvas _playerNameCanvas;
 
-    [SerializeField] string _playersCardsTag;
+    [SerializeField] string _playersCardsTags;
     [SerializeField] string _opponentsCardsTag;
 
-    GameObject[] objectsToHideAtStart;
-    GameObject[] objectsToShowAtStart;
+    IList<GameObject> objectsToHideAtStart;
+    IList<GameObject> objectsToShowAtStart;
 
     private void Awake()
     {
@@ -33,8 +35,15 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_opponentsCardsTag);
-        objectsToShowAtStart = GameObject.FindGameObjectsWithTag(_playersCardsTag);
+        objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_opponentsCardsTag).ToList();
+
+        var playersCardsTags = _playersCardsTags.Split(',');
+        objectsToShowAtStart = new List<GameObject>();
+        foreach (var playersCardsTag in playersCardsTags)
+        {
+            objectsToShowAtStart.Add(GameObject.FindGameObjectWithTag(playersCardsTag));
+        }
+        
 
         ShowOpponentsSide(false);
         ShowPlayerSide(false);
@@ -89,6 +98,17 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
                     
+                    _waitingForPlayerCanvas.gameObject.SetActive(false);
+                    _scoreCanvas.gameObject.SetActive(true);
+                    _playerNameCanvas.gameObject.SetActive(false);
+                    ShowOpponentsSide(true);
+                    ShowPlayerSide(true);
+                    break;
+                }
+            case GameStatus.Finished:
+                {
+                    Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
+
                     _waitingForPlayerCanvas.gameObject.SetActive(false);
                     _scoreCanvas.gameObject.SetActive(true);
                     _playerNameCanvas.gameObject.SetActive(false);

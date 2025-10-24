@@ -54,6 +54,10 @@ namespace Assets.Scripts.BoredGames.API
 
                 GameState.Instance.Status = data.GameStatus;
                 GameState.Instance.CurrentRoundStatus = data.RoundStatus;
+                if (GameState.Instance.CurrentRoundNumber < data.RoundNumber)
+                {
+                    GameState.Instance.CurrentRoundCardSelected = false;
+                }
                 GameState.Instance.CurrentRoundNumber = data.RoundNumber;
                 GameState.Instance.Score = data.Score;
 
@@ -89,9 +93,9 @@ namespace Assets.Scripts.BoredGames.API
             signalR.Connect();
         }
 
-        public void MakeMove(string gameId, MakeMoveMessage command)
+        public void MakeMove(MakeMoveMessage command)
         {
-            signalR.Invoke("MakeMove", gameId, JsonUtility.ToJson(command));
+            signalR.Invoke("MakeMove", JsonUtility.ToJson(command));
         }
 
         public void CloseConnection()

@@ -5,8 +5,8 @@ namespace Assets.Scripts.BoredGames.API
     [System.Serializable]
     public class MakeMoveMessage
     {
-        public string gameId;
-        public string playerId;
-        public string actionType;
+        public string GameId;
+        public string PlayerId;
+        public string ActionType;
     }
 }

@@ -64,7 +64,7 @@ public class GameGrain : Grain, IGameGrain
         return Task.FromResult(result);
     }
 
-    public Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
+    public async Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
     {
         var dto = command.Adapt<MoveDto>();
         var result = _gameRuleEngine.Handle(dto);
@@ -84,7 +84,10 @@ public class GameGrain : Grain, IGameGrain
             _gameState.GameStatus = GameStatus.InPlay;
         }
 
-        return Task.FromResult(_gameState.Adapt<GameStateViewModel>());
+        var newGameState = _gameState.Adapt<GameStateViewModel>();
+        newGameState.Score = score.Adapt<GameScoreViewModel>();
+
+        return newGameState;
     }
 
     public Task<GameScoreViewModel> GetScore()

@@ -37,17 +37,22 @@ public class GameHub : Hub
             .SendAsync("OnGameStateReceived", JsonConvert.SerializeObject(gameState));
     }
     
-    public async Task MakeMove(MakeMove makeMoveAction)
+    public async Task MakeMove(string payload)
     {
-        var parsed = Guid.TryParse(makeMoveAction.GameId, out var gameIdAsGuid);
-        if (!parsed)
+        var makeMove = JsonConvert.DeserializeObject<MakeMove>(payload);
+        if (makeMove == null)
         {
-            _logger.LogError($"Invalid gameId. Can't parse gameId {makeMoveAction.GameId}");
+            throw new Exception("Invalid payload.");
         }
-        parsed = Guid.TryParse(makeMoveAction.PlayerId, out var playerIdAsGuid);
+        var parsed = Guid.TryParse(makeMove.GameId, out var gameIdAsGuid);
         if (!parsed)
         {
-            _logger.LogError($"Invalid playerId. Can't parse playerId {makeMoveAction.PlayerId}");
+            _logger.LogError($"Invalid gameId. Can't parse gameId {makeMove.GameId}");
+        }
+        parsed = Guid.TryParse(makeMove.PlayerId, out var playerIdAsGuid);
+        if (!parsed)
+        {
+            _logger.LogError($"Invalid playerId. Can't parse playerId {makeMove.PlayerId}");
         }
         
         var game = _grainFactory.GetGrain<IGameGrain>(gameIdAsGuid);
@@ -63,13 +68,13 @@ public class GameHub : Hub
         var playerDetails= await player.GetProfile();
         gameState = await game.MakeMove(new MakeMoveCommand
         {
-            ActionType = makeMoveAction.ActionType,
+            ActionType = makeMove.ActionType,
             PlayerId = playerIdAsGuid,
             PlayerNickName = playerDetails.NickName
         });
             
         await Clients
             .Group(gameState.GameId.ToString())
-            .SendAsync("OnGameStateReceived", gameState);
+            .SendAsync("OnGameStateReceived", JsonConvert.SerializeObject(gameState));
     }
 }
