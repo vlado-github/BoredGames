@@ -3262,6 +3262,10 @@ MonoBehaviour:
   _card: {fileID: -2182124076254010665, guid: afcf94c4733369a4290b68e81bf0bcb5, type: 3}
   _highlightCard: {fileID: -8852777169384481020, guid: cdc2824883529774f8f3ed9995392d54, type: 3}
   popCardOffset: 0.3
+  cardsInHand: rock,paper,scissors
+  centerX: 0
+  centerY: -2.6
+  centerZ: 0
 --- !u!61 &779987337
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4288,7 +4292,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 11
   m_Sprite: {fileID: -4571828015118065507, guid: d1d3c5d5da8eee24f99f13c368ab5bd6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4586,7 +4590,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 12
   m_Sprite: {fileID: -4571828015118065507, guid: d1d3c5d5da8eee24f99f13c368ab5bd6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5260,9 +5264,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06e177157fd331f48bb4ee688b1d5af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _card: {fileID: 0}
+  _card: {fileID: -1469909079130451432, guid: 1095ac97d29ce7543b1be1680324f829, type: 3}
   _highlightCard: {fileID: -404999768985959364, guid: cfbd9ea4fb6b50c40ab1317fb81a28e3, type: 3}
   popCardOffset: 0.3
+  cardsInHand: rock,paper,scissors
+  centerX: 0
+  centerY: -2.6
+  centerZ: 0
 --- !u!61 &1621204543
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5324,6 +5332,10 @@ MonoBehaviour:
   _card: {fileID: -1469909079130451432, guid: 1095ac97d29ce7543b1be1680324f829, type: 3}
   _highlightCard: {fileID: -404999768985959364, guid: cfbd9ea4fb6b50c40ab1317fb81a28e3, type: 3}
   popCardOffset: 0
+  cardsInHand: 
+  centerX: 0
+  centerY: 0
+  centerZ: 0
 --- !u!1 &1634410678
 GameObject:
   m_ObjectHideFlags: 0
@@ -5678,9 +5690,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06e177157fd331f48bb4ee688b1d5af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _card: {fileID: 0}
+  _card: {fileID: 7766721758921934520, guid: 0980ebfe81307f447934e764252e0680, type: 3}
   _highlightCard: {fileID: 7394186360890323461, guid: b6c3bc405de3d9d469f91a28e8f87f3c, type: 3}
   popCardOffset: 0.3
+  cardsInHand: rock,paper,scissors
+  centerX: 0
+  centerY: -2.6
+  centerZ: 0
 --- !u!61 &1696103034
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5742,6 +5758,10 @@ MonoBehaviour:
   _card: {fileID: 7766721758921934520, guid: 0980ebfe81307f447934e764252e0680, type: 3}
   _highlightCard: {fileID: 7394186360890323461, guid: b6c3bc405de3d9d469f91a28e8f87f3c, type: 3}
   popCardOffset: 0
+  cardsInHand: 
+  centerX: 0
+  centerY: 0
+  centerZ: 0
 --- !u!1 &1698858219
 GameObject:
   m_ObjectHideFlags: 0

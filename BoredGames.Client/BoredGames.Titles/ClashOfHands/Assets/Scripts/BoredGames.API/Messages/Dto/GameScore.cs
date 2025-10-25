@@ -5,7 +5,7 @@ namespace Assets.Scripts.BoredGames.API
     [System.Serializable]
     public class GameScore
     {
-        public int CurrentRound;
+        public int LastRound;
         public int RequiredNumberOfWins;
         public PlayerScore[] PlayerScores;
     }

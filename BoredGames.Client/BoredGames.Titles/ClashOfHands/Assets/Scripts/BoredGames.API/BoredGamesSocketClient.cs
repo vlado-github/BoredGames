@@ -50,7 +50,8 @@ namespace Assets.Scripts.BoredGames.API
                 Log($">>> OnGameStateReceived: {payload}");
                 var data = JsonUtility.FromJson<GameStateMessage>(payload);
                 Log($"<<< OnGameStateReceived: {JsonUtility.ToJson(data)}");
-                var previousStatus = GameState.Instance.Status;
+                var previousGameStatus = GameState.Instance.Status;
+                var previousRoundNumber = GameState.Instance.CurrentRoundNumber;
 
                 GameState.Instance.Status = data.GameStatus;
                 GameState.Instance.CurrentRoundStatus = data.RoundStatus;
@@ -61,9 +62,15 @@ namespace Assets.Scripts.BoredGames.API
                 GameState.Instance.CurrentRoundNumber = data.RoundNumber;
                 GameState.Instance.Score = data.Score;
 
-                if (previousStatus != GameState.Instance.Status)
+                if (previousGameStatus != GameState.Instance.Status)
                 {
                     GameManager.Instance.CheckGameStatus();
+                }
+
+                var previousRoundCompleted = previousRoundNumber < GameState.Instance.CurrentRoundNumber;
+                if (previousRoundCompleted)
+                {
+                    GameManager.Instance.CheckRoundStatusAsync(previousRoundNumber, previousRoundCompleted);
                 }
             });
 

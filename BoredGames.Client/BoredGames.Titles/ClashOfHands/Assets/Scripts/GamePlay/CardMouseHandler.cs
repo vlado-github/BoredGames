@@ -1,7 +1,7 @@
 using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
 using System;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
 
 public class CardMouseHandler : MonoBehaviour
@@ -9,6 +9,19 @@ public class CardMouseHandler : MonoBehaviour
     [SerializeField] Sprite _card;
     [SerializeField] Sprite _highlightCard;
     [SerializeField] float popCardOffset;
+    [SerializeField] string cardsInHand;
+    [SerializeField] float centerX;
+    [SerializeField] float centerY;
+    [SerializeField] float centerZ;
+
+    private Vector3 defaultPosition;
+    private Quaternion defaultRotation;
+
+    private void Start()
+    {
+        defaultPosition = transform.position;
+        defaultRotation = transform.rotation;
+    }
 
     void OnMouseDown()
     {
@@ -16,8 +29,6 @@ public class CardMouseHandler : MonoBehaviour
         {
             return;
         }
-
-        Debug.Log($"OnMouseDown {tag}");
 
         var isSuccess = true;
         try
@@ -36,6 +47,8 @@ public class CardMouseHandler : MonoBehaviour
         }
 
         GameState.Instance.CurrentRoundCardSelected = isSuccess;
+        HideOtherCardsInHand();
+        Center();
     }
 
     void OnMouseEnter()
@@ -44,9 +57,11 @@ public class CardMouseHandler : MonoBehaviour
         {
             return;
         }
-        Debug.Log("Mouse entered!");
         transform.GetComponent<SpriteRenderer>().sprite = _highlightCard;
-        transform.position = transform.position + new Vector3(0, popCardOffset, 0);
+        if (transform.position.y < defaultPosition.y)
+        {
+            transform.position = transform.position + new Vector3(0, popCardOffset, 0);
+        }
     }
 
     void OnMouseExit()
@@ -55,8 +70,26 @@ public class CardMouseHandler : MonoBehaviour
         {
             return;
         }
-        Debug.Log("Mouse exited!");
         transform.GetComponent<SpriteRenderer>().sprite = _card;
-        transform.position = transform.position + new Vector3(0, -popCardOffset, 0);
+        if (transform.position.y > defaultPosition.y)
+        {
+            transform.position = transform.position + new Vector3(0, -popCardOffset, 0);
+        }
+    }
+
+    private void HideOtherCardsInHand()
+    {
+        var cards = cardsInHand.Split(",");
+        foreach (var card in cards.Where(x => !CompareTag(x)))
+        {
+            var cardObject = GameObject.FindGameObjectWithTag(card);
+            cardObject.SetActive(false);
+        }
+    }
+
+    private void Center()
+    {
+        transform.position = new Vector3(centerX, centerY, centerZ);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 }

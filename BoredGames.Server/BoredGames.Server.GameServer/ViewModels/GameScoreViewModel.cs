@@ -4,7 +4,7 @@ namespace BoredGames.Server.GameServer.ViewModels;
 public class GameScoreViewModel
 {
     [Id(0)]
-    public int CurrentRound { get; set; }
+    public int LastRound { get; set; }
     [Id(1)]
     public int RequiredNumberOfWins { get; set; }
 
