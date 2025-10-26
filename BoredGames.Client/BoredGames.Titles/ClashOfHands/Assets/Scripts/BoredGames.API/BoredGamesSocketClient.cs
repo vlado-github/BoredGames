@@ -1,9 +1,7 @@
 using Assets.BoredGames.API;
 using Assets.Scripts.GamePlay;
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
-using WebSocketSharp;
 
 namespace Assets.Scripts.BoredGames.API
 {

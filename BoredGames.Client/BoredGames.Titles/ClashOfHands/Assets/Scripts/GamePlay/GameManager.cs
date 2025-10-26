@@ -1,12 +1,11 @@
 using Assets.Scripts;
 using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -20,13 +19,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] string _playersCardsTags;
     [SerializeField] string _opponentsCardsTag;
 
+    [SerializeField] GameObject _rockPrefab;
+    [SerializeField] GameObject _paperPrefab;
+    [SerializeField] GameObject _scissorsPrefab;
+
+    [SerializeField] NotificationFader _notificationManager;
+
     IList<GameObject> objectsToHideAtStart;
     IList<GameObject> objectsToShowAtStart;
 
     IDictionary<string, Vector3> objectsToShowAtStartDefaultPositions;
-    IDictionary<string, Quaternion> objectsToShowAtStartDefaultRotations;
+    IDictionary<string, Quaternion> objectsToShowAtStartDefaultRotations;   
 
     GameObject opponentsSelectedCard = null;
+    GameObject playersSelectedCard = null;
+    bool gameOnNotificationDisplayed = false;
 
     private void Awake()
     {
@@ -56,35 +63,63 @@ public class GameManager : MonoBehaviour
             objectsToShowAtStartDefaultPositions.Add(playersCardsTag, playerCardObject.transform.position);
             objectsToShowAtStartDefaultRotations.Add(playersCardsTag, playerCardObject.transform.rotation);
         }
-        
 
-        ShowOpponentsSide(false);
-        ShowPlayerSide(false);
+        DisplayOpponentsSide(false);
+        DisplayPlayerSide(false);
         CheckGameStatus();
     }
-    private void ShowNotification(string title, string message)
+    private void ShowNotification(string message, Color? textColor = null, float? duration = null)
     {
-        Debug.Log($" >>> {title.ToUpper()} <<<");
-        Debug.Log($" @@@ {message.ToUpper()} @@@");
+        _notificationManager.ShowNotification(message, textColor, duration);
     }
 
-    private void ShowOpponentsSelectedCard(string cardTag)
+    public void ShowSelectedCard(string cardTag, bool isOppenent)
     {
-        opponentsSelectedCard = Instantiate(GameObject.FindGameObjectWithTag(cardTag));
-        opponentsSelectedCard.SetActive(true);
-        opponentsSelectedCard.transform.position = new Vector3(0, 3.2f, 0);
-    }
+        Debug.Log($"ShowSelectedCard {cardTag} {isOppenent}");
+        GameObject selectedCard;
+        if (!string.IsNullOrEmpty(cardTag))
+        {
+            if (cardTag == "rock")
+            {
+                selectedCard = Instantiate(_rockPrefab);
+            } 
+            else if (cardTag == "paper")
+            {
+                selectedCard = Instantiate(_paperPrefab);
+            }
+            else
+            {
+                selectedCard = Instantiate(_scissorsPrefab);
+            }
 
-    private void RemoveOpponentsSelectedCard()
-    {
-        if (opponentsSelectedCard != null) 
-        { 
-            opponentsSelectedCard.SetActive(false); 
-            opponentsSelectedCard = null; 
+            selectedCard.SetActive(true);
+
+            if (isOppenent)
+            {
+                selectedCard.transform.position = new Vector3(0, 2.6f, 0);
+                opponentsSelectedCard = selectedCard;
+            }
+            else
+            {
+                selectedCard.transform.position = new Vector3(0, -2.6f, 0);
+                playersSelectedCard = selectedCard;
+            }
         }
     }
 
-    private void ShowOpponentsSide(bool show = true)
+    private void RemoveSelectedCards()
+    {
+        if (!GameState.Instance.CurrentRoundCardSelected && opponentsSelectedCard != null)
+        {
+            opponentsSelectedCard.SetActive(false);
+        }
+        if (!GameState.Instance.CurrentRoundCardSelected && playersSelectedCard != null)
+        {
+            playersSelectedCard.SetActive(false);
+        }
+    }
+
+    private void DisplayOpponentsSide(bool show = true)
     {
         foreach (GameObject objectToHide in objectsToHideAtStart)
         {
@@ -92,15 +127,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ShowPlayerSide(bool show = true)
+    public void DisplayPlayerSide(bool show = true)
     {
+        Debug.Log($"DisplayPlayerSide  {show} {objectsToShowAtStart.Count}");
         foreach (GameObject objectToShow in objectsToShowAtStart)
         {
+            Debug.Log($"DisplayPlayerSide  {objectToShow.tag}");
             objectToShow.SetActive(show);
-            objectsToShowAtStartDefaultPositions.TryGetValue(objectToShow.tag, out var defaultPosition);
-            objectsToShowAtStartDefaultRotations.TryGetValue(objectToShow.tag, out var defaultRotation);
-            objectToShow.transform.position = defaultPosition;
-            objectToShow.transform.rotation = defaultRotation;
         }
     }
 
@@ -109,6 +142,11 @@ public class GameManager : MonoBehaviour
         if (GameState.Instance.CurrentRoundStatus == RoundStatus.InProgress && previousRoundCompleted)
         {
             var score = GameState.Instance.Score;
+            var playerScore = score.PlayerScores.FirstOrDefault(x => x.PlayerId == GameState.Instance.PlayerId);
+            if (playerScore == null)
+            {
+                return;
+            }
             var opponentScore = score.PlayerScores.FirstOrDefault(x => x.PlayerId != GameState.Instance.PlayerId);
             if (opponentScore == null) 
             {
@@ -116,56 +154,79 @@ public class GameManager : MonoBehaviour
             }
             
 
-            ShowOpponentsSide(false);
-            var opponentsRoundScore = GetOpponentRoundResult(previousRoundNumber, opponentScore);
-            Debug.Log("result:" + opponentsRoundScore.SelectedCardTag);
-            ShowOpponentsSelectedCard(opponentsRoundScore.SelectedCardTag);
-            //Task.Delay(2000);
-            //RemoveOpponentsSelectedCard();
+            DisplayOpponentsSide(false);
+            var playersRoundScore = GetRoundResult(previousRoundNumber, playerScore);
+            ShowSelectedCard(playersRoundScore.SelectedCardTag, isOppenent: false);
 
+            var opponentsRoundScore = GetRoundResult(previousRoundNumber, opponentScore);
+            ShowSelectedCard(opponentsRoundScore.SelectedCardTag, isOppenent: true);
 
-            //ShowOpponentsSide(true);
-            //ShowPlayerSide(true);
+            switch (playersRoundScore.Result)
+            {
+                case RoundScoreResultEnum.Win:
+                    {
+                        ShowNotification("Win", Color.green);
+                        break;
+                    }
+                case RoundScoreResultEnum.Loss:
+                    {
+                        ShowNotification("Loss", Color.magenta);
+                        break;
+                    }
+                case RoundScoreResultEnum.Draw:
+                    {
+                        ShowNotification("Draw", Color.yellow);
+                        break;
+                    }
+                default:
+                    {
+                        throw new Exception("Round result is not supported.");
+                    }
+            }
+
+            StartCoroutine(Delay(1, () =>
+            {
+                CheckGameStatus();
+            }));
         }
     }
 
-    private RoundScoreResult GetOpponentRoundResult(int previousRoundNumber, PlayerScore opponentScore)
+    private IEnumerator Delay(float seconds, Action callback)
+    {
+        yield return new WaitForSeconds(seconds);
+        callback.Invoke();
+    }
+
+    private RoundScoreResult GetRoundResult(int previousRoundNumber, PlayerScore playerScore)
     {
         var result = new RoundScoreResult();
-        var opponentRoundWin = opponentScore.RoundWins.FirstOrDefault(x => x.RoundNumber == previousRoundNumber);
-        if (opponentRoundWin == null)
+        var playerRoundWin = playerScore.RoundWins.FirstOrDefault(x => x.RoundNumber == previousRoundNumber);
+        if (playerRoundWin == null)
         {
-            var opponentRoundLoss = opponentScore.RoundLosses.FirstOrDefault(x => x.RoundNumber == previousRoundNumber);
-            if (opponentRoundLoss == null)
+            var playerRoundLoss = playerScore.RoundLosses.FirstOrDefault(x => x.RoundNumber == previousRoundNumber);
+            if (playerRoundLoss == null)
             {
-                var opponentRoundDraw = opponentScore.RoundDraws.FirstOrDefault(x => x.RoundNumber == previousRoundNumber);
-                if (opponentRoundDraw != null)
+                var playerRoundDraw = playerScore.RoundDraws.FirstOrDefault(x => x.RoundNumber == previousRoundNumber);
+                if (playerRoundDraw != null)
                 {
                     result.Result = RoundScoreResultEnum.Draw;
-                    result.SelectedCardTag = opponentRoundDraw.PlayerMove.ToLower();
-                    ShowNotification($"Round {previousRoundNumber}", "Draw");
+                    result.SelectedCardTag = playerRoundDraw.PlayerMove.ToLower();
                 }
             }
             else
             {
                 result.Result = RoundScoreResultEnum.Loss;
-                result.SelectedCardTag = opponentRoundLoss.PlayerMove.ToLower();
-                ShowNotification($"Round {previousRoundNumber}", "Loss");
+                result.SelectedCardTag = playerRoundLoss.PlayerMove.ToLower();
             }
         }
         else
         {
             result.Result = RoundScoreResultEnum.Win;
-            result.SelectedCardTag = opponentRoundWin.PlayerMove.ToLower();
-            ShowNotification($"Round {previousRoundNumber}", "Win");
+            result.SelectedCardTag = playerRoundWin.PlayerMove.ToLower();
         }
-        
 
         return result;
     }
-
-
-   
 
     public void CheckGameStatus()
     {
@@ -180,8 +241,6 @@ public class GameManager : MonoBehaviour
             BoredGamesSocketClient.Instance.SetupConnection();
         }
 
-       
-
         switch (GameState.Instance.Status)
         {
             case GameStatus.AwaitingPlayers:
@@ -192,10 +251,12 @@ public class GameManager : MonoBehaviour
                     }
 
                     Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
+                    RemoveSelectedCards();
                     _waitingForPlayerCanvas.gameObject.SetActive(true);
                     _scoreCanvas.gameObject.SetActive(false);
-                    ShowOpponentsSide(false);
-                    ShowPlayerSide(true);
+                    DisplayOpponentsSide(false);
+                    DisplayPlayerSide(true);
+                    
                     break;
                 }
             case GameStatus.InPlay:
@@ -205,13 +266,20 @@ public class GameManager : MonoBehaviour
                         return;
                     }
 
+                    if (!gameOnNotificationDisplayed)
+                    {
+                        ShowNotification("clash on!", Color.green, 0.5f);
+                        gameOnNotificationDisplayed = true;
+                    }
+
                     Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
-                    
+                    RemoveSelectedCards();
                     _waitingForPlayerCanvas.gameObject.SetActive(false);
                     _scoreCanvas.gameObject.SetActive(true);
                     _playerNameCanvas.gameObject.SetActive(false);
-                    ShowOpponentsSide(true);
-                    ShowPlayerSide(true);
+                    DisplayOpponentsSide(true);
+                    DisplayPlayerSide(true);
+                   
                     break;
                 }
             case GameStatus.Finished:

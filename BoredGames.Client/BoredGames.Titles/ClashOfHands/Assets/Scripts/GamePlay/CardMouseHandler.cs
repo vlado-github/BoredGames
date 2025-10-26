@@ -10,29 +10,28 @@ public class CardMouseHandler : MonoBehaviour
     [SerializeField] Sprite _highlightCard;
     [SerializeField] float popCardOffset;
     [SerializeField] string cardsInHand;
-    [SerializeField] float centerX;
-    [SerializeField] float centerY;
-    [SerializeField] float centerZ;
+    [SerializeField] GameManager _gameManager;
 
     private Vector3 defaultPosition;
-    private Quaternion defaultRotation;
+    private bool isSelected = false;
 
     private void Start()
     {
         defaultPosition = transform.position;
-        defaultRotation = transform.rotation;
     }
 
     void OnMouseDown()
     {
-        if (GameState.Instance.CurrentRoundCardSelected || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
+        Debug.Log($"Click: {tag}");
+        if (isSelected || GameState.Instance.CurrentRoundCardSelected || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
         {
+            Debug.Log($"Click: {isSelected}");
             return;
         }
 
-        var isSuccess = true;
         try
         {
+            Debug.Log($"Click: MakeMove");
             BoredGamesSocketClient.Instance.MakeMove(new MakeMoveMessage
             {
                 ActionType = tag,
@@ -42,18 +41,21 @@ public class CardMouseHandler : MonoBehaviour
         }
         catch (Exception ex)
         {
-            isSuccess = false;
+            isSelected = false;
             Debug.LogException(ex);
         }
-
-        GameState.Instance.CurrentRoundCardSelected = isSuccess;
-        HideOtherCardsInHand();
-        Center();
+        
+        isSelected = true;
+        GameState.Instance.CurrentRoundCardSelected = isSelected;
+        Debug.Log($"Click: DisplayPlayerSide");
+        _gameManager.DisplayPlayerSide(show: false);
+        Debug.Log($"Click: ShowSelectedCard");
+        _gameManager.ShowSelectedCard(tag, isOppenent: false);
     }
 
     void OnMouseEnter()
     {
-        if (GameState.Instance.CurrentRoundCardSelected || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
+        if (isSelected || GameState.Instance.CurrentRoundCardSelected || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
         {
             return;
         }
@@ -66,7 +68,7 @@ public class CardMouseHandler : MonoBehaviour
 
     void OnMouseExit()
     {
-        if (GameState.Instance.CurrentRoundCardSelected || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
+        if (isSelected || GameState.Instance.CurrentRoundCardSelected || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
         {
             return;
         }
@@ -75,21 +77,5 @@ public class CardMouseHandler : MonoBehaviour
         {
             transform.position = transform.position + new Vector3(0, -popCardOffset, 0);
         }
-    }
-
-    private void HideOtherCardsInHand()
-    {
-        var cards = cardsInHand.Split(",");
-        foreach (var card in cards.Where(x => !CompareTag(x)))
-        {
-            var cardObject = GameObject.FindGameObjectWithTag(card);
-            cardObject.SetActive(false);
-        }
-    }
-
-    private void Center()
-    {
-        transform.position = new Vector3(centerX, centerY, centerZ);
-        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 }
