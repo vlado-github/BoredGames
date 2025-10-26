@@ -15,21 +15,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] Canvas _waitingForPlayerCanvas;
     [SerializeField] Canvas _scoreCanvas;
     [SerializeField] Canvas _playerNameCanvas;
-
-    [SerializeField] string _playersCardsTags;
-    [SerializeField] string _opponentsCardsTag;
+    [SerializeField] GameObject _playerHand;
+    [SerializeField] GameObject _opponentHand;
 
     [SerializeField] GameObject _rockPrefab;
     [SerializeField] GameObject _paperPrefab;
     [SerializeField] GameObject _scissorsPrefab;
 
-    [SerializeField] NotificationFader _notificationManager;
-
-    IList<GameObject> objectsToHideAtStart;
-    IList<GameObject> objectsToShowAtStart;
-
-    IDictionary<string, Vector3> objectsToShowAtStartDefaultPositions;
-    IDictionary<string, Quaternion> objectsToShowAtStartDefaultRotations;   
+    [SerializeField] NotificationFader _notificationManager;  
 
     GameObject opponentsSelectedCard = null;
     GameObject playersSelectedCard = null;
@@ -50,24 +43,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        objectsToHideAtStart = GameObject.FindGameObjectsWithTag(_opponentsCardsTag).ToList();
-        objectsToShowAtStartDefaultPositions = new Dictionary<string, Vector3>();
-        objectsToShowAtStartDefaultRotations = new Dictionary<string, Quaternion>();
-
-        var playersCardsTags = _playersCardsTags.Split(',');
-        objectsToShowAtStart = new List<GameObject>();
-        foreach (var playersCardsTag in playersCardsTags)
-        {
-            var playerCardObject = GameObject.FindGameObjectWithTag(playersCardsTag);
-            objectsToShowAtStart.Add(playerCardObject);
-            objectsToShowAtStartDefaultPositions.Add(playersCardsTag, playerCardObject.transform.position);
-            objectsToShowAtStartDefaultRotations.Add(playersCardsTag, playerCardObject.transform.rotation);
-        }
-
         DisplayOpponentsSide(false);
         DisplayPlayerSide(false);
         CheckGameStatus();
     }
+
     private void ShowNotification(string message, Color? textColor = null, float? duration = null)
     {
         _notificationManager.ShowNotification(message, textColor, duration);
@@ -121,20 +101,26 @@ public class GameManager : MonoBehaviour
 
     private void DisplayOpponentsSide(bool show = true)
     {
-        foreach (GameObject objectToHide in objectsToHideAtStart)
+        if (_opponentHand == null)
         {
-            objectToHide.SetActive(show);
+            Debug.LogError($"_opponentHand can't be empty.");
+            return;
         }
+        Debug.Log($"_opponentHand {show}");
+        var alpha = show ? 1f : 0f;
+        _opponentHand.SetActive(show);
     }
 
     public void DisplayPlayerSide(bool show = true)
     {
-        Debug.Log($"DisplayPlayerSide  {show} {objectsToShowAtStart.Count}");
-        foreach (GameObject objectToShow in objectsToShowAtStart)
+        if (_playerHand == null)
         {
-            Debug.Log($"DisplayPlayerSide  {objectToShow.tag}");
-            objectToShow.SetActive(show);
+            Debug.LogError($"_playerHand can't be empty.");
+            return;
         }
+        Debug.Log($"_playerHand {show}");
+        var alpha = show ? 1f : 0f;
+        _playerHand.SetActive(show);
     }
 
     public void CheckRoundStatusAsync(int previousRoundNumber, bool previousRoundCompleted)
