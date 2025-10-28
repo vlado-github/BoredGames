@@ -7,7 +7,7 @@ public interface IGameGrain : IGrainWithGuidKey
 {
     Task AddPlayerToGame(AddPlayerCommand command);
     Task<GameStateViewModel> MakeMove(MakeMoveCommand command);
-    Task<IList<PlayerViewModel>> GetWinners();
+    Task<GameWinnersViewModel> GetWinners();
     Task<GameStateViewModel> GetState();
     Task<GameScoreViewModel> GetScore();
     Task<GameDefinitionViewModel> GetDefinition();

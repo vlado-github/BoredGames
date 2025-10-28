@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Canvas _waitingForPlayerCanvas;
     [SerializeField] Canvas _scoreCanvas;
     [SerializeField] Canvas _playerNameCanvas;
+    [SerializeField] Canvas _gameOverCanvas;
     [SerializeField] GameObject _playerHand;
     [SerializeField] GameObject _opponentHand;
 
@@ -165,16 +166,12 @@ public class GameManager : MonoBehaviour
     private void HandleRoundResultDisplay()
     {
         var roundResult = GameState.Instance.Score.GetRoundResult(GameState.Instance.PreviousRoundNumber);
-        Debug.Log($"prevRound: {GameState.Instance.PreviousRoundNumber}, {roundResult.Keys.FirstOrDefault()}:{roundResult.Values.FirstOrDefault()}, {roundResult.Keys.LastOrDefault()} {roundResult.Values.LastOrDefault()}");
         var playerRoundScore = roundResult.FirstOrDefault(x => x.Key == GameState.Instance.PlayerId);
         var opponentRoundScore = roundResult.FirstOrDefault(x => x.Key != GameState.Instance.PlayerId);
         if (opponentRoundScore.Value != null)
         {
             GameState.Instance.CurrentRoundSelectedOpponentCard = opponentRoundScore.Value.SelectedCardTag;
         }
-
-        Debug.Log($" in play: opponent={GameState.Instance.CurrentRoundSelectedOpponentCard}  player={GameState.Instance.CurrentRoundSelectedPlayerCard} prevRoundCompl={GameState.Instance.IsPreviousRoundCompleted}");
-
 
         if (GameState.Instance.IsPreviousRoundCompleted
             && !string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedOpponentCard)
@@ -208,7 +205,6 @@ public class GameManager : MonoBehaviour
 
             StartCoroutine(Delay(1, () =>
             {
-                Debug.Log(">>> reset <<<");
                 GameState.Instance.CompleteRoundResultDisplay();
             }));
         }
@@ -230,15 +226,10 @@ public class GameManager : MonoBehaviour
                         return;
                     }
 
-                    //Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
-                   // RemoveSelectedCards();
                     _waitingForPlayerCanvas.gameObject.SetActive(true);
                     _scoreCanvas.gameObject.SetActive(false);
                     _playerHand.gameObject.SetActive(true);
                     _opponentHand.gameObject.SetActive(false);
-                    
-                    //DisplayOpponentsSide(false);
-                    //DisplayPlayerSide(true);
                     
                     break;
                 }
@@ -250,15 +241,11 @@ public class GameManager : MonoBehaviour
                         gameOnNotificationDisplayed = true;
                     }
 
-                   // Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
-
                     ResetHands();
 
                     _waitingForPlayerCanvas.gameObject.SetActive(false);
                     _scoreCanvas.gameObject.SetActive(true);
                     _playerNameCanvas.gameObject.SetActive(false);
-
-                   // Debug.Log($"scores: {GameState.Instance.Score?.PlayerScores.Length}");
 
                     if (GameState.Instance.Score == null)
                     {
@@ -279,8 +266,10 @@ public class GameManager : MonoBehaviour
                     _waitingForPlayerCanvas.gameObject.SetActive(false);
                     _scoreCanvas.gameObject.SetActive(true);
                     _playerNameCanvas.gameObject.SetActive(false);
+                    _gameOverCanvas.gameObject.SetActive(true);
 
                     ShowNotification("game over", Color.white, 0.5f);
+
                     break;
                 }
         }

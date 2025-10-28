@@ -56,6 +56,16 @@ namespace Assets.Scripts.BoredGames.API
             }
         }
 
+        public IEnumerator GetWinners(Action<WinnersResponse> onSuccess)
+        {
+            var url = new Uri(ApiConfig.BaseUrl, $"/api/game/{GameState.Instance.GameId}/winners");
+
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                yield return HandleRequest(request, onSuccess);
+            }
+        }
+
         public IEnumerator CreateGame(Action<CreateGameResponse> onSuccess)
         {
             var url = new Uri(ApiConfig.BaseUrl, "/api/game/create");

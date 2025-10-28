@@ -14,7 +14,7 @@ public class PlayerNameHandler : MonoBehaviour
     [SerializeField] public TMP_InputField _playerNameInput;
     [SerializeField] public TextMeshProUGUI _validationMessage;
     
-    private Button saveButton;
+    private Button continueButton;
     public static string GameInstanceIdParamKey = "gameInstanceId";
 
     private void Awake()
@@ -34,13 +34,13 @@ public class PlayerNameHandler : MonoBehaviour
 
     void Start()
     {
-        GameObject saveButtonObject = GameObject.Find("SaveButton");
-        if (saveButtonObject != null)
+        GameObject continueButtonObject = GameObject.Find("ContinueButton");
+        if (continueButtonObject != null)
         {
-            saveButton = saveButtonObject.GetComponent<Button>();
-            if (saveButton != null)
+            continueButton = continueButtonObject.GetComponent<Button>();
+            if (continueButton != null)
             {
-                saveButton.onClick.AddListener(OnButtonClick);
+                continueButton.onClick.AddListener(OnButtonClick);
             }
         }
 
@@ -101,7 +101,7 @@ public class PlayerNameHandler : MonoBehaviour
 
     void OnDestroy()
     {
-        saveButton.onClick.RemoveListener(OnButtonClick);
+        continueButton.onClick.RemoveListener(OnButtonClick);
         _playerNameInput.onValueChanged.RemoveListener(OnInputValueChanged);
     }
 }

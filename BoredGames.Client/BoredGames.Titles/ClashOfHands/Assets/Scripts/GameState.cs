@@ -33,7 +33,7 @@ namespace Assets.Scripts.GamePlay
         public string CurrentRoundSelectedOpponentCard { get; set; } = null;
 
         public int PreviousRoundNumber { get; set; }
-        public bool IsPreviousRoundCompleted => PreviousRoundNumber < GameState.Instance.CurrentRoundNumber && GameState.Instance.Score.HasRoundResult(PreviousRoundNumber);
+        public bool IsPreviousRoundCompleted => GameState.Instance.Score.HasRoundResult(PreviousRoundNumber);
         public IList<int> RoundResultDisplayCompleted { get; private set; } = new List<int>();
 
         public GameScore Score { get; set; }

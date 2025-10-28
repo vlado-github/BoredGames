@@ -96,7 +96,7 @@ namespace BoredGames.API.Controllers
         }
         
         [HttpGet("{gameId:guid}/winners")]
-        public async Task<IList<PlayerViewModel>> GetWinners(Guid gameId)
+        public async Task<GameWinnersViewModel> GetWinners(Guid gameId)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(gameId);
             return await game.GetWinners();

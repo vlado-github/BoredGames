@@ -104,10 +104,13 @@ public class GameGrain : Grain, IGameGrain
         return Task.FromResult(definition);
     }
 
-    public Task<IList<PlayerViewModel>> GetWinners()
+    public Task<GameWinnersViewModel> GetWinners()
     {
         var result = _gameRuleEngine.GetWinners();
-        return Task.FromResult(result.Adapt<IList<PlayerViewModel>>());
+        return Task.FromResult(new GameWinnersViewModel()
+        {
+            Winners = result.Adapt<IList<PlayerViewModel>>()
+        });
     }
 
     public async Task<GameStateViewModel> GetState()
