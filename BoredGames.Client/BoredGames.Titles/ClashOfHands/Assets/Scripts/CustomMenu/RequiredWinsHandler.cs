@@ -26,7 +26,6 @@ public class RequiredWinsHandler : MonoBehaviour
 
     private void OnValueChange(float value)
     {
-        Debug.Log($"Number of wins required: {value}");
         if (value > 0)
         {
             int intValue = (int)value;

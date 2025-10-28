@@ -12,6 +12,9 @@ TagManager:
   - paper
   - scissors
   - notification_text
+  - player_hand
+  - opponent_hand
+  - selected_card
   layers:
   - Default
   - TransparentFX

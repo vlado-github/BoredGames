@@ -33,7 +33,6 @@ namespace Assets.Scripts.GamePlay
 
         void OnButtonClick()
         {
-            Debug.Log(_inviteUrlField.text);
             #if UNITY_WEBGL && !UNITY_EDITOR
                 CopyTextToClipboard(_inviteUrlField.text);
             #else

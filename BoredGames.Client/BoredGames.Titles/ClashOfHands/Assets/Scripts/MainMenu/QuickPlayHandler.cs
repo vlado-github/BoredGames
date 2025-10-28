@@ -33,6 +33,11 @@ public class QuickPlayHandler : MonoBehaviour
             GameState.Instance.GameId = response.gameId;
             GameState.Instance.Status = GameStatus.AwaitingPlayers;
 
+            if (!BoredGamesSocketClient.Instance.IsConnected())
+            {
+                BoredGamesSocketClient.Instance.SetupConnection();
+            }
+
             _mainMenuCanvas.gameObject.SetActive(false);
             _gamePlayCanvas.gameObject.SetActive(true);
             _inviteLinkDialog.gameObject.SetActive(true);

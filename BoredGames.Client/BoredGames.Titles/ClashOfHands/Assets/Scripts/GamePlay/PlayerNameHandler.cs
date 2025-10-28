@@ -70,15 +70,21 @@ public class PlayerNameHandler : MonoBehaviour
         {
             GameState.Instance.PlayerName = playerName;
 
-            StartCoroutine(BoredGamesAPIClient.Instance.CreatePlayerProfile((response) =>
+            StartCoroutine(BoredGamesAPIClient.Instance.CreatePlayerSession((response) =>
             {
                 GameState.Instance.PlayerId = response.id;
                 GameState.Instance.PlayerName = response.nickName;
 
+                
+
                 if (GameState.Instance.IsGameCreated)
                 {
-                    Debug.Log($"JoinGame {response.nickName}");
-                    StartCoroutine(BoredGamesAPIClient.Instance.JoinGame((response) => { }));
+                    if (!BoredGamesSocketClient.Instance.IsConnected())
+                    {
+                        BoredGamesSocketClient.Instance.SetupConnection();
+                    }
+
+                    StartCoroutine(BoredGamesAPIClient.Instance.JoinGame((response) => {}));
                     _playerNameDialog.gameObject.SetActive(false);
                     _mainMenuCanvas.gameObject.SetActive(false);
 
@@ -86,7 +92,6 @@ public class PlayerNameHandler : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log($"JoinGame {GameState.Instance.IsGameCreated}");
                     _playerNameDialog.gameObject.SetActive(false);
                     _mainMenuCanvas.gameObject.SetActive(true);
                 }

@@ -9,11 +9,8 @@ public class CardMouseHandler : MonoBehaviour
     [SerializeField] Sprite _card;
     [SerializeField] Sprite _highlightCard;
     [SerializeField] float popCardOffset;
-    [SerializeField] string cardsInHand;
-    [SerializeField] GameManager _gameManager;
 
     private Vector3 defaultPosition;
-    private bool isSelected = false;
 
     private void Start()
     {
@@ -22,16 +19,13 @@ public class CardMouseHandler : MonoBehaviour
 
     void OnMouseDown()
     {
-        Debug.Log($"Click: {tag}");
-        if (isSelected || GameState.Instance.CurrentRoundCardSelected || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
+        if (!string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard) || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
         {
-            Debug.Log($"Click: {isSelected}");
             return;
         }
 
         try
         {
-            Debug.Log($"Click: MakeMove");
             BoredGamesSocketClient.Instance.MakeMove(new MakeMoveMessage
             {
                 ActionType = tag,
@@ -41,25 +35,20 @@ public class CardMouseHandler : MonoBehaviour
         }
         catch (Exception ex)
         {
-            isSelected = false;
             Debug.LogException(ex);
+            return;
         }
         
-        isSelected = true;
-        GameState.Instance.CurrentRoundCardSelected = isSelected;
-        Debug.Log($"Click: DisplayPlayerSide");
-        _gameManager.DisplayPlayerSide(show: false);
-        Debug.Log($"Click: ShowSelectedCard");
-        _gameManager.ShowSelectedCard(tag, isOppenent: false);
+        GameState.Instance.CurrentRoundSelectedPlayerCard = tag;
     }
 
     void OnMouseEnter()
     {
-        if (isSelected || GameState.Instance.CurrentRoundCardSelected || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
+        if (!string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard) || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
         {
             return;
         }
-        transform.GetComponent<SpriteRenderer>().sprite = _highlightCard;
+        //  transform.GetComponent<SpriteRenderer>().sprite = _highlightCard;
         if (transform.position.y < defaultPosition.y)
         {
             transform.position = transform.position + new Vector3(0, popCardOffset, 0);
@@ -68,14 +57,14 @@ public class CardMouseHandler : MonoBehaviour
 
     void OnMouseExit()
     {
-        if (isSelected || GameState.Instance.CurrentRoundCardSelected || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
+        if (!string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard) || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay)
         {
             return;
         }
-        transform.GetComponent<SpriteRenderer>().sprite = _card;
+      //  transform.GetComponent<SpriteRenderer>().sprite = _card;
         if (transform.position.y > defaultPosition.y)
         {
-            transform.position = transform.position + new Vector3(0, -popCardOffset, 0);
+            transform.position = defaultPosition;
         }
     }
 }

@@ -1,4 +1,6 @@
+using Assets.Scripts.GamePlay;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Scripts.BoredGames.API
 {
@@ -8,6 +10,48 @@ namespace Assets.Scripts.BoredGames.API
         public int LastRound;
         public int RequiredNumberOfWins;
         public PlayerScore[] PlayerScores;
+
+        public IDictionary<string, RoundScoreResult>  GetRoundResult(int roundNumber)
+        {
+            var result = new Dictionary<string, RoundScoreResult>();
+            if (PlayerScores == null || PlayerScores.Length == 0)
+            {
+                return result;
+            }
+            foreach (var playerScore in PlayerScores)
+            {
+                var playerResult = new RoundScoreResult();
+                var playerRoundWin = playerScore.RoundWins.FirstOrDefault(x => x.RoundNumber == roundNumber);
+                if (playerRoundWin == null)
+                {
+                    var playerRoundLoss = playerScore.RoundLosses.FirstOrDefault(x => x.RoundNumber == roundNumber);
+                    if (playerRoundLoss == null)
+                    {
+                        var playerRoundDraw = playerScore.RoundDraws.FirstOrDefault(x => x.RoundNumber == roundNumber);
+                        if (playerRoundDraw != null)
+                        {
+                            playerResult.Result = RoundScoreResultEnum.Draw;
+                            playerResult.SelectedCardTag = playerRoundDraw.PlayerMove.ToLower();
+                        }
+                    }
+                    else
+                    {
+                        playerResult.Result = RoundScoreResultEnum.Loss;
+                        playerResult.SelectedCardTag = playerRoundLoss.PlayerMove.ToLower();
+                    }
+                }
+                else
+                {
+                    playerResult.Result = RoundScoreResultEnum.Win;
+                    playerResult.SelectedCardTag = playerRoundWin.PlayerMove.ToLower();
+                }
+
+                result.Add(playerScore.PlayerId, playerResult);
+            }
+            return result;
+        }
+
+        public bool HasRoundResult(int roundNumber) => GetRoundResult(roundNumber).Count == GameConfiguration.Instance.NumberOfPlayers;
     }
 
     [System.Serializable]

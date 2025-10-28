@@ -120,7 +120,7 @@ namespace Assets.Scripts.BoredGames.API
             }
         }
 
-        public IEnumerator CreatePlayerProfile(Action<PlayerDetailsResponse> onSuccess)
+        public IEnumerator CreatePlayerSession(Action<PlayerDetailsResponse> onSuccess)
         {
             var url = new Uri(ApiConfig.BaseUrl, $"/api/player");
             var data = new CreatePlayerProfileRequest
@@ -134,7 +134,7 @@ namespace Assets.Scripts.BoredGames.API
             }
         }
 
-        public IEnumerator UpdatePlayerProfile(Action<PlayerDetailsResponse> onSuccess)
+        public IEnumerator UpdatePlayerSessionDetails(Action<PlayerDetailsResponse> onSuccess)
         {
             var url = new Uri(ApiConfig.BaseUrl, $"/api/player");
             var data = new UpdatePlayerProfileRequest
@@ -148,7 +148,7 @@ namespace Assets.Scripts.BoredGames.API
             }
         }
 
-        public IEnumerator GetPlayerDetails(Action<PlayerDetailsResponse> onSuccess)
+        public IEnumerator GetPlayerSessionDetails(Action<PlayerDetailsResponse> onSuccess)
         {
             var url = new Uri(ApiConfig.BaseUrl, $"/api/player/details");
 

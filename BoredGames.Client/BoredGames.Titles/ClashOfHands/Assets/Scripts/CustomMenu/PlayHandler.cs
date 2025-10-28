@@ -32,6 +32,11 @@ public class PlayHandler : MonoBehaviour
             GameState.Instance.GameId = response.gameId;
             GameState.Instance.Status = Assets.Scripts.GameStatus.AwaitingPlayers;
 
+            if (!BoredGamesSocketClient.Instance.IsConnected())
+            {
+                BoredGamesSocketClient.Instance.SetupConnection();
+            }
+
             _customMenuCanvas.gameObject.SetActive(false);
             _gamePlayCanvas.gameObject.SetActive(true);
             _inviteLinkDialog.gameObject.SetActive(true);
