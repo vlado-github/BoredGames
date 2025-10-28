@@ -11,7 +11,7 @@ namespace Assets.Scripts.GamePlay
         void Start()
         {
             var show = GameState.Instance.Status == GameStatus.InPlay 
-                && GameState.Instance.IsRoundResultDisplayCompleted();
+                && string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedOpponentCard);
             if (show)
             {
                 Show();
@@ -26,7 +26,7 @@ namespace Assets.Scripts.GamePlay
         void Update()
         {
             var show = GameState.Instance.Status == GameStatus.InPlay
-                && GameState.Instance.IsRoundResultDisplayCompleted();
+                && string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedOpponentCard);
             if (show)
             {
                 Show();
@@ -42,10 +42,6 @@ namespace Assets.Scripts.GamePlay
             if (_opponentHand != null)
             {
                 _opponentHand.gameObject.SetActive(true);
-                //foreach (var gameobject in GameObject.FindGameObjectsWithTag("opponent_hand"))
-                //{
-                //    gameobject.SetActive(true);
-                //}
             }
         }
 
@@ -54,10 +50,6 @@ namespace Assets.Scripts.GamePlay
             if (_opponentHand != null)
             {
                 _opponentHand.gameObject.SetActive(false);
-                //foreach (var gameobject in GameObject.FindGameObjectsWithTag("opponent_hand"))
-                //{
-                //    gameobject.SetActive(false);
-                //}
             }
         }
     }
