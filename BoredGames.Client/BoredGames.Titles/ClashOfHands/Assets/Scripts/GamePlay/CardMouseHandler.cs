@@ -17,6 +17,7 @@ public class CardMouseHandler : MonoBehaviour
     private void Start()
     {
         defaultPosition = transform.position;
+        transform.GetComponent<SpriteRenderer>().sprite = _card;
     }
 
     void OnMouseDown()
@@ -53,8 +54,7 @@ public class CardMouseHandler : MonoBehaviour
             return;
         }
         transform.GetComponent<SpriteRenderer>().sprite = _highlightCard;
-
-        if (transform.position.y < defaultPosition.y)
+        if (transform.position.y <= defaultPosition.y)
         {
             transform.position = transform.position + new Vector3(0, popCardOffset, 0);
         }
@@ -67,7 +67,6 @@ public class CardMouseHandler : MonoBehaviour
             return;
         }
         transform.GetComponent<SpriteRenderer>().sprite = _card;
-
         if (transform.position.y > defaultPosition.y)
         {
             transform.position = defaultPosition;

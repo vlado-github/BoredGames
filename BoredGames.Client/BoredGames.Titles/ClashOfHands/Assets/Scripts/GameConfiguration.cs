@@ -21,6 +21,6 @@
         public int RequiredNumberOfConsecutiveWins { get; set; } = 1;
         public int NumberOfRounds { get; private set; } = 99;
 
-        public string PortalBaseUrl { get; private set; } = "http://localhost:5173/game?gameTitle=ClashOfHands";
+        public string PortalBaseUrl { get; private set; } = "https://boredgames.lol/game?gameTitle=ClashOfHands"; //"http://localhost:5173/game?gameTitle=ClashOfHands";
     }
 }

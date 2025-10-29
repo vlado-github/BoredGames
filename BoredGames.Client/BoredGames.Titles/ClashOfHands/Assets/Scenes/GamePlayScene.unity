@@ -2225,7 +2225,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3348831479635166177, guid: 13343924c71c84442a0afeffe593106c, type: 3}
       propertyPath: popCardOffset
-      value: 5
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 3348831479635166177, guid: 13343924c71c84442a0afeffe593106c, type: 3}
       propertyPath: _playerHandHandler
@@ -3484,7 +3484,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3285315238844402298, guid: f428f792213d59c488eadd32d483d658, type: 3}
       propertyPath: popCardOffset
-      value: 5
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 3285315238844402298, guid: f428f792213d59c488eadd32d483d658, type: 3}
       propertyPath: _playerHandHandler
@@ -3864,7 +3864,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8995819761452391782, guid: b05b0df5cef88aa47827020a89c19818, type: 3}
       propertyPath: popCardOffset
-      value: 5
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8995819761452391782, guid: b05b0df5cef88aa47827020a89c19818, type: 3}
       propertyPath: _playerHandHandler
@@ -4865,7 +4865,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 11
   m_Sprite: {fileID: -4571828015118065507, guid: d1d3c5d5da8eee24f99f13c368ab5bd6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5262,7 +5262,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 12
   m_Sprite: {fileID: -4571828015118065507, guid: d1d3c5d5da8eee24f99f13c368ab5bd6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
