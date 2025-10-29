@@ -44,7 +44,7 @@ public static class MappingConfig
             .NewConfig()
             .Map(dest => dest.RequiredNumberOfWins, src => src.RequiredNumberOfWins)
             .Map(dest => dest.PlayerScores, src => src.PlayerStatistics)
-            .Map(dest => dest.CurrentRound, src => src.CurrentRoundNumber);
+            .Map(dest => dest.LastRound, src => src.LastRoundNumber);
 
         TypeAdapterConfig<GameDefinition, GameDefinitionViewModel>
             .NewConfig()

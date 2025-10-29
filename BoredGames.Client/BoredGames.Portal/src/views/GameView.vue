@@ -1,7 +1,7 @@
 <script setup>
-import CardTable from '../components/CardGame/CardTable.vue';
+import GamePlayer from '../components/GamePlayer.vue';
 </script>
 
 <template>
-  <CardTable />
+  <GamePlayer />
 </template>

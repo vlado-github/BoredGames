@@ -33,7 +33,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
         var player01 = _grainFactory.GetGrain<IPlayerGrain>(_player01);
         var command = new CreateGameCommand
         {
-            Title = GameTitle.RockPaperScissors,
+            Title = GameTitle.ClashOfHands,
             NumberOfPlayers = 2,
             RequiredNumberOfWins = 1,
             NumberOfRounds = 1
@@ -78,16 +78,16 @@ public class RockPaperScissorsGame : BddDefinitionsBase
     public async Task ThenWinnerShouldBePlayer(string playerId)
     {
         var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
-        var winners = await game.GetWinners();
-        Assert.Single(winners);
-        Assert.Equal(winners.Single().Id, new Guid(playerId));
+        var result = await game.GetWinners();
+        Assert.Single(result.Winners);
+        Assert.Equal(result.Winners.Single().Id, new Guid(playerId));
     }
     
     [Then("Game is a draw")]
     public async Task ThenGameIsDraw()
     {
         var game = _grainFactory.GetGrain<IGameGrain>(_gameId);
-        var winners = await game.GetWinners();
-        Assert.Empty(winners);
+        var result = await game.GetWinners();
+        Assert.Empty(result.Winners);
     }
 }

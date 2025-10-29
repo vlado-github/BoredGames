@@ -1,5 +1,6 @@
 <script>
-import MenuDialog from './MenuDialog.vue'
+import GamePlayer from './GamePlayer.vue';
+import router from '@/router';
 
 export default {
   name: "gameTitleTile",
@@ -7,17 +8,15 @@ export default {
     titleId: Number,
     titleName: String,
     iconUrl: String,
-    formSchema: Array,
-    playerName: ''
   },
 
   components: {
-    MenuDialog
+    GamePlayer
   },
 
   methods: {
-    async pickGame() {
-      await this.$refs.menuDialog.show();
+    play() {
+      router.push({ name: 'game', query: { gameTitle: this.titleName} })
     }
   }
 }
@@ -26,13 +25,9 @@ export default {
 <template>
   <div class="title">
     <div>
-        <img @click="pickGame" v-bind:id="titleId" width="250" height="250" v-bind:src="iconUrl" v-bind:alt="titleName"/>
+        <img @click="play" :id="titleId" width="250" height="250" :src="iconUrl" :alt="titleName"/>
         <span class="caption">{{ titleName }}</span>
     </div>
-    <MenuDialog ref="menuDialog" 
-      :titleId="this.titleId" 
-      :formSchema="this.formSchema"
-      :playerName="this.playerName" />
   </div>  
 </template>
 

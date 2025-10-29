@@ -48,6 +48,7 @@ public class GameGrain : Grain, IGameGrain
         if (!_players.Select(x => x.Id).Contains(dto.Id))
         {
             _players.Add(dto);
+            _gameState.PlayersNumber = _players.Count;
         }
 
         if (_gameState.GameStatus is GameStatus.AwaitingPlayers 
@@ -63,7 +64,7 @@ public class GameGrain : Grain, IGameGrain
         return Task.FromResult(result);
     }
 
-    public Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
+    public async Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
     {
         var dto = command.Adapt<MoveDto>();
         var result = _gameRuleEngine.Handle(dto);
@@ -83,7 +84,10 @@ public class GameGrain : Grain, IGameGrain
             _gameState.GameStatus = GameStatus.InPlay;
         }
 
-        return Task.FromResult(_gameState.Adapt<GameStateViewModel>());
+        var newGameState = _gameState.Adapt<GameStateViewModel>();
+        newGameState.Score = score.Adapt<GameScoreViewModel>();
+
+        return newGameState;
     }
 
     public Task<GameScoreViewModel> GetScore()
@@ -100,14 +104,19 @@ public class GameGrain : Grain, IGameGrain
         return Task.FromResult(definition);
     }
 
-    public Task<IList<PlayerViewModel>> GetWinners()
+    public Task<GameWinnersViewModel> GetWinners()
     {
         var result = _gameRuleEngine.GetWinners();
-        return Task.FromResult(result.Adapt<IList<PlayerViewModel>>());
+        return Task.FromResult(new GameWinnersViewModel()
+        {
+            Winners = result.Adapt<IList<PlayerViewModel>>()
+        });
     }
 
-    public Task<GameStateViewModel> GetState()
+    public async Task<GameStateViewModel> GetState()
     {
-        return Task.FromResult(_gameState.Adapt<GameStateViewModel>());
+        var gameState = _gameState.Adapt<GameStateViewModel>();
+        gameState.Score = await GetScore();
+        return gameState;
     }
 }

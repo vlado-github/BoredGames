@@ -13,7 +13,7 @@ public class GameDto
 
     public static GameDto Default => new GameDto()
     {
-        Title = GameTitle.RockPaperScissors,
+        Title = GameTitle.ClashOfHands,
         NumberOfPlayers = 2,
         RequiredNumberOfWins = 1,
         NumberOfRounds = 10

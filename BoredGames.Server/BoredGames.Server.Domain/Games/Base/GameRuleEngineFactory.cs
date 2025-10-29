@@ -10,7 +10,7 @@ public static class GameRuleEngineFactory
     {
         switch (dto.Title)
         {
-            case GameTitle.RockPaperScissors:
+            case GameTitle.ClashOfHands:
             {
                 var ruleEngine = new RockPaperScissorsRuleEngine();
                 ruleEngine.Setup(new RockPaperScissorsConfiguration(

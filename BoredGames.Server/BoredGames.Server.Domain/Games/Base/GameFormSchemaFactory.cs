@@ -9,7 +9,7 @@ public static class GameFormSchemaFactory
     {
         switch (title)
         {
-            case GameTitle.RockPaperScissors:
+            case GameTitle.ClashOfHands:
             {
                 return new RockPaperScissorsFormSchema();
             }

@@ -3,7 +3,7 @@ namespace BoredGames.Server.Domain.Games.Entities;
 public class GameScore
 {
     public IList<PlayerStatistic> PlayerStatistics { get; private set; }
-    public int CurrentRoundNumber { get; private set; }
+    public int LastRoundNumber { get; private set; }
 
     public readonly int RequiredNumberOfWins;
     public readonly int NumberOfRounds;
@@ -11,14 +11,14 @@ public class GameScore
     public GameScore(int numberOfRounds, int requiredNumberOfWins)
     {
         PlayerStatistics = new List<PlayerStatistic>();
-        CurrentRoundNumber = 1;
+        LastRoundNumber = 1;
         RequiredNumberOfWins = requiredNumberOfWins;
         NumberOfRounds = numberOfRounds;
     }
 
     public void AddWin(Player player, int roundNumber, string actionType)
     {
-        CurrentRoundNumber = roundNumber;
+        LastRoundNumber = roundNumber;
         var playerStat = PlayerStatistics.SingleOrDefault(x => x.PlayerId == player.Id);
         if (playerStat == null)
         {
@@ -34,7 +34,7 @@ public class GameScore
 
     public void AddLoss(Player player, int roundNumber, string actionType)
     {
-        CurrentRoundNumber = roundNumber;
+        LastRoundNumber = roundNumber;
         var playerStat = PlayerStatistics.SingleOrDefault(x => x.PlayerId == player.Id);
         if (playerStat == null)
         {
@@ -50,7 +50,7 @@ public class GameScore
     
     public void AddDraw(Player player, int roundNumber, string actionType)
     {
-        CurrentRoundNumber = roundNumber;
+        LastRoundNumber = roundNumber;
         var playerStat = PlayerStatistics.SingleOrDefault(x => x.PlayerId == player.Id);
         if (playerStat == null)
         {
