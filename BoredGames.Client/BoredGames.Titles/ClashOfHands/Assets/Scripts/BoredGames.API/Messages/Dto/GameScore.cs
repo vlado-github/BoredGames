@@ -1,6 +1,7 @@
 using Assets.Scripts.GamePlay;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts.BoredGames.API
 {
@@ -11,9 +12,9 @@ namespace Assets.Scripts.BoredGames.API
         public int RequiredNumberOfWins;
         public PlayerScore[] PlayerScores;
 
-        public IDictionary<string, RoundScoreResult>  GetRoundResult(int roundNumber)
+        public IList<PlayerRoundScoreResult>  GetRoundResult(int roundNumber)
         {
-            var result = new Dictionary<string, RoundScoreResult>();
+            var result = new List<PlayerRoundScoreResult>();
             if (PlayerScores == null || PlayerScores.Length == 0)
             {
                 return result;
@@ -46,8 +47,13 @@ namespace Assets.Scripts.BoredGames.API
                     playerResult.SelectedCardTag = playerRoundWin.PlayerMove.ToLower();
                 }
 
-                result.Add(playerScore.PlayerId, playerResult);
+                result.Add(new PlayerRoundScoreResult { 
+                    PlayerId = playerScore.PlayerId, 
+                    RoundResult = playerResult 
+                });
             }
+            Debug.Log($"GetRoundResult: {result.Count}");
+
             return result;
         }
 

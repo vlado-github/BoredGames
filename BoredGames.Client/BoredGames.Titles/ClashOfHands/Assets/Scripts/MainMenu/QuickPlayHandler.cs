@@ -10,7 +10,6 @@ public class QuickPlayHandler : MonoBehaviour
     private Button quickPlayButton; // Assign in Inspector
 
     [SerializeField] Canvas _mainMenuCanvas;
-    [SerializeField] Canvas _gamePlayCanvas;
     [SerializeField] Canvas _inviteLinkDialog;
 
     void Start()
@@ -39,7 +38,6 @@ public class QuickPlayHandler : MonoBehaviour
             }
 
             _mainMenuCanvas.gameObject.SetActive(false);
-            _gamePlayCanvas.gameObject.SetActive(true);
             _inviteLinkDialog.gameObject.SetActive(true);
 
             GameManager.Instance.CheckGameStatus();

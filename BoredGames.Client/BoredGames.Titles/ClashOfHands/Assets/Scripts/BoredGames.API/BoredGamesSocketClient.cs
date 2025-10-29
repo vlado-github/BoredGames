@@ -46,7 +46,6 @@ namespace Assets.Scripts.BoredGames.API
 
             signalR.On("OnGameStateReceived", (string payload) =>
             {
-                Log($">>> OnGameStateReceived: {payload}");
                 var data = JsonUtility.FromJson<GameStateMessage>(payload);
                 Log($"<<< OnGameStateReceived: {JsonUtility.ToJson(data)}");
                 GameState.Instance.PreviousRoundNumber = GameState.Instance.CurrentRoundNumber;
@@ -54,6 +53,15 @@ namespace Assets.Scripts.BoredGames.API
                 GameState.Instance.CurrentRoundStatus = data.RoundStatus;
                 GameState.Instance.CurrentRoundNumber = data.RoundNumber;
                 GameState.Instance.Score = data.Score;
+
+                if (GameState.Instance.Score != null && GameState.Instance.Score.HasRoundResult(GameState.Instance.PreviousRoundNumber))
+                {
+                    GameManager.Instance.HandleRoundResultDisplay();
+                }
+                else
+                {
+                    GameManager.Instance.CheckGameStatus();
+                }
             });
 
             // Connection callback

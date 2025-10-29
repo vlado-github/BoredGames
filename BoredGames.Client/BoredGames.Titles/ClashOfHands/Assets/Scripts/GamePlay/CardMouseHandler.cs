@@ -9,6 +9,8 @@ public class CardMouseHandler : MonoBehaviour
     [SerializeField] Sprite _card;
     [SerializeField] Sprite _highlightCard;
     [SerializeField] float popCardOffset;
+    [SerializeField] PlayerHandHandler _playerHandHandler;
+    [SerializeField] SelectedPlayerCardHandler _selectedPlayerCardHandler;
 
     private Vector3 defaultPosition;
 
@@ -40,6 +42,8 @@ public class CardMouseHandler : MonoBehaviour
         }
         
         GameState.Instance.CurrentRoundSelectedPlayerCard = tag;
+        _playerHandHandler.Hide();
+        _selectedPlayerCardHandler.Show(tag);
     }
 
     void OnMouseEnter()
@@ -48,7 +52,8 @@ public class CardMouseHandler : MonoBehaviour
         {
             return;
         }
-        //  transform.GetComponent<SpriteRenderer>().sprite = _highlightCard;
+        transform.GetComponent<SpriteRenderer>().sprite = _highlightCard;
+
         if (transform.position.y < defaultPosition.y)
         {
             transform.position = transform.position + new Vector3(0, popCardOffset, 0);
@@ -61,7 +66,8 @@ public class CardMouseHandler : MonoBehaviour
         {
             return;
         }
-      //  transform.GetComponent<SpriteRenderer>().sprite = _card;
+        transform.GetComponent<SpriteRenderer>().sprite = _card;
+
         if (transform.position.y > defaultPosition.y)
         {
             transform.position = defaultPosition;

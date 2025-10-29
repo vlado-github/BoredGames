@@ -30,8 +30,6 @@ namespace Assets.Scripts.GamePlay
         public int CurrentRoundNumber { get; set; }
         public RoundStatus CurrentRoundStatus { get; set; }
         public string CurrentRoundSelectedPlayerCard { get; set; } = null;
-        public string CurrentRoundSelectedOpponentCard { get; set; } = null;
-
         public int PreviousRoundNumber { get; set; }
         public bool IsPreviousRoundCompleted => GameState.Instance.Score.HasRoundResult(PreviousRoundNumber);
         public IList<int> RoundResultDisplayCompleted { get; private set; } = new List<int>();
@@ -44,13 +42,6 @@ namespace Assets.Scripts.GamePlay
         public bool IsRoundResultDisplayCompleted()
         {
             return RoundResultDisplayCompleted.Any(x => x == PreviousRoundNumber);
-        }
-
-        public void CompleteRoundResultDisplay()
-        {
-            CurrentRoundSelectedPlayerCard = null;
-            CurrentRoundSelectedOpponentCard = null;
-            RoundResultDisplayCompleted.Add(PreviousRoundNumber);
         }
     }
 }

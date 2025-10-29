@@ -5,54 +5,16 @@ namespace Assets.Scripts.GamePlay
 {
     public class PlayerHandHandler : MonoBehaviour
     {
-        [SerializeField] public GameObject _playerHand;
-
-        // Use this for initialization
-        void Start()
+        public void Show()
         {
-            var show = GameState.Instance.Status == GameStatus.AwaitingPlayers ||
-                (GameState.Instance.Status == GameStatus.InPlay && string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard));
-            
-            if (show)
-            {
-                Show();
-            }
-            else
-            {
-                Hide();
-            }
+            Debug.Log("PlayerHand show");
+            gameObject.SetActive(true);
         }
 
-        // Update is called once per frame
-        void Update()
+        public void Hide()
         {
-            var show = GameState.Instance.Status == GameStatus.AwaitingPlayers || 
-                (GameState.Instance.Status == GameStatus.InPlay && string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard));
-           
-            if (show)
-            {
-                Show();
-            }
-            else
-            {
-                Hide();
-            }
-        }
-
-        private void Show()
-        {
-            if (_playerHand != null)
-            {
-                _playerHand.gameObject.SetActive(true);
-            }
-        }
-
-        private void Hide()
-        {
-            if (_playerHand != null)
-            {
-                _playerHand.gameObject.SetActive(false);
-            }
+            Debug.Log("PlayerHand hide");
+            gameObject.SetActive(false);
         }
     }
 }

@@ -17,15 +17,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] Canvas _scoreCanvas;
     [SerializeField] Canvas _playerNameCanvas;
     [SerializeField] Canvas _gameOverCanvas;
-    [SerializeField] GameObject _playerHand;
-    [SerializeField] GameObject _opponentHand;
+    [SerializeField] PlayerHandHandler _playerHand;
+    [SerializeField] OpponentHandHandler _opponentHand;
 
-    //[SerializeField] Texture _rockImage;
-    //[SerializeField] Texture _paperImage;
-    //[SerializeField] Texture _scissorsImage;
-
-    //[SerializeField] RawImage selectedPlayerCardPlaceholder;
-    //[SerializeField] RawImage selectedOpponentCardPlaceholder;
+    [SerializeField] SelectedPlayerCardHandler _selectedPlayerCardHandler;
+    [SerializeField] SelectedOpponentCardHandler _selectedOpponentCardHandler;
 
     [SerializeField] NotificationFader _notificationManager;  
 
@@ -46,13 +42,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //DisplayOpponentsSide(false);
-       // DisplayPlayerSide(false);
-        CheckGameStatus();
-    }
-
-    private void Update()
-    {
         CheckGameStatus();
     }
 
@@ -60,84 +49,6 @@ public class GameManager : MonoBehaviour
     {
         _notificationManager.ShowNotification(message, textColor, duration);
     }
-
-    //public void ShowSelectedCard(string cardTag, bool isOppenent)
-    //{
-    //    if (!string.IsNullOrEmpty(cardTag))
-    //    {
-    //        if (isOppenent)
-    //        {
-    //            GameState.Instance.CurrentRoundSelectedOpponentCard = cardTag;
-    //            selectedOpponentCardPlaceholder.color = new Color(0, 0, 0, 1);
-    //            if (cardTag == "rock")
-    //            {
-    //                selectedOpponentCardPlaceholder.texture = _rockImage;
-    //            }
-    //            else if (cardTag == "paper")
-    //            {
-    //                selectedOpponentCardPlaceholder.texture = _paperImage;
-    //            }
-    //            else
-    //            {
-    //                selectedOpponentCardPlaceholder.texture = _scissorsImage;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            GameState.Instance.CurrentRoundSelectedPlayerCard = cardTag;
-    //            selectedPlayerCardPlaceholder.color = new Color(0, 0, 0, 1);
-    //            if (cardTag == "rock")
-    //            {
-    //                selectedPlayerCardPlaceholder.texture = _rockImage;
-    //            }
-    //            else if (cardTag == "paper")
-    //            {
-    //                selectedPlayerCardPlaceholder.texture = _paperImage;
-    //            }
-    //            else
-    //            {
-    //                selectedPlayerCardPlaceholder.texture = _scissorsImage;
-    //            }
-    //        }
-    //    }
-    //}
-
-    //private void RemoveSelectedCards()
-    //{
-    //    if (!string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard))
-    //    {
-    //        selectedPlayerCardPlaceholder.texture = null;
-    //        selectedPlayerCardPlaceholder.color = new Color(0,0,0,0);
-    //        GameState.Instance.CurrentRoundSelectedPlayerCard = null;
-    //    }
-    //    if (!string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedOpponentCard))
-    //    {
-    //        selectedOpponentCardPlaceholder.texture = null;
-    //        selectedOpponentCardPlaceholder.color = new Color(0, 0, 0, 0);
-    //        GameState.Instance.CurrentRoundSelectedOpponentCard = null;
-    //    }
-    //}
-
-    //private void DisplayOpponentsSide(bool show = true)
-    //{
-    //    //Debug.Log($"DisplayOpponentsSide show:{show}");
-    //    if (_opponentHand == null)
-    //    {
-    //        Debug.LogError($"_opponentHand can't be empty.");
-    //        return;
-    //    }
-    //    _opponentHand.SetActive(show);
-    //}
-
-    //public void DisplayPlayerSide(bool show = true)
-    //{
-    //    //Debug.Log($"DisplayPlayerSide show:{show}");
-    //    if (_playerHand == null)
-    //    {
-    //        _playerHand = GameObject.FindGameObjectWithTag("player_hand");
-    //    }
-    //    _playerHand.SetActive(show);
-    //}
 
     private IEnumerator Delay(float seconds, Action callback = null)
     {
@@ -148,64 +59,59 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ResetHands()
-    {
-        if (string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedOpponentCard) && string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard))
-        {
-            if (_playerHand != null)
-            {
-                _playerHand.gameObject.SetActive(true);
-            }
-            if (_opponentHand != null)
-            {
-                _opponentHand.gameObject.SetActive(true);
-            }
-        }
-    }
-
-    private void HandleRoundResultDisplay()
+    public void HandleRoundResultDisplay()
     {
         var roundResult = GameState.Instance.Score.GetRoundResult(GameState.Instance.PreviousRoundNumber);
-        var playerRoundScore = roundResult.FirstOrDefault(x => x.Key == GameState.Instance.PlayerId);
-        var opponentRoundScore = roundResult.FirstOrDefault(x => x.Key != GameState.Instance.PlayerId);
-        if (opponentRoundScore.Value != null)
+        var playerRoundScore = roundResult.FirstOrDefault(x => x.PlayerId == GameState.Instance.PlayerId);
+        var opponentRoundScore = roundResult.FirstOrDefault(x => x.PlayerId != GameState.Instance.PlayerId);
+
+        if (opponentRoundScore != null)
         {
-            GameState.Instance.CurrentRoundSelectedOpponentCard = opponentRoundScore.Value.SelectedCardTag;
+            if (opponentRoundScore.RoundResult.Result == null)
+            {
+                return;
+            }
+            _opponentHand.Hide();
+            _selectedOpponentCardHandler.Show(opponentRoundScore.RoundResult.SelectedCardTag);
         }
 
-        if (GameState.Instance.IsPreviousRoundCompleted
-            && !string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedOpponentCard)
-            && !string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard))
+        if (playerRoundScore != null)
         {
-            if (playerRoundScore.Value != null)
+            if (playerRoundScore.RoundResult.Result == null) 
             {
-                switch (playerRoundScore.Value.Result)
-                {
-                    case RoundScoreResultEnum.Win:
-                        {
-                            ShowNotification("Win", Color.green);
-                            break;
-                        }
-                    case RoundScoreResultEnum.Loss:
-                        {
-                            ShowNotification("Loss", Color.magenta);
-                            break;
-                        }
-                    case RoundScoreResultEnum.Draw:
-                        {
-                            ShowNotification("Draw", Color.yellow);
-                            break;
-                        }
-                    default:
-                        {
-                            throw new Exception("Round result is not supported.");
-                        }
-                }
+                return;
+            }
+            switch (playerRoundScore.RoundResult.Result)
+            {
+                case RoundScoreResultEnum.Win:
+                    {
+                        ShowNotification("Win", Color.green);
+                        break;
+                    }
+                case RoundScoreResultEnum.Loss:
+                    {
+                        ShowNotification("Loss", Color.magenta);
+                        break;
+                    }
+                case RoundScoreResultEnum.Draw:
+                    {
+                        ShowNotification("Draw", Color.yellow);
+                        break;
+                    }
+                default:
+                    {
+                        throw new Exception("Round result is not supported.");
+                    }
             }
 
             StartCoroutine(Delay(1, () =>
             {
-                GameState.Instance.CompleteRoundResultDisplay();
+                //Reset display for next round
+
+                _selectedOpponentCardHandler.Hide();
+                _selectedPlayerCardHandler.Hide();
+                GameState.Instance.CurrentRoundSelectedPlayerCard = null;
+                CheckGameStatus();
             }));
         }
     }
@@ -221,15 +127,11 @@ public class GameManager : MonoBehaviour
         {
             case GameStatus.AwaitingPlayers:
                 {
-                    if (GameState.Instance.CurrentRoundStatus == RoundStatus.InProgress && !string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard))
-                    {
-                        return;
-                    }
-
                     _waitingForPlayerCanvas.gameObject.SetActive(true);
                     _scoreCanvas.gameObject.SetActive(false);
-                    _playerHand.gameObject.SetActive(true);
-                    _opponentHand.gameObject.SetActive(false);
+                    
+                    _playerHand.Show();
+                    _opponentHand.Hide();
                     
                     break;
                 }
@@ -241,22 +143,16 @@ public class GameManager : MonoBehaviour
                         gameOnNotificationDisplayed = true;
                     }
 
-                    ResetHands();
-
                     _waitingForPlayerCanvas.gameObject.SetActive(false);
                     _scoreCanvas.gameObject.SetActive(true);
                     _playerNameCanvas.gameObject.SetActive(false);
 
-                    if (GameState.Instance.Score == null)
+                    if (string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard))
                     {
-                        break;
-                    }
-                    if (GameState.Instance.IsRoundResultDisplayCompleted())
-                    {
-                        break;
+                        _playerHand.Show();
+                        _opponentHand.Show();
                     }
 
-                    HandleRoundResultDisplay();
                     break;
                 }
             case GameStatus.Finished:

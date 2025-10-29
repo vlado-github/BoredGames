@@ -4,54 +4,34 @@ using UnityEngine.UI;
 
 public class SelectedPlayerCardHandler : MonoBehaviour
 {
-    [SerializeField] public RawImage _image;
-    [SerializeField] public Texture _rock;
-    [SerializeField] public Texture _paper;
-    [SerializeField] public Texture _scissors;
+    [SerializeField] public SpriteRenderer _selectedPlayerCardPlaceholder;
+    [SerializeField] public Sprite _rock;
+    [SerializeField] public Sprite _paper;
+    [SerializeField] public Sprite _scissors;
 
-    void Start()
+    public void Show(string cardTag)
     {
-        Hide();
-    }
-
-    void Update()
-    {
-        if (!string.IsNullOrEmpty(GameState.Instance.CurrentRoundSelectedPlayerCard))
+        if (cardTag == "rock")
         {
-            Show();
+            _selectedPlayerCardPlaceholder.sprite = _rock;
+        }
+        else if (cardTag == "paper")
+        {
+            _selectedPlayerCardPlaceholder.sprite = _paper;
+        }
+        else if (cardTag == "scissors")
+        {
+            _selectedPlayerCardPlaceholder.sprite = _scissors;
         }
         else
         {
-            Hide();
+            Debug.LogError($"Card tag not supported: {cardTag}");
         }
+
     }
 
-    private void Show()
+    public void Hide()
     {
-        if (_image != null)
-        {
-            if (GameState.Instance.CurrentRoundSelectedPlayerCard == "rock")
-            {
-                _image.texture = _rock;
-            }
-            else if (GameState.Instance.CurrentRoundSelectedPlayerCard == "paper")
-            {
-                _image.texture = _paper;
-            }
-            else
-            {
-                _image.texture = _scissors;
-            }
-            _image.color = new Color(255, 255, 255, 255);
-        }
-    }
-
-    private void Hide()
-    {
-        if (_image != null)
-        {
-            _image.texture = null;
-            _image.color = new Color(255, 255, 255, 0);
-        }
+        _selectedPlayerCardPlaceholder.sprite = null;
     }
 }
