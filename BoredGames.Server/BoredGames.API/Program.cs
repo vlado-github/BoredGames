@@ -59,7 +59,7 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 // Controllers and Hubs
 app.MapControllers();
-app.MapHub<GameHub>($"/{nameof(GameHub)}");
+app.MapHub<GameHub>($"/hubs/{nameof(GameHub)}");
 app.Run();
 
 // In order to enable tests to run a test instance of a host

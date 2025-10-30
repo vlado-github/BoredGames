@@ -35,7 +35,7 @@ namespace Assets.Scripts.BoredGames.API
             signalR = new SignalR();
 
             // Initialize SignalR
-            var socketHubUrl = new Uri(ApiConfig.BaseHubUrl, $"{ApiConfig.SocketHub}?{ApiConfig.QueryParamApiKey}={ApiConfig.ApiKey}");
+            var socketHubUrl = new Uri(ApiConfig.BaseHubUrl, $"hubs/{ApiConfig.SocketHub}?{ApiConfig.QueryParamApiKey}={ApiConfig.ApiKey}");
             signalR.Init($"{socketHubUrl}");
 
 
