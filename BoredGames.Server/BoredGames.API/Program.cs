@@ -40,9 +40,9 @@ if (!app.Environment.IsProduction())
 app.UseCors(CorsPolicyExtensions.CorsPolicyName);
 
 var webSocketOptions = new WebSocketOptions();
-foreach (var originUrL in CorsPolicyExtensions.GetCorsOriginURLs())
+foreach (var originUrl in CorsPolicyExtensions.GetCorsOriginURLs())
 {
-    webSocketOptions.AllowedOrigins.Add(originUrL);
+    webSocketOptions.AllowedOrigins.Add($"https://{originUrl}");
 }
 app.UseWebSockets(webSocketOptions);
 
