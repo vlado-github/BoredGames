@@ -1,6 +1,8 @@
 ﻿services:
   nginx:
-    image: fholzer/nginx-brotli:latest
+    build:
+      context: .
+      dockerfile: .nginx/Dockerfile
     container_name: boredgames_nginx_proxy
     restart: always
     ports:
