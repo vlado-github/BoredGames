@@ -15,10 +15,12 @@
   redis:
     image: redis:6
     container_name: boredgames_redis
+    restart: always
     ports:
       - "6379:6379"
     volumes:
       - /home/boredgames/redis_data:/data
+    command: ["redis-server", "--dir", "/data"]
     networks:
       - boredgames-network
     deploy:
@@ -54,6 +56,7 @@
       dockerfile: BoredGames.Server/BoredGames.Server.GameServer/Dockerfile
     depends_on:
       - redis
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - INSTANCE_ID=1
@@ -76,6 +79,7 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - INSTANCE_ID=2
       - REDIS_HOST=redis
+    restart: always
     ports:
       - "11113:11113"   # Orleans silo port
       - "30002:30002"   # Orleans gateway port (client)
@@ -84,7 +88,7 @@
 
   database:
     image: postgres
-    container_name: boredgames_${DB_SERVER}
+    container_name: ${DB_SERVER}
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: postgres
@@ -92,7 +96,7 @@
     volumes:
        - postgres:/data/postgres
     ports:
-      - "5438:5432"
+      - "5432:5432"
     networks:
       - boredgames-network
     restart: unless-stopped

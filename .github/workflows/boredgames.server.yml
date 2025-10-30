@@ -41,6 +41,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      
+      - name: Stop (all)
+        run: |
+          docker-compose down --rmi all
 
       - name: Deploy (all)
         run: |
