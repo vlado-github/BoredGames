@@ -1,3 +1,6 @@
+![Client Deploy](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.client/badge.svg))
+![Server Deploy](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.server/badge.svg))
+
 # BoredGames
 
 BoredGames platform for hosting custom games and games' backends.
