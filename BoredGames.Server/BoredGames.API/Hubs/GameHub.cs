@@ -1,4 +1,5 @@
-﻿using BoredGames.API.Models;
+﻿using BoredGames.API.Filters;
+using BoredGames.API.Models;
 using BoredGames.Common.Enums;
 using BoredGames.Common.Exceptions;
 using BoredGames.Server.GameServer.Commands;

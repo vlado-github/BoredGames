@@ -35,19 +35,19 @@ namespace Assets.Scripts.BoredGames.API
             signalR = new SignalR();
 
             // Initialize SignalR
-            var socketHubUrl = new Uri(ApiConfig.BaseUrl, ApiConfig.SocketHub);
+            var socketHubUrl = new Uri(ApiConfig.BaseHubUrl, $"{ApiConfig.SocketHub}?{ApiConfig.QueryParamApiKey}={ApiConfig.ApiKey}");
             signalR.Init($"{socketHubUrl}");
+
 
             // Handler callback
             signalR.On("OnPlayerJoined", (string payload) =>
             {
-                Log($"OnPlayerJoined: {payload}");
+                //Log($"OnPlayerJoined: {payload}");
             }); 
 
             signalR.On("OnGameStateReceived", (string payload) =>
             {
                 var data = JsonUtility.FromJson<GameStateMessage>(payload);
-                Log($"<<< OnGameStateReceived: {JsonUtility.ToJson(data)}");
                 GameState.Instance.PreviousRoundNumber = GameState.Instance.CurrentRoundNumber;
                 GameState.Instance.Status = data.GameStatus;
                 GameState.Instance.CurrentRoundStatus = data.RoundStatus;
@@ -67,8 +67,7 @@ namespace Assets.Scripts.BoredGames.API
             // Connection callback
             signalR.ConnectionStarted += (object sender, ConnectionEventArgs e) =>
             {
-                // Log the connected ID
-                Log($"Connected: {e.ConnectionId}");
+                Log($"Connected!");
                 isConnected = true;
 
                 if (!GameState.Instance.IsGameCreated)
@@ -76,15 +75,12 @@ namespace Assets.Scripts.BoredGames.API
                     LogError("Game instance is not created.");
                 }
 
-                // Send payload to hub as JSON
-                Log($"JoinGameGroup: GameId={GameState.Instance.GameId} Player={GameState.Instance.PlayerName}");
                 signalR.Invoke("JoinGameGroup", GameState.Instance.GameId, GameState.Instance.PlayerName);
             };
 
             signalR.ConnectionClosed += (object sender, ConnectionEventArgs e) =>
             {
-                // Log the disconnected ID
-                Log($"Disconnected: {e.ConnectionId}");
+                Log($"Disconnected.");
             };
 
             signalR.Connect();

@@ -115,7 +115,7 @@ public class SignalR
 
     private static Task OnConnectionReconnectedEvent(string connectionId)
     {
-        Debug.Log($"Connection successfully reconnected. The ConnectionId is now: {connectionId}");
+        Debug.Log($"Connection successfully reconnected.");
 
         lastConnectionId = connectionId;
 

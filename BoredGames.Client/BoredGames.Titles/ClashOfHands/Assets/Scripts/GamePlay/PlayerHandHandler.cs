@@ -7,13 +7,11 @@ namespace Assets.Scripts.GamePlay
     {
         public void Show()
         {
-            Debug.Log("PlayerHand show");
             gameObject.SetActive(true);
         }
 
         public void Hide()
         {
-            Debug.Log("PlayerHand hide");
             gameObject.SetActive(false);
         }
     }
