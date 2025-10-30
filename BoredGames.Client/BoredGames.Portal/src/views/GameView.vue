@@ -1,5 +1,5 @@
 <script setup>
-import GamePlayer from '../components/GamePlayer.vue';
+import GamePlayer from '@/components/GamePlayer.vue';
 </script>
 
 <template>
