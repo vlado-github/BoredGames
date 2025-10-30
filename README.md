@@ -1,5 +1,5 @@
-![Client Deploy](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.client/badge.svg)
-![Server Deploy](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.server/badge.svg)
+![Client Deploy](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.client.yml/badge.svg)
+![Server Deploy](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.server.yml/badge.svg)
 
 # BoredGames
 
