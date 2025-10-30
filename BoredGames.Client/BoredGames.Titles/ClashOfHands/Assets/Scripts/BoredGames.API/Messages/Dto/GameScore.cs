@@ -52,7 +52,6 @@ namespace Assets.Scripts.BoredGames.API
                     RoundResult = playerResult 
                 });
             }
-            Debug.Log($"GetRoundResult: {result.Count}");
 
             return result;
         }

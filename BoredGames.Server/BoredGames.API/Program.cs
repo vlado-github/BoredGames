@@ -1,10 +1,12 @@
 using BoredGames.API.Extensions;
+using BoredGames.API.Filters;
 using BoredGames.API.Hubs;
 using BoredGames.API.Middlewares;
 using BoredGames.API.Models;
 using BoredGames.Common.Utils;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.SetupOrleansClient();
@@ -15,10 +17,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCustomCors();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(hubOptions =>
+{
+    hubOptions.AddFilter<HubKeyAttribute>();
+});
 
 
 var app = builder.Build();
+
+// Swagger
 if (!app.Environment.IsProduction())
 {
     app.UseSwagger();
@@ -28,17 +35,29 @@ if (!app.Environment.IsProduction())
         options.RoutePrefix = string.Empty;
     });
 }
+
+// CORS
 app.UseCors(CorsPolicyExtensions.CorsPolicyName);
+
+var webSocketOptions = new WebSocketOptions();
+foreach (var originUrL in CorsPolicyExtensions.GetCorsOriginURLs())
+{
+    webSocketOptions.AllowedOrigins.Add(originUrL);
+}
+app.UseWebSockets(webSocketOptions);
+
+// Default Middlewares
 if (CurrentEnvironment.IsLocal())
 {
     app.UseHttpsRedirection();
 }
 app.UseAuthorization();
 
-//Adding Middlewares
+// Custom Middlewares
 app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
+// Controllers and Hubs
 app.MapControllers();
 app.MapHub<GameHub>($"/{nameof(GameHub)}");
 app.Run();

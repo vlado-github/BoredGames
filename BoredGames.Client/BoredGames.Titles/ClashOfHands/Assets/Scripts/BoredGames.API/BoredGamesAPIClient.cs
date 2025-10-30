@@ -35,20 +35,19 @@ namespace Assets.Scripts.BoredGames.API
             if (request.result == UnityWebRequest.Result.ConnectionError ||
                 request.result == UnityWebRequest.Result.ProtocolError)
             {
-                var errorMessage = $"[{ApiConfig.BaseUrl}] {request.uri} Request error: {request.error}]";
+                var errorMessage = $"[{ApiConfig.BaseApiUrl}] {request.uri} Request error: {request.error}]";
                 Debug.LogError(errorMessage);
             }
             else
             {
                 var response = JsonUtility.FromJson<T>(request.downloadHandler.text);
-                Debug.Log($"[server] {request.uri} response: "+ JsonUtility.ToJson(response));
                 onSuccess(response);
             }
         }
 
         public IEnumerator GetTitles(Action<TitlesResponse> onSuccess)
         {
-            var url = new Uri(ApiConfig.BaseUrl, "/api/game/titles");
+            var url = new Uri(ApiConfig.BaseApiUrl, "/api/game/titles");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
@@ -58,7 +57,7 @@ namespace Assets.Scripts.BoredGames.API
 
         public IEnumerator GetWinners(Action<WinnersResponse> onSuccess)
         {
-            var url = new Uri(ApiConfig.BaseUrl, $"/api/game/{GameState.Instance.GameId}/winners");
+            var url = new Uri(ApiConfig.BaseApiUrl, $"/api/game/{GameState.Instance.GameId}/winners");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
@@ -68,7 +67,7 @@ namespace Assets.Scripts.BoredGames.API
 
         public IEnumerator CreateGame(Action<CreateGameResponse> onSuccess)
         {
-            var url = new Uri(ApiConfig.BaseUrl, "/api/game/create");
+            var url = new Uri(ApiConfig.BaseApiUrl, "/api/game/create");
 
             var data = new CreateGameRequest
             {
@@ -86,7 +85,7 @@ namespace Assets.Scripts.BoredGames.API
 
         public IEnumerator JoinGame(Action<GameStateResponse> onSuccess)
         {
-            var url = new Uri(ApiConfig.BaseUrl, "/api/game/join");
+            var url = new Uri(ApiConfig.BaseApiUrl, "/api/game/join");
             var isValid = true;
 
             if (!GameState.Instance.IsGameCreated)
@@ -122,7 +121,7 @@ namespace Assets.Scripts.BoredGames.API
 
         public IEnumerator GetGameState(Action<GameStateResponse> onSuccess)
         {
-            var url = new Uri(ApiConfig.BaseUrl, $"/api/game/{GameState.Instance.GameId}/state");
+            var url = new Uri(ApiConfig.BaseApiUrl, $"/api/game/{GameState.Instance.GameId}/state");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
@@ -132,7 +131,7 @@ namespace Assets.Scripts.BoredGames.API
 
         public IEnumerator CreatePlayerSession(Action<PlayerDetailsResponse> onSuccess)
         {
-            var url = new Uri(ApiConfig.BaseUrl, $"/api/player");
+            var url = new Uri(ApiConfig.BaseApiUrl, $"/api/player");
             var data = new CreatePlayerProfileRequest
             {
                 nickname = GameState.Instance.PlayerName
@@ -146,7 +145,7 @@ namespace Assets.Scripts.BoredGames.API
 
         public IEnumerator UpdatePlayerSessionDetails(Action<PlayerDetailsResponse> onSuccess)
         {
-            var url = new Uri(ApiConfig.BaseUrl, $"/api/player");
+            var url = new Uri(ApiConfig.BaseApiUrl, $"/api/player");
             var data = new UpdatePlayerProfileRequest
             {
                 nickname = GameState.Instance.PlayerName
@@ -160,7 +159,7 @@ namespace Assets.Scripts.BoredGames.API
 
         public IEnumerator GetPlayerSessionDetails(Action<PlayerDetailsResponse> onSuccess)
         {
-            var url = new Uri(ApiConfig.BaseUrl, $"/api/player/details");
+            var url = new Uri(ApiConfig.BaseApiUrl, $"/api/player/details");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {

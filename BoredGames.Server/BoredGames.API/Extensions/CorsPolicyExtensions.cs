@@ -44,4 +44,24 @@ public static class CorsPolicyExtensions
             }
         });
     }
+
+    public static IList<string> GetCorsOriginURLs()
+    {
+        if (!CurrentEnvironment.IsLocal())
+        {
+            var corsOriginUrlString = Environment.GetEnvironmentVariable(EnvVarNames.CorsOrigin);
+            if (string.IsNullOrEmpty(corsOriginUrlString))
+            {
+                return new List<string>();
+            }
+            return corsOriginUrlString.Split(",").ToList();
+        }
+        else
+        {
+            return new List<string>
+            {
+                "http://localhost:5173",
+            };
+        }
+    }
 }
