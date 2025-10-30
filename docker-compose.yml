@@ -1,6 +1,6 @@
 ﻿services:
   nginx:
-    image: nginx:stable-alpine
+    image: fholzer/nginx-brotli:latest
     container_name: boredgames_nginx_proxy
     restart: always
     ports:
