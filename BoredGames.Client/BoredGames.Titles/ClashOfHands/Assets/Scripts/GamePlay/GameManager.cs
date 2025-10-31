@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
                     }
                 case RoundScoreResultEnum.Draw:
                     {
-                        ShowNotification("Draw", Color.yellow);
+                        ShowNotification("Tie", Color.yellow);
                         break;
                     }
                 default:
