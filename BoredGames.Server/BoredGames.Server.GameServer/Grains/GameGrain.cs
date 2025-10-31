@@ -37,11 +37,11 @@ public class GameGrain : Grain, IGameGrain
         _gameState.RoundStatus = roundResult.RoundStatus;
     }
 
-    public Task AddPlayerToGame(AddPlayerCommand command)
+    public async Task AddPlayerToGame(AddPlayerCommand command)
     {
         if (_players.Count == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
-            return Task.CompletedTask;
+            return;
         }
         
         var dto = command.Adapt<PlayerDto>();
@@ -56,12 +56,6 @@ public class GameGrain : Grain, IGameGrain
         {
             _gameState.GameStatus = GameStatus.InPlay;
         }
-
-        var settings = _gameRuleEngine.GetDefinition();
-
-        var result = settings.Adapt<GameDefinitionViewModel>();
-        result.GameId = this.GetPrimaryKey();
-        return Task.FromResult(result);
     }
 
     public async Task<GameStateViewModel> MakeMove(MakeMoveCommand command)

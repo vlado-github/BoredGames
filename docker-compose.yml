@@ -17,8 +17,6 @@
     image: redis:6
     container_name: boredgames_redis
     restart: always
-    ports:
-      - "6379:6379"
     volumes:
       - /home/boredgames/redis_data:/data
     command: ["redis-server", "--dir", "/data"]
@@ -96,8 +94,6 @@
       POSTGRES_PASSWORD: admin
     volumes:
        - postgres:/data/postgres
-    ports:
-      - "5432:5432"
     networks:
       - boredgames-network
     restart: unless-stopped
