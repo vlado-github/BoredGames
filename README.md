@@ -1,4 +1,3 @@
-
 # BoredGames
 
 ![Client Deploy](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.portal.yml/badge.svg)
