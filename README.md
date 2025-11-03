@@ -1,6 +1,6 @@
 <div align="center">
 <div align="center">
-💖 **Found BoredGames interesting?**
+💖 <b>Found BoredGames interesting?</b>
 
 ⭐ Please consider giving us a star to support the project! ⭐
 </div>
