@@ -12,7 +12,7 @@
    <h1>BoredGames</h1>
    <h3>Web platform for hosting custom web-based games and games' backends.</h3>
    
-   [![GitHub Release](https://github.com/vlado-github/BoredGames/releases/badge.svg)](https://github.com/vlado-github/BoredGames/releases)
+   [![GitHub Release](https://img.shields.io/badge/release-v1.1.0-blue)](https://github.com/vlado-github/BoredGames/releases)
 
    [![Client Deploy](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.portal.yml/badge.svg)](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.portal.yml)
 
