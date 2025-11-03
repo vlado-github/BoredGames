@@ -1,10 +1,9 @@
 <div align="center">
-   <div align="center">
+<div align="center">
+💖 **Found BoredGames interesting?**
 
-      💖 **Found BoredGames interesting?**  
-      ⭐ Please consider giving us a star to support the project! ⭐
-
-   </div>
+⭐ Please consider giving us a star to support the project! ⭐
+</div>
 
    <p>
       <img src="https://boredgames.lol/assets/clashofhands-logo.png" alt="ClashOfHands game logo" width="200px">
@@ -21,7 +20,7 @@
 
    <p>
       <a href="https://boredgames.lol">Website 🌎</a> • 
-      <a href="">Installation ⚙️</a>
+      <a href="https://github.com/vlado-github/BoredGames?tab=readme-ov-file#-getting-started">Installation ⚙️</a>
    </p>
 </div>
 
