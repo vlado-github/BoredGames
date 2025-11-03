@@ -130,6 +130,6 @@ Server side contains two parts:
 #### Run
 
 1. Run shell or cmd
-2. Position to source folder of project (_BoredGames/BoredGames.Client\BoredGames.Portal_)
+2. Position to source folder of project (_BoredGames/BoredGames.Client/BoredGames.Portal_)
 3. Execute command:
    `npm run dev`
