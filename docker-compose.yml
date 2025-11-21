@@ -1,4 +1,6 @@
-﻿services:
+﻿version: "3.9"
+
+services:
   nginx:
     image: nginx:stable-alpine
     container_name: boredgames_nginx_proxy
@@ -8,7 +10,8 @@
       - "443:443"
     volumes:
       - ${NGINX_CONFIG_PATH}:/etc/nginx/nginx.conf:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro 
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /home/boredgames/letsencrypt:/home/boredgames/letsencrypt:ro
       - /home/boredgames/release:/home/boredgames/release:ro
     depends_on:
       - certbot
@@ -17,11 +20,17 @@
 
   certbot:
     image: certbot/certbot:latest
+    container_name: boredgames_certbot
     restart: always
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
-      - /home/boredgames/letsencrypt/:/home/boredgames/letsencrypt/
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $!; done;'" 
+      - /home/boredgames/letsencrypt:/home/boredgames/letsencrypt
+    entrypoint: >
+      /bin/sh -c 'trap exit TERM;
+      while :; do
+        certbot renew --webroot -w /home/boredgames/letsencrypt;
+        sleep 12h & wait $!;
+      done;'
 
   redis:
     image: redis:6
@@ -71,8 +80,8 @@
       - INSTANCE_ID=1
       - REDIS_HOST=redis
     ports:
-      - "11112:11112"   # Orleans silo port
-      - "30001:30001"   # Orleans gateway port (client)
+      - "11112:11112"
+      - "30001:30001"
     networks:
       - boredgames-network
 
@@ -84,14 +93,14 @@
       dockerfile: BoredGames.Server/BoredGames.Server.GameServer/Dockerfile
     depends_on:
       - redis
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - INSTANCE_ID=2
       - REDIS_HOST=redis
-    restart: always
     ports:
-      - "11113:11113"   # Orleans silo port
-      - "30002:30002"   # Orleans gateway port (client)
+      - "11113:11113"
+      - "30002:30002"
     networks:
       - boredgames-network
 
@@ -103,7 +112,7 @@
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
     volumes:
-       - postgres:/data/postgres
+      - postgres:/data/postgres
     networks:
       - boredgames-network
     restart: unless-stopped
@@ -114,10 +123,10 @@
     command: start --import-realm
     environment:
       KC_HOSTNAME: ${KEYCLOAK_SERVER_NAME}
-      KC_PROXY_HEADERS: "xforwarded"
+      KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: "true"
       KC_HEALTH_ENABLED: "true"
-      KC_HOSTNAME_STRICT: "false" 
+      KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
       KC_BOOTSTRAP_ADMIN_USERNAME: admin-temp
@@ -130,16 +139,16 @@
       - ./.keycloak/imports:/opt/keycloak/data/import
       - ./.keycloak/keycloak-theme-for-kc-all-other-versions.jar:/opt/keycloak/providers/keycloak-theme.jar
     ports:
-      - 5555:8080
+      - "5555:8080"
     restart: always
     networks:
       boredgames-network:
         aliases:
           - keycloak.local
- 
+
 networks:
   boredgames-network:
     driver: bridge
 
 volumes:
-    postgres:
+  postgres:
