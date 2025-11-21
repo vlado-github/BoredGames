@@ -17,6 +17,7 @@
 
   certbot:
     image: certbot/certbot:latest
+    restart: always
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /home/boredgames/letsencrypt/:/home/boredgames/letsencrypt/
