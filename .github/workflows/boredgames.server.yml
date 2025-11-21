@@ -1,4 +1,4 @@
-name: BoredGames Backend
+name: BoredGames Backend - build & deploy
 
 env:
   DOTNET_VERSION: '8'                 # set this to the .NET Core version to use

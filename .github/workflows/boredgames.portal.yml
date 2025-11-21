@@ -1,4 +1,4 @@
-name: BoredGames Portal
+name: BoredGames Portal - build & deploy
 
 on:
   #push:
