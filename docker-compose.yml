@@ -10,8 +10,17 @@
       - ${NGINX_CONFIG_PATH}:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro 
       - /home/boredgames/release:/home/boredgames/release:ro
+    depends_on:
+      - certbot
     networks:
       - boredgames-network
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /home/boredgames/letsencrypt/:/home/boredgames/letsencrypt/
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $!; done;'" 
 
   redis:
     image: redis:6
