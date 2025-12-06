@@ -6,7 +6,7 @@
 </div>
 
    <p>
-      <img src="https://boredgames.lol/assets/clashofhands-logo.png" alt="ClashOfHands game logo" width="200px">
+      <img src="https://boredgames.lol/assets/boredgames-logo.png" alt="ClashOfHands game logo" width="200px">
    </p>
 
    <h1>BoredGames</h1>
