@@ -48,7 +48,7 @@ jobs:
 
       - name: Deploy (all)
         run: |
-          docker-compose up -d --force-recreate 
+          docker-compose up --scale gameserver-silo=3 -d --force-recreate 
 
 
 

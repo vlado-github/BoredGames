@@ -75,7 +75,7 @@
 
 3. **Start the Docker Containers:**
    ```bash
-   docker compose --env-file .env.local up -d --force-recreate
+   docker compose --env-file .env.local up --scale gameserver-silo=3 -d --force-recreate
    ```
 
 4. **Open API documentation:**
