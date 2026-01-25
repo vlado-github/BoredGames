@@ -1,6 +1,4 @@
-﻿version: "3.9"
-
-services:
+﻿services:
   nginx:
     image: nginx:stable-alpine
     container_name: boredgames_nginx_proxy
@@ -56,8 +54,7 @@ services:
       - "5008:8080"
     restart: always
     depends_on:
-      - gameserver-silo1
-      - gameserver-silo2
+      - gameserver-silo
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - BORED_GAMES_CORS_ORIGIN_URL=${BORED_GAMES_CORS_ORIGIN_URL}
@@ -66,9 +63,8 @@ services:
     networks:
       - boredgames-network
 
-  gameserver-silo1:
+  gameserver-silo:
     image: boredgames.gameserver
-    container_name: gameserver_silo1
     build:
       context: .
       dockerfile: BoredGames.Server/BoredGames.Server.GameServer/Dockerfile
@@ -77,30 +73,10 @@ services:
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - INSTANCE_ID=1
       - REDIS_HOST=redis
     ports:
-      - "11112:11112"
-      - "30001:30001"
-    networks:
-      - boredgames-network
-
-  gameserver-silo2:
-    image: boredgames.gameserver
-    container_name: gameserver_silo2
-    build:
-      context: .
-      dockerfile: BoredGames.Server/BoredGames.Server.GameServer/Dockerfile
-    depends_on:
-      - redis
-    restart: always
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - INSTANCE_ID=2
-      - REDIS_HOST=redis
-    ports:
-      - "11113:11113"
-      - "30002:30002"
+      - "11111-11117:11111"
+      - "30000-30006:30000"
     networks:
       - boredgames-network
 
