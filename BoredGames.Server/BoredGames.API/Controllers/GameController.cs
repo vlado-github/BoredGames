@@ -1,21 +1,20 @@
 using BoredGames.API.Extensions;
-using BoredGames.API.Filters;
 using BoredGames.API.Hubs;
 using BoredGames.API.Models;
 using BoredGames.Common.Consts;
 using BoredGames.Common.Enums;
-using BoredGames.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.GameServer.Commands;
 using BoredGames.Server.GameServer.Grains.Base;
 using BoredGames.Server.GameServer.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
 namespace BoredGames.API.Controllers
 {
-    [ApiKey]
+    [Authorize]
     [Route("api/game")]
     [ApiController]
     public class GameController : ControllerBase

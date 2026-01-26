@@ -6,6 +6,8 @@ using BoredGames.API.Models;
 using BoredGames.Common.Utils;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Keycloak.AuthServices.Authentication;
+using Keycloak.AuthServices.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,16 @@ builder.Services.AddSignalR(hubOptions =>
 {
     hubOptions.AddFilter<HubKeyAttribute>();
 });
+
+// Setup Auth
+builder.Services
+    .AddKeycloakWebApiAuthentication(builder.Configuration, options =>
+    {
+        builder.Configuration.GetSection("Authentication:Schemes:Bearer").Bind(options);
+    });
+builder.Services
+    .AddAuthorization()
+    .AddKeycloakAuthorization(builder.Configuration);
 
 
 var app = builder.Build();
@@ -51,6 +63,7 @@ if (CurrentEnvironment.IsLocal())
 {
     app.UseHttpsRedirection();
 }
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Custom Middlewares
