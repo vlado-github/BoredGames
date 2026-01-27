@@ -12,6 +12,7 @@ namespace Assets.Scripts.BoredGames.API
     public class BoredGamesAPIClient
     {
         private static BoredGamesAPIClient _instance = null;
+        private static ApiTokenResponse cachedToken = new ApiTokenResponse();
 
         public static BoredGamesAPIClient Instance
         {
@@ -25,10 +26,45 @@ namespace Assets.Scripts.BoredGames.API
             }
         }
 
-        private IEnumerator HandleRequest<T>(UnityWebRequest request, Action<T> onSuccess) where T : IResponse
+        public static IEnumerator GetToken(Action<ApiTokenResponse> onSuccess)
         {
-            yield return AuthHelper.GetToken((token) => request.SetHeaders(token));
-            
+            if (cachedToken.IsValid())
+            {
+                onSuccess(cachedToken);
+                yield break;
+            }
+            else
+            {
+                var url = new Uri(ApiConfig.BaseApiUrl, "/api/auth/token");
+
+                using (UnityWebRequest request = UnityWebRequest.Get(url))
+                {
+                    yield return request.SendWebRequest();
+
+                    if (request.result == UnityWebRequest.Result.ConnectionError ||
+                        request.result == UnityWebRequest.Result.ProtocolError)
+                    {
+                        var errorMessage = $"[{ApiConfig.BaseApiUrl}] {request.uri} Request error: {request.error}]";
+                        Debug.LogError(errorMessage);
+                    }
+                    else
+                    {
+                        string jsonResp = request.downloadHandler.text;
+                        Debug.Log(jsonResp);
+                        var response = JsonUtility.FromJson<ApiTokenResponse>(jsonResp);
+                        cachedToken = response;
+                        Debug.Log(response.access_token);
+                        Debug.Log(response.expires_in);
+                        onSuccess(response);
+                    }
+                }
+            }
+        }
+
+        private IEnumerator HandleRequest<T>(UnityWebRequest request, Action<T> onSuccess, ApiTokenResponse token) where T : IResponse
+        {
+            request.SetHeaders(token);
+
             // Send the request and wait for the response
             yield return request.SendWebRequest();
 
@@ -43,30 +79,43 @@ namespace Assets.Scripts.BoredGames.API
                 var response = JsonUtility.FromJson<T>(request.downloadHandler.text);
                 onSuccess(response);
             }
+
         }
 
         public IEnumerator GetTitles(Action<TitlesResponse> onSuccess)
         {
+            ApiTokenResponse token = null;
+
+            yield return GetToken((t) => token = t);
+
             var url = new Uri(ApiConfig.BaseApiUrl, "/api/game/titles");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
-                yield return HandleRequest(request, onSuccess);
+                yield return HandleRequest(request, onSuccess, token);
             }
         }
 
         public IEnumerator GetWinners(Action<WinnersResponse> onSuccess)
         {
+            ApiTokenResponse token = null;
+
+            yield return GetToken((t) => token = t);
+
             var url = new Uri(ApiConfig.BaseApiUrl, $"/api/game/{GameState.Instance.GameId}/winners");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
-                yield return HandleRequest(request, onSuccess);
+                yield return HandleRequest(request, onSuccess, token);
             }
         }
 
         public IEnumerator CreateGame(Action<CreateGameResponse> onSuccess)
         {
+            ApiTokenResponse token = null;
+
+            yield return GetToken((t) => token = t);
+
             var url = new Uri(ApiConfig.BaseApiUrl, "/api/game/create");
 
             var data = new CreateGameRequest
@@ -79,12 +128,16 @@ namespace Assets.Scripts.BoredGames.API
 
             using (UnityWebRequest request = UnityWebRequest.Post(url, JsonUtility.ToJson(data), ApiConfig.DefaultContentType))
             {
-                yield return HandleRequest(request, onSuccess);
+                yield return HandleRequest(request, onSuccess, token);
             }
         }
 
         public IEnumerator JoinGame(Action<GameStateResponse> onSuccess)
         {
+            ApiTokenResponse token = null;
+
+            yield return GetToken((t) => token = t);
+
             var url = new Uri(ApiConfig.BaseApiUrl, "/api/game/join");
             var isValid = true;
 
@@ -114,23 +167,31 @@ namespace Assets.Scripts.BoredGames.API
 
                 using (UnityWebRequest request = UnityWebRequest.Put(url, JsonUtility.ToJson(data)))
                 {
-                    yield return HandleRequest(request, onSuccess);
+                    yield return HandleRequest(request, onSuccess, token);
                 }
             }
         }
 
         public IEnumerator GetGameState(Action<GameStateResponse> onSuccess)
         {
+            ApiTokenResponse token = null;
+
+            yield return GetToken((t) => token = t);
+
             var url = new Uri(ApiConfig.BaseApiUrl, $"/api/game/{GameState.Instance.GameId}/state");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
-                yield return HandleRequest(request, onSuccess);
+                yield return HandleRequest(request, onSuccess, token);
             }
         }
 
         public IEnumerator CreatePlayerSession(Action<PlayerDetailsResponse> onSuccess)
         {
+            ApiTokenResponse token = null;
+
+            yield return GetToken((t) => token = t);
+
             var url = new Uri(ApiConfig.BaseApiUrl, $"/api/player");
             var data = new CreatePlayerProfileRequest
             {
@@ -139,12 +200,16 @@ namespace Assets.Scripts.BoredGames.API
 
             using (UnityWebRequest request = UnityWebRequest.Post(url, JsonUtility.ToJson(data), ApiConfig.DefaultContentType))
             {
-                yield return HandleRequest(request, onSuccess);
+                yield return HandleRequest(request, onSuccess, token);
             }
         }
 
         public IEnumerator UpdatePlayerSessionDetails(Action<PlayerDetailsResponse> onSuccess)
         {
+            ApiTokenResponse token = null;
+
+            yield return GetToken((t) => token = t);
+
             var url = new Uri(ApiConfig.BaseApiUrl, $"/api/player");
             var data = new UpdatePlayerProfileRequest
             {
@@ -153,17 +218,21 @@ namespace Assets.Scripts.BoredGames.API
 
             using (UnityWebRequest request = UnityWebRequest.Put(url, JsonUtility.ToJson(data)))
             {
-                yield return HandleRequest(request, onSuccess);
+                yield return HandleRequest(request, onSuccess, token);
             }
         }
 
         public IEnumerator GetPlayerSessionDetails(Action<PlayerDetailsResponse> onSuccess)
         {
+            ApiTokenResponse token = null;
+
+            yield return GetToken((t) => token = t);
+
             var url = new Uri(ApiConfig.BaseApiUrl, $"/api/player/details");
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
-                yield return HandleRequest(request, onSuccess);
+                yield return HandleRequest(request, onSuccess, token);
             }
         }
     }
