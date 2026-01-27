@@ -56,7 +56,7 @@
     depends_on:
       - gameserver-silo
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - BORED_GAMES_CORS_ORIGIN_URL=${BORED_GAMES_CORS_ORIGIN_URL}
       - BORED_GAMES_APP_BASE_URL=${BORED_GAMES_APP_BASE_URL}
       - BORED_GAMES_API_KEY=${BORED_GAMES_API_KEY}
@@ -72,11 +72,11 @@
       - redis
     restart: always
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - REDIS_HOST=redis
     ports:
-      - "11111-11117:11111"
-      - "30000-30006:30000"
+      - "11112-11117:11111"
+      - "30001-30006:30000"
     networks:
       - boredgames-network
 
@@ -95,7 +95,7 @@
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.4
-    container_name: boredgames_keycloak
+    container_name: ${KEYCLOAK_SERVER_NAME}
     command: start --import-realm
     environment:
       KC_HOSTNAME: ${KEYCLOAK_SERVER_NAME}
@@ -112,7 +112,7 @@
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: admin
     volumes:
-      - ./.keycloak/imports:/opt/keycloak/data/import
+      - ./.keycloak/imports/${ASPNETCORE_ENVIRONMENT}:/opt/keycloak/data/import
       - ./.keycloak/keycloak-theme-for-kc-all-other-versions.jar:/opt/keycloak/providers/keycloak-theme.jar
     ports:
       - "5555:8080"

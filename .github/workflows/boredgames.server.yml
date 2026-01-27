@@ -22,6 +22,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Inject secret into appsettings.Production.json
+        run: |
+          sed -i 's|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g' \
+            BoredGames.Server/BoredGames.API/appsettings.Production.json
+      
+      - name: Inject secret into keycloak realm config
+        run: |
+          sed -i 's|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g' \
+            .keycloak/imports/prod-realm-config.json
+
       - name: Build Solution (BoredGames.API)
         run: |
           docker build -f BoredGames.Server/BoredGames.API/Dockerfile -t boredgames-api .
