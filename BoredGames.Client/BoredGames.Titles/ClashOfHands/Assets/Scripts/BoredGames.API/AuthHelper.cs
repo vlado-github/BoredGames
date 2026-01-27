@@ -1,11 +1,7 @@
-﻿using Assets.Scripts.BoredGames.API.Responses;
-using Assets.Scripts.GamePlay;
+﻿using Assets.Scripts.GamePlay;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,36 +9,49 @@ namespace Assets.BoredGames.API
 {
     static class AuthHelper
     {
-        public static IEnumerator GetToken(Action<ApiTokenResponse> onSuccess)
+
+        private static ApiTokenResponse cachedToken = new ApiTokenResponse();
+
+
+        public static async Task<ApiTokenResponse> GetToken()
         {
-            var url = new Uri(ApiConfig.BaseApiUrl, "/api/auth/token");
-
-            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            if (cachedToken.IsValid())
             {
-                yield return request.SendWebRequest();
+                return cachedToken;
+            }
+            else
+            {
+                var url = new Uri(ApiConfig.BaseApiUrl, "/api/auth/token");
 
-                if (request.result == UnityWebRequest.Result.ConnectionError ||
-                    request.result == UnityWebRequest.Result.ProtocolError)
+                using (UnityWebRequest request = UnityWebRequest.Get(url))
                 {
-                    var errorMessage = $"[{ApiConfig.BaseApiUrl}] {request.uri} Request error: {request.error}]";
-                    Debug.LogError(errorMessage);
-                }
-                else
-                {
-                    var response = JsonUtility.FromJson<ApiTokenResponse>(request.downloadHandler.text);
-                    onSuccess(response);
+                    await request.SendWebRequest();
+
+                    if (request.result == UnityWebRequest.Result.ConnectionError ||
+                        request.result == UnityWebRequest.Result.ProtocolError)
+                    {
+                        var errorMessage = $"[{ApiConfig.BaseApiUrl}] {request.uri} Request error: {request.error}]";
+                        Debug.LogError(errorMessage);
+                        throw new Exception(errorMessage);
+                    }
+                    else
+                    {
+                        string jsonResp = request.downloadHandler.text;
+                        Debug.Log(jsonResp);
+                        cachedToken = JsonUtility.FromJson<ApiTokenResponse>(jsonResp);
+                        Debug.Log(cachedToken.access_token);
+                        Debug.Log(cachedToken.expires_in);
+                        return cachedToken;
+                    }
                 }
             }
         }
 
-        public static void SetHeaders(this UnityWebRequest request)
+        public static void SetHeaders(this UnityWebRequest request, ApiTokenResponse token)
         {
             request.SetRequestHeader("Accept", "application/json");
             request.SetRequestHeader("Content-Type", "application/json");
-            GetToken((token) =>
-            {
-                request.SetRequestHeader("Authorization", $"Bearer {token}");
-            });
+            request.SetRequestHeader("Authorization", $"Bearer {token.access_token}");
             if (!string.IsNullOrEmpty(GameState.Instance.PlayerId))
             {
                 request.SetRequestHeader(ApiConfig.HeaderPlayerKey, GameState.Instance.PlayerId.ToString());

@@ -27,8 +27,8 @@ namespace Assets.Scripts.BoredGames.API
 
         private IEnumerator HandleRequest<T>(UnityWebRequest request, Action<T> onSuccess) where T : IResponse
         {
-            request.SetHeaders();
-
+            yield return AuthHelper.GetToken((token) => request.SetHeaders(token));
+            
             // Send the request and wait for the response
             yield return request.SendWebRequest();
 

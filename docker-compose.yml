@@ -75,8 +75,8 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - REDIS_HOST=redis
     ports:
-      - "11111-11117:11111"
-      - "30000-30006:30000"
+      - "11112-11117:11111"
+      - "30001-30006:30000"
     networks:
       - boredgames-network
 
@@ -95,7 +95,7 @@
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.4
-    container_name: boredgames_keycloak
+    container_name: ${KEYCLOAK_SERVER_NAME}
     command: start --import-realm
     environment:
       KC_HOSTNAME: ${KEYCLOAK_SERVER_NAME}
