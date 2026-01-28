@@ -64,19 +64,20 @@ app.UseWebSockets(webSocketOptions);
 app.UseRouting();
 
 // CORS
-app.UseCors("BoredGamesOrigins");//app.UseCors(CorsPolicyExtensions.CorsPolicyName);
+app.UseCors(CorsPolicyExtensions.CorsPolicyName);
 
 // Default Middlewares
-if (CurrentEnvironment.IsLocal())
-{
+// if (CurrentEnvironment.IsLocal())
+// {
     app.UseHttpsRedirection();
-}
+//}
 app.UseAuthentication();
 app.UseAuthorization();
 
 // Controllers and Hubs
 app.MapControllers();
-app.MapHub<GameHub>($"/hubs/{nameof(GameHub)}");
+app.MapHub<GameHub>($"/hubs/{nameof(GameHub)}")
+    .RequireCors(CorsPolicyExtensions.CorsPolicyName);
 app.Run();
 
 // In order to enable tests to run a test instance of a host
