@@ -103,7 +103,7 @@ namespace Assets.Scripts.BoredGames.API
 
         private static void Log(string message)
         {
-            Debug.Log($"[socket]: {message}");
+            //Debug.Log($"[socket]: {message}");
         }
 
         private static void LogError(string message)

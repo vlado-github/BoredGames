@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour
                 }
             case GameStatus.Finished:
                 {
-                    Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
+                    //Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
 
                     _waitingForPlayerCanvas.gameObject.SetActive(false);
                     _scoreCanvas.gameObject.SetActive(true);

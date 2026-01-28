@@ -28,6 +28,7 @@ public static class WebApplicationBuilderExtensions
                         options.MinimumBreadcrumbLevel = LogEventLevel.Debug;
                         options.MinimumEventLevel = LogEventLevel.Warning;
                     })
+                    .WriteTo.Console()
                     .Enrich.FromLogContext()
                     .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions())
                     .Enrich.WithCorrelationId()

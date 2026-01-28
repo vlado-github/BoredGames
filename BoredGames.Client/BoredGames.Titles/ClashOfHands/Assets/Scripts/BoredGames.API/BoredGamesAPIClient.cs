@@ -50,11 +50,8 @@ namespace Assets.Scripts.BoredGames.API
                     else
                     {
                         string jsonResp = request.downloadHandler.text;
-                        Debug.Log(jsonResp);
                         var response = JsonUtility.FromJson<ApiTokenResponse>(jsonResp);
                         cachedToken = response;
-                        Debug.Log(response.access_token);
-                        Debug.Log(response.expires_in);
                         onSuccess(response);
                     }
                 }
