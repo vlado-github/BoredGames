@@ -24,7 +24,7 @@ jobs:
 
       - name: Inject Sentry secret into .env file
         run: |
-          sed -i 's|BORED_GAMES_SERILOG_DSN=__BORED_GAMES_SERILOG_DSN__|BORED_GAMES_SERILOG_DSN=${{ secrets.BORED_GAMES_SERILOG_DSN }}|g' .env
+          sed -i 's|__BORED_GAMES_SERILOG_DSN__|${{ secrets.BORED_GAMES_SERILOG_DSN }}|g' .env
 
       - name: Inject Keycloak client secret in appsettings.Production.json
         run: |
@@ -49,11 +49,6 @@ jobs:
       name: 'Production'
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
       - name: Stop (all)
         run: |
           docker-compose down --rmi all
