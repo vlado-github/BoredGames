@@ -22,6 +22,12 @@ jobs:
         with:
           fetch-depth: 0
 
+          
+      - name: Inject Sentry secret into .env file
+        run: |
+          sed -i 's|__BORED_GAMES_SERILOG_DSN__|${{ secrets.BORED_GAMES_SERILOG_DSN }}|g' \
+            .env
+
       - name: Inject secret into appsettings.Production.json
         run: |
           sed -i 's|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g' \
