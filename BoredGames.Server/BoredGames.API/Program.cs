@@ -67,10 +67,10 @@ app.UseRouting();
 app.UseCors(CorsPolicyExtensions.CorsPolicyName);
 
 // Default Middlewares
-// if (CurrentEnvironment.IsLocal())
-// {
+if (CurrentEnvironment.IsLocal())
+{
     app.UseHttpsRedirection();
-//}
+}
 app.UseAuthentication();
 app.UseAuthorization();
 
