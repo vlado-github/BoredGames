@@ -48,9 +48,7 @@ if (!app.Environment.IsProduction())
     });
 }
 
-// CORS
-app.UseCors(CorsPolicyExtensions.CorsPolicyName);
-
+// Web Socket
 var webSocketOptions = new WebSocketOptions();
 foreach (var originUrl in CorsPolicyExtensions.GetCorsOriginURLs())
 {
@@ -58,7 +56,11 @@ foreach (var originUrl in CorsPolicyExtensions.GetCorsOriginURLs())
 }
 app.UseWebSockets(webSocketOptions);
 
+// Routing
 app.UseRouting();
+
+// CORS
+app.UseCors(CorsPolicyExtensions.CorsPolicyName);
 
 // Default Middlewares
 if (CurrentEnvironment.IsLocal())
