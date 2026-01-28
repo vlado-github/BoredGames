@@ -25,16 +25,16 @@ jobs:
           
       - name: Inject Sentry secret into .env file
         run: |
-          sed -i 's|__BORED_GAMES_SERILOG_DSN__|${{ secrets.BORED_GAMES_SERILOG_DSN }}|g' .env
+          sed -i "s|__BORED_GAMES_SERILOG_DSN__|${{ secrets.BORED_GAMES_SERILOG_DSN }}|g" .env
 
       - name: Inject secret into appsettings.Production.json
         run: |
-          sed -i 's|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g' \
+          sed -i "s|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g" \
             BoredGames.Server/BoredGames.API/appsettings.Production.json
       
       - name: Inject secret into keycloak realm config
         run: |
-          sed -i 's|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g' \
+          sed -i "s|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g" \
             .keycloak/imports/Production/prod-realm-config.json
 
       - name: Build Solution (BoredGames.API)
