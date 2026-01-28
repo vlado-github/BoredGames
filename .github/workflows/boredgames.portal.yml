@@ -16,6 +16,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Inject Sentry secret into .env file
+        run: |
+          sed -i 's|__BORED_GAMES_SERILOG_DSN__|${{ secrets.BORED_GAMES_SERILOG_DSN }}|g' .env
+
+      - name: Inject Keycloak client secret in appsettings.Production.json
+        run: |
+          sed -i "s|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g" BoredGames.Server/BoredGames.API/appsettings.Production.json
+
+      - name: Inject Keycloak client secret in keycloak realm config
+        run: |
+          sed -i "s|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g" .keycloak/imports/Production/prod-realm-config.json
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
