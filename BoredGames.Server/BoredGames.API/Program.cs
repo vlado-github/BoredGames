@@ -58,6 +58,8 @@ foreach (var originUrl in CorsPolicyExtensions.GetCorsOriginURLs())
 }
 app.UseWebSockets(webSocketOptions);
 
+app.UseRouting();
+
 // Default Middlewares
 if (CurrentEnvironment.IsLocal())
 {
