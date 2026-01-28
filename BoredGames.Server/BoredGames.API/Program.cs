@@ -76,8 +76,7 @@ app.UseAuthorization();
 
 // Controllers and Hubs
 app.MapControllers();
-app.MapHub<GameHub>($"/hubs/{nameof(GameHub)}")
-   .RequireCors(CorsPolicyExtensions.CorsPolicyName);
+app.MapHub<GameHub>($"/hubs/{nameof(GameHub)}");
 app.Run();
 
 // In order to enable tests to run a test instance of a host
