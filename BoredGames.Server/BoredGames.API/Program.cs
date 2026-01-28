@@ -48,6 +48,10 @@ if (!app.Environment.IsProduction())
     });
 }
 
+// Custom Middlewares
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
+
 // Web Socket
 var webSocketOptions = new WebSocketOptions();
 foreach (var originUrl in CorsPolicyExtensions.GetCorsOriginURLs())
@@ -70,14 +74,10 @@ if (CurrentEnvironment.IsLocal())
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Custom Middlewares
-app.UseMiddleware<LoggingMiddleware>();
-app.UseMiddleware<ExceptionMiddleware>();
-
 // Controllers and Hubs
 app.MapControllers();
-app.MapHub<GameHub>($"/hubs/{nameof(GameHub)}");
-   // .RequireCors(CorsPolicyExtensions.CorsPolicyName);
+app.MapHub<GameHub>($"/hubs/{nameof(GameHub)}")
+   .RequireCors(CorsPolicyExtensions.CorsPolicyName);
 app.Run();
 
 // In order to enable tests to run a test instance of a host
