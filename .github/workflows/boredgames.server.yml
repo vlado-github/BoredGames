@@ -49,6 +49,10 @@ jobs:
       name: 'Production'
 
     steps:
+      - name: Cleanup workspace
+        run: |
+          rm -rf *
+
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
@@ -65,7 +69,7 @@ jobs:
       - name: Inject Keycloak client secret in keycloak realm config
         run: |
           sed -i "s|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g" .keycloak/imports/Production/prod-realm-config.json
-          
+
       - name: Stop (all)
         run: |
           docker-compose down --rmi all
