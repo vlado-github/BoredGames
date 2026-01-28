@@ -30,7 +30,7 @@ jobs:
       - name: Inject secret into keycloak realm config
         run: |
           sed -i 's|__KEYCLOAK_CLIENT_SECRET__|${{ secrets.KEYCLOAK_CLIENT_SECRET }}|g' \
-            .keycloak/imports/prod-realm-config.json
+            .keycloak/imports/Production/prod-realm-config.json
 
       - name: Build Solution (BoredGames.API)
         run: |
