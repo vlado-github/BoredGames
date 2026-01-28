@@ -64,7 +64,7 @@ app.UseWebSockets(webSocketOptions);
 app.UseRouting();
 
 // CORS
-app.UseCors(CorsPolicyExtensions.CorsPolicyName);
+app.UseCors("BoredGamesOrigins");//app.UseCors(CorsPolicyExtensions.CorsPolicyName);
 
 // Default Middlewares
 if (CurrentEnvironment.IsLocal())

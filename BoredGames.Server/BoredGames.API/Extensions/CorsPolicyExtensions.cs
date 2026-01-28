@@ -5,7 +5,7 @@ namespace BoredGames.API.Extensions;
 
 public static class CorsPolicyExtensions
 {
-    public static string CorsPolicyName = "BoredGamesOrigins";
+    public const string CorsPolicyName = "BoredGamesOrigins";
 
     public static void AddCustomCors(this IServiceCollection services)
     {
