@@ -20,6 +20,7 @@ anchor_bottom = 0.115
 grow_horizontal = 2
 accessibility_name = "username"
 accessibility_description = "player's username"
+theme_override_font_sizes/font_size = 40
 text = "Player"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true

@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://cs2rtyj6fmuji"]
+
+[node name="PlayerNameInputControl" type="Control" unique_id=1007643415]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Stack" type="VBoxContainer" parent="." unique_id=1235900263]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerNameInput" type="LineEdit" parent="Stack" unique_id=1187305452]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+placeholder_text = "Player name..."
+max_length = 150
+
+[node name="ValidationMessage" type="Label" parent="Stack" unique_id=1856724831]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7526573, 0.14332956, 0.19669637, 1)
+theme_override_font_sizes/font_size = 40
+text = "* Player name is required."
