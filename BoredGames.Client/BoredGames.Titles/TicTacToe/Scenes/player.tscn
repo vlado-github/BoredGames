@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cauu3yirsrg0c" path="res://art/player.png" id="1_4flbx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_onrkg"]
-bg_color = Color(0.3481501, 0.6831018, 0.46467793, 1)
+bg_color = Color(0.18039216, 0.7058824, 0.42745098, 1)
 
 [node name="Player" type="Panel" unique_id=2037425]
 custom_minimum_size = Vector2(200, 200)
