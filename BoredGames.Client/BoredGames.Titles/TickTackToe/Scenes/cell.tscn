@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://balioefq1bd7e"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wp51n"]
+bg_color = Color(0.32156864, 0.64705884, 0.7764706, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efq80"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+
+[node name="Button" type="Button" unique_id=1194264578]
+custom_minimum_size = Vector2(110, 110)
+offset_right = 92.0
+offset_bottom = 92.0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.30219284, 0.42170843, 0.8722654, 1)
+theme_override_font_sizes/font_size = 40
+text = "X"
+metadata/_edit_use_anchors_ = true
+
+[node name="Background" type="Panel" parent="." unique_id=1140658512]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_wp51n")
+metadata/_edit_use_anchors_ = true
+
+[node name="Border" type="Panel" parent="." unique_id=1615226587]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_efq80")
+metadata/_edit_use_anchors_ = true
