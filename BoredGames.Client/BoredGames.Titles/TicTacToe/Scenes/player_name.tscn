@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bc0uwoxihqnhp"]
 
 [ext_resource type="PackedScene" uid="uid://cs2rtyj6fmuji" path="res://Scenes/player_name_input.tscn" id="1_dqt5q"]
+[ext_resource type="Script" uid="uid://rpwaimc34m2n" path="res://Scripts/PlayerNameForm.cs" id="1_kt8qd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iox2c"]
 bg_color = Color(0.9411765, 0.7647059, 0.7607843, 1)
@@ -41,6 +42,7 @@ anchor_bottom = 0.66512346
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 150
+script = ExtResource("1_kt8qd")
 metadata/_edit_use_anchors_ = true
 
 [node name="PlayerNameInputControl" parent="Stack" unique_id=1007643415 instance=ExtResource("1_dqt5q")]
@@ -50,4 +52,5 @@ layout_mode = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_dqt5q")
+disabled = true
 text = "Continue"

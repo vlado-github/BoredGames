@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://cs2rtyj6fmuji"]
 
+[ext_resource type="Script" path="res://Scripts/PlayerNameControl.cs" id="1_shmif"]
+
 [node name="PlayerNameInputControl" type="Control" unique_id=1007643415]
 layout_mode = 3
 anchors_preset = 15
@@ -16,6 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_shmif")
 metadata/_edit_use_anchors_ = true
 
 [node name="PlayerNameInput" type="LineEdit" parent="Stack" unique_id=1187305452]

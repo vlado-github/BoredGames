@@ -1,0 +1,17 @@
+<Project Sdk="Godot.NET.Sdk/4.6.0">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Scenes\cell.tscn" />
+    <Content Include="Scenes\custom_game.tscn" />
+    <Content Include="Scenes\main.tscn" />
+    <Content Include="Scenes\menu.tscn" />
+    <Content Include="Scenes\player.tscn" />
+    <Content Include="Scenes\player_name.tscn" />
+    <Content Include="Scenes\player_name_input.tscn" />
+    <Content Include="Scenes\score.tscn" />
+  </ItemGroup>
+</Project>
