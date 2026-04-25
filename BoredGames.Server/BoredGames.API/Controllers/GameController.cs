@@ -30,6 +30,7 @@ namespace BoredGames.API.Controllers
             _appBaseUrl = Environment.GetEnvironmentVariable(EnvVarNames.AppBaseUrl);
         }
 
+        [AllowAnonymous]
         [HttpGet("titles")]
         public GameTitlesViewModel GetTitles()
         {
