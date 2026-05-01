@@ -10,9 +10,8 @@ class ApiService {
   }
 
   async getTitles() {
-    const token = await getAuthToken();
     const response = await this.api
-      .get("game/titles", { headers: {'Authorization': `Bearer ${token}`}})
+      .get("game/titles")
       .catch(this.handleError);
     return response.data;
   }
