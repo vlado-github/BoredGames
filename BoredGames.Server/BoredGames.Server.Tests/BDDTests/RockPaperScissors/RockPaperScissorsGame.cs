@@ -19,7 +19,7 @@ public class RockPaperScissorsGame : BddDefinitionsBase
 
     public RockPaperScissorsGame() : base()
     {
-        using (var scope = Application.Services.CreateScope())
+        using (var scope = WebApiInstance.Services.CreateScope())
         {
             _grainFactory = scope.ServiceProvider.GetRequiredService<IGrainFactory>();
         }
