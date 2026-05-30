@@ -8,10 +8,10 @@
       "applicationUrl": "https://localhost:17080;http://localhost:15220",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_ENVIRONMENT": "Development",
         "ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21160",
         "ASPIRE_DASHBOARD_MCP_ENDPOINT_URL": "https://localhost:23098",
-        "ASPIRE_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22075"
+        "ASPIRE_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22075",
+        "REDIS_HOST": "redis"
       }
     },
     "http": {
@@ -21,10 +21,10 @@
       "applicationUrl": "http://localhost:15220",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_ENVIRONMENT": "Development",
         "ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19061",
         "ASPIRE_DASHBOARD_MCP_ENDPOINT_URL": "http://localhost:18018",
-        "ASPIRE_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20036"
+        "ASPIRE_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20036",
+        "REDIS_HOST": "redis"
       }
     }
   }

@@ -2,13 +2,29 @@ using Aspire.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var redis = builder.AddRedis("cache");
+var aspnetEnvVar =  Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-var orleans = builder.AddOrleans("default")
+// Orleans cluster register
+var redis = builder.AddRedis("redis");
+
+// Orleans cluster
+var orleans = builder.AddOrleans("boredgames-cluster")
     .WithClustering(redis)
-    .WithGrainStorage(redis);
+    .WithGrainStorage("Default", redis)
+    .WithGrainStorage("PubSubStore", redis);
+    //.WithReminders(redis);
 
-var api = builder.AddProject<Projects.BoredGames_API>("api")
-    .WithReference(orleans.AsClient());
+// Orleans silo
+var gameServer = builder.AddProject<Projects.BoredGames_Server_GameServer>("boredgames-server")
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", aspnetEnvVar)
+    .WithReference(orleans)
+    .WaitFor(redis)
+    .WithReplicas(3);
+
+// Orleans client
+builder.AddProject<Projects.BoredGames_API>("boredgames-client")
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", aspnetEnvVar)
+    .WithReference(orleans.AsClient())
+    .WaitFor(gameServer);
 
 builder.Build().Run();

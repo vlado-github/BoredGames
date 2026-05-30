@@ -3,7 +3,8 @@
 using BoredGames.Server.GameServer.Extensions;
 using Microsoft.Extensions.Hosting;
 
-var builder = Host.CreateDefaultBuilder(args)
+var builder = Host.CreateApplicationBuilder(args);
+builder
     .SetupDependencies()
     .SetupOrleans();
 using (var host = builder.Build())

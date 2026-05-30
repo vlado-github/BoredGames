@@ -9,7 +9,7 @@ public class TestGameServerFactory<TProgram>
 {
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        builder.SetupOrleans();
+       // builder.SetupOrleans();
         return base.CreateHost(builder);
     }
 }
