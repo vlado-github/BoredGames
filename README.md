@@ -73,12 +73,32 @@
    cd BoredGames
    ```
 
-3. **Start the Docker Containers:**
+3. **(first time only) Add _.env.local_ file to the folder with the content:**
+```
+DB_SERVER=boredgames_localhost
+KEYCLOAK_SERVER_NAME=boredgames.keycloak.local
+BORED_GAMES_API_KEY=__some_key__
+BORED_GAMES_APP_BASE_URL=http://localhost:5173
+BORED_GAMES_CORS_ORIGIN_URL=http://localhost:5208,https://localhost:7075
+BORED_GAMES_SERILOG_DSN=__BORED_GAMES_SERILOG_DSN__
+NGINX_CONFIG_PATH=./.nginx/config/nginx.conf
+ASPNETCORE_ENVIRONMENT=Development
+```
+
+4. **(first time only) Check availability for volume folders and add them:**
+```bash
+ls -ld /home/boredgames /home/boredgames/letsencrypt /home/boredgames/release /home/boredgames/redis_data
+sudo mkdir -p /home/boredgames/{letsencrypt,release}
+sudo mkdir -p /home/boredgames/redis_data
+sudo chown -R "$USER":"$USER" /home/boredgames
+``` 
+
+5. **Start the Docker Containers:**
    ```bash
    docker compose --env-file .env.local up --scale gameserver-silo=3 -d --force-recreate
    ```
 
-4. **Open API documentation:**
+6. **Open API documentation:**
    ```
    Open your browser and navigate to http://localhost:5008/index.html
    ```
