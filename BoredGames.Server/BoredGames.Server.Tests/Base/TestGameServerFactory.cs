@@ -1,15 +1,8 @@
-using BoredGames.Server.GameServer.Extensions;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Hosting;
+using Aspire.Hosting.Testing;
 
 namespace BoredGames.Server.Tests.Base;
 
-public class TestGameServerFactory<TProgram>
-    : WebApplicationFactory<TProgram> where TProgram : class
+public class TestGameServerFactory() : DistributedApplicationFactory(typeof(Projects.BoredGames_Server_GameServer))
 {
-    protected override IHost CreateHost(IHostBuilder builder)
-    {
-       // builder.SetupOrleans();
-        return base.CreateHost(builder);
-    }
+
 }

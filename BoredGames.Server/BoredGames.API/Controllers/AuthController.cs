@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
 
             var result =
                 await client.PostAsync(
-                    $"{_keycloakOptions.AuthServerUrl}/realms/boredgames/protocol/openid-connect/token", 
+                    $"{_keycloakOptions.AuthServerUrl}realms/boredgames/protocol/openid-connect/token", 
                     formContent);
 
             if (result.IsSuccessStatusCode)

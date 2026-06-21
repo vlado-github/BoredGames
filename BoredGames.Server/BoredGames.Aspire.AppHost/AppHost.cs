@@ -5,6 +5,10 @@ var aspnetEnvVar =  Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
 // Orleans cluster register
 var redis = builder.AddRedis("redis");
 
+// Keycloak
+var keycloak = builder.AddKeycloak("keycloak", port: 8080)
+    .WithRealmImport($"./../../.keycloak/imports/{aspnetEnvVar}");
+
 // Orleans cluster
 var orleans = builder.AddOrleans("boredgames-cluster")
     .WithClustering(redis)
@@ -22,7 +26,8 @@ var gameServer = builder.AddProject<Projects.BoredGames_Server_GameServer>("bore
 var api = builder.AddProject<Projects.BoredGames_API>("boredgames-client")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", aspnetEnvVar)
     .WithReference(orleans.AsClient())
-    .WaitFor(gameServer);
+    .WaitFor(gameServer)
+    .WaitFor(keycloak);
 
 // Game Portal
 builder.AddViteApp("boredgames-portal", "../../BoredGames.Client/BoredGames.Portal")

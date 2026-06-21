@@ -58,6 +58,9 @@
 ## 🚀 Getting Started
 
 ### 🐳 Quick Start with Aspire
+> [!IMPORTANT]  
+> Please ensure you have .NET SDK 8 installed on your system. If not, you can download them from the
+> official Microsoft website: [.NET](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 
 > [!IMPORTANT]  
 > Please ensure you have Docker installed on your system. If not, you can download them from the
@@ -78,6 +81,12 @@
    ```
 
 3. **Start Aspire:**
+   Using _dotnet_:
+   ```bash
+   dotnet run --project BoredGames.Server/BoredGames.Aspire.AppHost/
+   ```
+   or using Aspire CLI:
+
    ```bash
    aspire run --detach
    ```
