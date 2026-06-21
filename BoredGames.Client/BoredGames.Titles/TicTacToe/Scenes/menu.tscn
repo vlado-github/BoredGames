@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://b6ae1lljjvc4h"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u4yt8"]
+bg_color = Color(0.9411765, 0.7647059, 0.7607843, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1rerr"]
+bg_color = Color(0.18039216, 0.7058824, 0.42745098, 1)
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.13436142, 0.52749276, 0.31668702, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xhh6f"]
+bg_color = Color(0.46998817, 0.66862124, 0.29215172, 1)
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.36445862, 0.52370334, 0.21681547, 1)
+border_blend = true
+
+[node name="Menu" type="Control" unique_id=1259712889]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="Panel" parent="." unique_id=433286812]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u4yt8")
+metadata/_edit_use_anchors_ = true
+
+[node name="Stack" type="VBoxContainer" parent="." unique_id=944179817]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.3780382
+anchor_top = 0.39969134
+anchor_right = 0.62196183
+anchor_bottom = 0.60030866
+offset_top = -48.0
+offset_right = 19.0
+offset_bottom = 122.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 100
+metadata/_edit_use_anchors_ = true
+
+[node name="QuickPlay" type="Button" parent="Stack" unique_id=1168664916]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_1rerr")
+text = "Quick Play"
+
+[node name="CustomGame" type="Button" parent="Stack" unique_id=1123084251]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_xhh6f")
+text = "Custom Game
+"

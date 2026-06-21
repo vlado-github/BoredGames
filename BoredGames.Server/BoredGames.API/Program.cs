@@ -11,7 +11,7 @@ using Keycloak.AuthServices.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.SetupOrleansClient();
+builder.SetupOrleansClient();
 builder.SetupSerilog();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(MakeMoveValidator));

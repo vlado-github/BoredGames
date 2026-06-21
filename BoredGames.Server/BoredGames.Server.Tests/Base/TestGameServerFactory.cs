@@ -4,12 +4,12 @@ using Microsoft.Extensions.Hosting;
 
 namespace BoredGames.Server.Tests.Base;
 
-public class TestWebApplicationFactory<TProgram>
+public class TestGameServerFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class
 {
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        builder.SetupOrleans();
+       // builder.SetupOrleans();
         return base.CreateHost(builder);
     }
 }

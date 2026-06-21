@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bubc2mmg5etvg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8c1jp"]
+bg_color = Color(0.78431374, 0.44313726, 0.84705883, 1)
+
+[node name="Score" type="Label" unique_id=306327799]
+offset_right = 200.0
+offset_bottom = 100.0
+accessibility_name = "score"
+accessibility_description = "score display between 2 players and current round"
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_8c1jp")
+text = "Player 0:0 Player
+round: 0"
+horizontal_alignment = 1
