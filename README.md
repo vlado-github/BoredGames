@@ -57,6 +57,42 @@
 
 ## 🚀 Getting Started
 
+### 🐳 Quick Start with Aspire
+
+> [!IMPORTANT]  
+> Please ensure you have Docker installed on your system. If not, you can download them from the
+> official Docker website: [Docker](https://www.docker.com/get-started)
+
+> [!IMPORTANT]  
+> Please ensure you have Aspire installed on your system. If not, you can find instructions on the
+> official Aspire web site: [Aspire CLI](https://aspire.dev/get-started/install-cli/).
+
+1. **Clone the Repository:**
+   ```bash
+   git clone git@github.com:vlado-github/BoredGames.git
+   ```
+
+2. **Navigate to the BoredGames.Server Directory (_BoredGames.Server_):**
+   ```bash
+   cd BoredGames/BoredGames.Server
+   ```
+
+3. **Start Aspire:**
+   ```bash
+   aspire run --detach
+   ```
+
+4. **Access ASpire Dashboard:**
+   ```
+   In terminal output you will find **Dashboard: <localhost_url>** that you can access via browser
+   ```
+
+5. **Stop Aspire**
+   ```bash
+   aspire stop
+   ```
+
+
 ### 🐳 Quick Start with Docker
 
 > [!IMPORTANT]  
