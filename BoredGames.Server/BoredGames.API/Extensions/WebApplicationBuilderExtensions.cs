@@ -21,7 +21,7 @@ public static class WebApplicationBuilderExtensions
                         options.SendDefaultPii = false;
                         options.Debug = true;
                         options.Environment = CurrentEnvironment.Get();
-                        options.EnableTracing = true;
+                        options.EnableMetrics = true;
                         options.TracesSampleRate = 1.0;
                         options.AttachStacktrace = true;
                         options.DiagnosticLevel = SentryLevel.Error;

@@ -2,11 +2,20 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var aspnetEnvVar =  Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-// Orleans cluster register
+// Redis - used as Orleans cluster registrar
 var redis = builder.AddRedis("redis");
 
+// Postgres - used as Keycloak database
+var postgres = builder.AddPostgres("boredgames-postgres");
+
 // Keycloak
-var keycloak = builder.AddKeycloak("keycloak", port: 8080)
+var keycloakDb = postgres.AddDatabase("keycloak");
+var keycloak = builder.AddKeycloak("boredgames-keycloak", port: 8080)
+    .WithReference(postgres)
+    .WaitFor(keycloakDb)
+    .WithDataVolume()
+    .WithEnvironment("KC_BOOTSTRAP_ADMIN_USERNAME", "admin")
+    .WithEnvironment("KC_BOOTSTRAP_ADMIN_PASSWORD", "admin")
     .WithRealmImport($"./../../.keycloak/imports/{aspnetEnvVar}");
 
 // Orleans cluster
@@ -22,8 +31,8 @@ var gameServer = builder.AddProject<Projects.BoredGames_Server_GameServer>("bore
     .WaitFor(redis)
     .WithReplicas(3);
 
-// Orleans client
-var api = builder.AddProject<Projects.BoredGames_API>("boredgames-client")
+// API
+var api = builder.AddProject<Projects.BoredGames_API>("boredgames-api")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", aspnetEnvVar)
     .WithReference(orleans.AsClient())
     .WaitFor(gameServer)
