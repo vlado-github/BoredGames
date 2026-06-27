@@ -79,7 +79,12 @@ public class GameGrain : Grain, IGameGrain
         }
 
         var newGameState = _gameState.Adapt<GameStateViewModel>();
-        newGameState.Score = score.Adapt<GameScoreViewModel>();
+        newGameState.Score = new GameScoreViewModel()
+        {
+            LastRound = score.LastRoundNumber,
+            RequiredNumberOfWins = score.RequiredNumberOfWins,
+            PlayerScores = score.PlayerStatistics.Adapt<List<PlayerScoreViewModel>>()
+        };
 
         return newGameState;
     }
