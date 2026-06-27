@@ -57,7 +57,7 @@
 
 ## 🚀 Getting Started
 
-### 🐳 Quick Start with Aspire
+### 🏠 Quick Start with Aspire
 > [!IMPORTANT]  
 > Please ensure you have .NET SDK 10 installed on your system. If not, you can download them from the
 > official Microsoft website: [.NET](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
