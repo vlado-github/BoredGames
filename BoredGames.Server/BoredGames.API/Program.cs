@@ -11,14 +11,22 @@ using Keycloak.AuthServices.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Setup Orleans client
 builder.SetupOrleansClient();
+
+// Setup logging
 builder.SetupSerilog();
+
+// Miscellaneous 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(MakeMoveValidator));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCustomCors();
+
+// Setup SignalR
 builder.Services.AddSignalR(hubOptions =>
 {
     hubOptions.AddFilter<HubKeyAttribute>();

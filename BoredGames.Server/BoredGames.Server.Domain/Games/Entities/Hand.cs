@@ -2,13 +2,13 @@ namespace BoredGames.Server.Domain.Games.Entities;
 
 public class Hand
 {
-    public Hand(int roundNumber, string actionType)
+    public Hand(int roundNumber, string playerMove)
     {
         RoundNumber = roundNumber;
-        ActionType = actionType;
+        PlayerMove = playerMove;
     }
     
     public int RoundNumber { get; set; }
     
-    public string ActionType { get; set; }
+    public string PlayerMove { get; set; }
 }

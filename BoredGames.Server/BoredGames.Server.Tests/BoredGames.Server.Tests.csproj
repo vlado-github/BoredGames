@@ -1,16 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
+
+        <LangVersion>14</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Aspire.Hosting.Testing" Version="13.3.5" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.8" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+        <PackageReference Include="Refit" Version="10.1.6" />
         <PackageReference Include="xunit" Version="2.9.0" />
         <PackageReference Include="Xunit.Gherkin.Quick" Version="4.5.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
@@ -25,6 +29,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BoredGames.API\BoredGames.API.csproj" />
+      <ProjectReference Include="..\BoredGames.Aspire.AppHost\BoredGames.Aspire.AppHost.csproj" />
       <ProjectReference Include="..\BoredGames.Common\BoredGames.Common.csproj" />
       <ProjectReference Include="..\BoredGames.Server.GameServer\BoredGames.Server.GameServer.csproj" />
     </ItemGroup>

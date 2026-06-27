@@ -52,7 +52,7 @@
       context: .
       dockerfile: BoredGames.Server/BoredGames.API/Dockerfile
     ports:
-      - "5008:8080"
+      - "5208:8080"
     restart: always
     depends_on:
       - gameserver-silo

@@ -13,10 +13,11 @@ export default {
   },
 
   async mounted() {
+    console.log(">>>>"+import.meta.env.MODE);
     if (this.gameInstanceId) {
-      this.linkToGameUrl = `${import.meta.env.VITE_BASE_URL}/games/${this.gameTitle}/index.html?gameInstanceId=${this.gameInstanceId}`;
+      this.linkToGameUrl = `${import.meta.env.VITE_BASE_URL}/games/${this.gameTitle}/dist-${import.meta.env.MODE}/index.html?gameInstanceId=${this.gameInstanceId}`;
     } else {
-      this.linkToGameUrl = `${import.meta.env.VITE_BASE_URL}/games/${this.gameTitle}/index.html`;
+      this.linkToGameUrl = `${import.meta.env.VITE_BASE_URL}/games/${this.gameTitle}/dist-${import.meta.env.MODE}/index.html`;
     }
   }
 }
