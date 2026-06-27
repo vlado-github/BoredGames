@@ -59,7 +59,7 @@
 
 ### 🐳 Quick Start with Aspire
 > [!IMPORTANT]  
-> Please ensure you have .NET SDK 8 installed on your system. If not, you can download them from the
+> Please ensure you have .NET SDK 10 installed on your system. If not, you can download them from the
 > official Microsoft website: [.NET](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 
 > [!IMPORTANT]  
@@ -91,7 +91,7 @@
    aspire run --detach
    ```
 
-4. **Access ASpire Dashboard:**
+4. **Access Aspire Dashboard:**
    ```
    In terminal output you will find **Dashboard: <localhost_url>** that you can access via browser
    ```
@@ -153,7 +153,7 @@ sudo chown -R "$USER":"$USER" /home/boredgames
 ### BoredGames.Server
 
 > [!IMPORTANT]  
-> Please ensure you have .NET SDK 8 installed on your system. If not, you can download them from the
+> Please ensure you have .NET SDK 10 installed on your system. If not, you can download them from the
 > official Microsoft website: [.NET](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 
 Server side contains two parts:
