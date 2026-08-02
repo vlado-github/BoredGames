@@ -29,7 +29,7 @@
 <a href="https://boredgames.lol">BoredGames</a> is a web platform for creators to host their games and for players to enjoy playing web-based games. Games that run in browser can be played on any device without any installation. Platform API provides backend logic for scoring and multiplayer gaming.
 
 <div align="center">
-   <img alt="BoredGames website with gallery of games" src="https://boredgames.lol/assets/screenshot.png"/>
+   <img alt="BoredGames website with gallery of games (screenshot)" src="https://boredgames.lol/assets/screenshot.png"/>
    <div align="center">
       <caption>BoredGames website</caption>
    </div>
