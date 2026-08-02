@@ -42,13 +42,13 @@
 ### 🔧 Hosting
 - **WebGL/Wasm/JS:** upload a game draft which is then reviewed and hosted for **free**
 
-### 🏆 Scoring and muliplayer API
+### 🏆 Scoring and multiplayer API
 - **Scoring:** tracks gameplay scores 
 - **Multiplayer:** play with other people on the network
 
 ### 📧 Player Profiles
 - **Anonymous:** play without registration by using ephemeral session
-- **Registered:** crete account to keep your scores and library of your favourite games
+- **Registered:** create account to keep your scores and library of your favorite games
 
 ### 📱 Mobile-Friendly
 - **Cross Platform:** runs in any browser natively
