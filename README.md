@@ -29,7 +29,7 @@
 <a href="https://boredgames.lol">BoredGames</a> is a web platform for creators to host their games and for players to enjoy playing web-based games. Games that run in browser can be played on any device without any installation. Platform API provides backend logic for scoring and multiplayer gaming.
 
 <div align="center">
-   <img alt="BoredGames website with gallery of games" src="https://boredgames.lol/assets/screenshot.png"/>
+   <img alt="BoredGames website with gallery of games (screenshot)" src="https://boredgames.lol/assets/screenshot-v2.png"/>
    <div align="center">
       <caption>BoredGames website</caption>
    </div>
@@ -42,13 +42,13 @@
 ### 🔧 Hosting
 - **WebGL/Wasm/JS:** upload a game draft which is then reviewed and hosted for **free**
 
-### 🏆 Scoring and muliplayer API
+### 🏆 Scoring and multiplayer API
 - **Scoring:** tracks gameplay scores 
 - **Multiplayer:** play with other people on the network
 
 ### 📧 Player Profiles
 - **Anonymous:** play without registration by using ephemeral session
-- **Registered:** crete account to keep your scores and library of your favourite games
+- **Registered:** create account to keep your scores and library of your favorite games
 
 ### 📱 Mobile-Friendly
 - **Cross Platform:** runs in any browser natively
@@ -57,7 +57,7 @@
 
 ## 🚀 Getting Started
 
-### 🐳 Quick Start with Aspire
+### 🏠 Quick Start with Aspire
 > [!IMPORTANT]  
 > Please ensure you have .NET SDK 10 installed on your system. If not, you can download them from the
 > official Microsoft website: [.NET](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
