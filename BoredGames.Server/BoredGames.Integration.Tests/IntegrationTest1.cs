@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace BoredGames.Integration.Tests;
+namespace BoredGames.Integration.Tests.Tests;
 
 public class IntegrationTest1
 {
