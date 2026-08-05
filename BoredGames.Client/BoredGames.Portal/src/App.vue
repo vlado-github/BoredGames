@@ -39,7 +39,7 @@ export default {
     width: 100%;
   }
   .background {
-    background-color: #1b2939;
+    background-color: #df95c5b8;
     position:fixed;
     width: 100%;
     height: 100%;
