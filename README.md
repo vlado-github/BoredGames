@@ -10,9 +10,9 @@
    </p>
 
    <h1>BoredGames</h1>
-   <h3>Web platform for hosting custom web-based games and games' backends.</h3>
+   <h3>Single-player and multi-player web games.</h3>
    
-   [![GitHub Release](https://img.shields.io/badge/release-v1.3.1-blue)](https://github.com/vlado-github/BoredGames/releases)
+   [![GitHub Release](https://img.shields.io/badge/release-v1.4.0-blue)](https://github.com/vlado-github/BoredGames/releases)
 
    [![Client Deploy](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.portal.yml/badge.svg)](https://github.com/vlado-github/BoredGames/actions/workflows/boredgames.portal.yml)
 
@@ -39,7 +39,7 @@
 
 <a href="https://boredgames.lol">BoredGames</a> offers tools for your game:
 
-### 🔧 Hosting
+### 🔧 Hosting (WIP)
 - **WebGL/Wasm/JS:** upload a game draft which is then reviewed and hosted for **free**
 
 ### 🏆 Scoring and multiplayer API
@@ -48,7 +48,7 @@
 
 ### 📧 Player Profiles
 - **Anonymous:** play without registration by using ephemeral session
-- **Registered:** create account to keep your scores and library of your favorite games
+- **Registered (WIP):** create account to keep your scores and library of your favorite games
 
 ### 📱 Mobile-Friendly
 - **Cross Platform:** runs in any browser natively
