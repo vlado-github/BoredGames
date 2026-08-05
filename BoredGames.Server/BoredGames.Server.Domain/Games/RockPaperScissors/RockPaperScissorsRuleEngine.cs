@@ -7,7 +7,6 @@ namespace BoredGames.Server.Domain.Games.RockPaperScissors;
 
 public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfiguration>
 {
-    //todo: refactor to move to SmartEnum
     public static readonly string RockAction = "rock";
     public static readonly string PaperAction = "paper";
     public static readonly string ScissorsAction = "scissors";
@@ -17,25 +16,25 @@ public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfi
         Setup(RockPaperScissorsConfiguration.Default);
     }
 
-    public override RoundResult Handle(MoveDto dto)
-    {
-        _rounds.Current.AddMove(dto);
-        if (_rounds.Current.GetMoves().Count == _settings.RequiredNumberOfPlayers)
-        {
-            return ResolveResult();
-        }
-
-        return new RoundResult(
-            roundStatus: _rounds.Current.GetStatus(), 
-            roundNumber: _rounds.Current.Number);
-    }
+    // public override RoundResult Handle(MoveDto dto)
+    // {
+    //     _rounds.Current.AddMove(dto);
+    //     if (_rounds.Current.GetMoves().Count == _settings.RequiredNumberOfPlayers)
+    //     {
+    //         return ResolveResult();
+    //     }
+    //
+    //     return new RoundResult(
+    //         roundStatus: _rounds.Current.GetStatus(), 
+    //         roundNumber: _rounds.Current.Number);
+    // }
 
     public override RockPaperScissorsConfiguration GetDefinition()
     {
         return _settings;
     }
     
-    private RoundResult ResolveResult()
+    protected override RoundResult ResolveResult()
     {
         foreach (var move in _rounds.Current.GetMoves())
         {

@@ -16,9 +16,22 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
         _gameScore = new GameScore(_settings.NumberOfRounds, _settings.RequiredNumberOfWins);
     }
 
-    public abstract RoundResult Handle(MoveDto dto);
+    public virtual RoundResult Handle(MoveDto dto)
+    {
+        _rounds.Current.AddMove(dto);
+        if (_rounds.Current.GetMoves().Count == _settings.RequiredNumberOfPlayers)
+        {
+            return ResolveResult();
+        }
+
+        return new RoundResult(
+            roundStatus: _rounds.Current.GetStatus(), 
+            roundNumber: _rounds.Current.Number);
+    }
     
     public abstract GameConfigurationBase GetDefinition();
+
+    protected abstract RoundResult ResolveResult();
     
     public RoundResult GetCurrentRoundResult()
     {

@@ -20,7 +20,7 @@ namespace BoredGames.API.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGrainFactory _grainFactory;
-        private readonly string _appBaseUrl;
+        private readonly string? _appBaseUrl;
         private readonly IHubContext<GameHub> _hubContext;
         
         public GameController(IGrainFactory grainFactory, IHubContext<GameHub> hubContext)
@@ -35,14 +35,13 @@ namespace BoredGames.API.Controllers
         public GameTitlesViewModel GetTitles()
         {
             var result = new GameTitlesViewModel();
-            foreach(GameTitle title in Enum.GetValues(typeof(GameTitle)) )
+            foreach(GameTitle title in Enum.GetValues(typeof(GameTitle)))
             {
                 result.Titles.Add(new GameTitleViewModel()
                 {
                     Id = (int) title,
                     Name = title.ToString(),
                     ThumbnailImageUrl = $"{_appBaseUrl}/assets/clashofhands-logo.png",
-                    FormSchema = GameFormSchemaFactory.GetInstance(title).ToJson()
                 });
             }
 
