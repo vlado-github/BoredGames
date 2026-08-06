@@ -15,5 +15,5 @@ public class CreateGameCommand : CommandBase
     [Id(3)]
     public int NumberOfRounds { get; set; }
     [Id(4)]
-    public string? Description { get; set; }
+    public string? EndOfGameMessage { get; set; }
 }

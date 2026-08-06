@@ -7,6 +7,6 @@
         public int numberOfPlayers;
         public int requiredNumberOfConsecutiveWins;
         public int numberOfRounds;
-        public string description = string.Empty;
+        public string endOfGameMessage = string.Empty;
     }
 }

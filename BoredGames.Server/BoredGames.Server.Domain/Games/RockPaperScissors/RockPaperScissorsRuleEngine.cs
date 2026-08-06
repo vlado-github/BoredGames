@@ -5,36 +5,20 @@ using BoredGames.Server.Domain.Games.Entities;
 
 namespace BoredGames.Server.Domain.Games.RockPaperScissors;
 
-public class RockPaperScissorsRuleEngine : GameRuleEngine<RockPaperScissorsConfiguration>
+public class RockPaperScissorsRuleEngine : SimultaneousGameRuleEngine<RockPaperScissorsConfiguration>
 {
     public static readonly string RockAction = "rock";
     public static readonly string PaperAction = "paper";
     public static readonly string ScissorsAction = "scissors";
-
-    public RockPaperScissorsRuleEngine()
+    
+    public override void Setup(RockPaperScissorsConfiguration? configuration)
     {
-        Setup(RockPaperScissorsConfiguration.Default);
-    }
-
-    // public override RoundResult Handle(MoveDto dto)
-    // {
-    //     _rounds.Current.AddMove(dto);
-    //     if (_rounds.Current.GetMoves().Count == _settings.RequiredNumberOfPlayers)
-    //     {
-    //         return ResolveResult();
-    //     }
-    //
-    //     return new RoundResult(
-    //         roundStatus: _rounds.Current.GetStatus(), 
-    //         roundNumber: _rounds.Current.Number);
-    // }
-
-    public override RockPaperScissorsConfiguration GetDefinition()
-    {
-        return _settings;
+        _gameSetupBuilder
+            .AddConfiguration(configuration ?? RockPaperScissorsConfiguration.Default)
+            .AddResultResolver(ResolveResultAction);
     }
     
-    protected override RoundResult ResolveResult()
+    private RoundResult ResolveResultAction()
     {
         foreach (var move in _rounds.Current.GetMoves())
         {

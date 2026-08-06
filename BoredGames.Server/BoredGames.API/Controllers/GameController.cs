@@ -59,7 +59,7 @@ namespace BoredGames.API.Controllers
                 NumberOfPlayers = request.NumberOfPlayers,
                 RequiredNumberOfWins = request.RequiredNumberOfConsecutiveWins,
                 NumberOfRounds = request.NumberOfRounds,
-                Description = request.Description,
+                EndOfGameMessage = request.EndOfGameMessage,
             });
             return gameDefinition;
         }

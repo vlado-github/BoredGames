@@ -17,7 +17,8 @@ public static class GameRuleEngineFactory
                     requiredNumberOfPlayers: dto.NumberOfPlayers,
                     numberOfRounds: dto.NumberOfRounds,
                     requiredNumberOfWins: dto.RequiredNumberOfWins,
-                    description: dto.Description));
+                    description: dto.EndOfGameMessage));
+                ruleEngine.Initialize();
                 return ruleEngine;
             }
             default:

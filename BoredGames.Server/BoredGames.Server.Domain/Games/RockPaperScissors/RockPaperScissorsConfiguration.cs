@@ -1,6 +1,4 @@
 using BoredGames.Server.Domain.Games.Base;
-using BoredGames.Server.Domain.Games.Entities;
-using BoredGames.Server.Domain.Games.Enums;
 
 namespace BoredGames.Server.Domain.Games.RockPaperScissors;
 
@@ -9,7 +7,7 @@ public class RockPaperScissorsConfiguration : GameConfigurationBase
     public static readonly int MinimumRequiredNumberOfWins = 1;
     public static readonly int MinimumRequiredNumberOfRounds = 1;
     public static readonly int MinimumRequiredNumberOfPlayers = 2;
-    public static readonly RockPaperScissorsConfiguration Default = new RockPaperScissorsConfiguration();
+    public static readonly RockPaperScissorsConfiguration Default = new();
 
     public RockPaperScissorsConfiguration(int? requiredNumberOfPlayers = null, 
         int? requiredNumberOfWins = null, int? numberOfRounds = null, string? description = null)
@@ -18,7 +16,7 @@ public class RockPaperScissorsConfiguration : GameConfigurationBase
         RequiredNumberOfWins = requiredNumberOfWins ?? MinimumRequiredNumberOfWins;
         NumberOfRounds = numberOfRounds ?? MinimumRequiredNumberOfRounds;
         Description = description ?? string.Empty;
-        GameMechanicsType = Enums.GameMechanicsType.Simultaneous;
+        GameSystemType = Enums.GameSystemType.Simultaneous;
         Assets = new Dictionary<string, object>()
         {
             { 

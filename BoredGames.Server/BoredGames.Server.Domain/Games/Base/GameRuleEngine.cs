@@ -8,30 +8,30 @@ public abstract class GameRuleEngine<T> : IGameRuleEngine, IGameConfigurable<T> 
     protected T _settings;
     protected Rounds _rounds;
     protected GameScore _gameScore;
+    protected IGameSetupBuilder<T> _gameSetupBuilder;
+    protected GameSetup<T> _gameSetup;
 
-    public void Setup(T settings) 
+    protected GameRuleEngine()
     {
-        _settings = settings;
+        _gameSetupBuilder = new GameSetupBuilder<T>();
+    }
+    
+    public void Initialize()
+    {
+        _gameSetup = _gameSetupBuilder.Build();
+        _settings = _gameSetup.GameConfiguration;
         _rounds = new Rounds(_settings.NumberOfRounds);
         _gameScore = new GameScore(_settings.NumberOfRounds, _settings.RequiredNumberOfWins);
     }
-
-    public virtual RoundResult Handle(MoveDto dto)
-    {
-        _rounds.Current.AddMove(dto);
-        if (_rounds.Current.GetMoves().Count == _settings.RequiredNumberOfPlayers)
-        {
-            return ResolveResult();
-        }
-
-        return new RoundResult(
-            roundStatus: _rounds.Current.GetStatus(), 
-            roundNumber: _rounds.Current.Number);
-    }
     
-    public abstract GameConfigurationBase GetDefinition();
-
-    protected abstract RoundResult ResolveResult();
+    public abstract void Setup(T gameConfiguration);
+    
+    public abstract RoundResult Handle(MoveDto dto);
+    
+    public GameConfigurationBase GetDefinition()
+    {
+        return _settings;
+    }
     
     public RoundResult GetCurrentRoundResult()
     {

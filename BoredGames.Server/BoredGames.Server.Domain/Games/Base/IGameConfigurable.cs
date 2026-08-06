@@ -1,6 +1,8 @@
+using BoredGames.Server.Domain.Games.Entities;
+
 namespace BoredGames.Server.Domain.Games.Base;
 
-public interface IGameConfigurable<T> where T : GameConfigurationBase
+public interface IGameConfigurable<in T> where T : GameConfigurationBase
 {
-    void Setup(T configuration);
+    void Initialize();
 }

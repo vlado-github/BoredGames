@@ -1,6 +1,6 @@
 namespace BoredGames.Server.Domain.Games.Enums;
 
-public enum GameMechanicsType
+public enum GameSystemType
 {
     Simultaneous,
     TurnBase,
