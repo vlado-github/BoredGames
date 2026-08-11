@@ -80,7 +80,11 @@ public abstract class GameRuleEngine<T> :
     public virtual void OnNext(GameState value)
     {
         _gameState = value;
-        _gameSetup.GameStateHandlerAction(value);
+        if (_gameSetup.GameStateHandlerAction != null)
+        {
+            _gameSetup.GameStateHandlerAction(value);
+        }
+
         Console.WriteLine("The current game state is {0}", JsonConvert.SerializeObject(_gameState));
     }
 
