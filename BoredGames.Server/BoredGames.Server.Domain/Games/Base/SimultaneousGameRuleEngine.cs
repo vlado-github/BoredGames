@@ -5,12 +5,12 @@ namespace BoredGames.Server.Domain.Games.Base;
 
 public abstract class SimultaneousGameRuleEngine<T> : GameRuleEngine<T> where T : GameConfigurationBase
 {
-    public override RoundResult Handle(MoveDto dto)
+    public override RoundResult Handle(MoveDto moveDto)
     {
-        _rounds.Current.AddMove(dto);
+        _rounds.Current.AddMove(moveDto);
         if (_rounds.Current.GetMoves().Count == _settings.RequiredNumberOfPlayers)
         {
-            return _gameSetup.ResultResolverAction();
+            return _gameSetup.ResultResolverAction(moveDto);
         }
 
         return new RoundResult(

@@ -5,4 +5,5 @@ public enum GameResult
     Win,
     Loss,
     Draw,
+    Pending
 }

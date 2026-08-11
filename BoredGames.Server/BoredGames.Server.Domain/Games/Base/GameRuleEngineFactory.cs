@@ -1,6 +1,7 @@
 using BoredGames.Common.Enums;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.RockPaperScissors;
+using BoredGames.Server.Domain.Games.TicTacToe;
 
 namespace BoredGames.Server.Domain.Games.Base;
 
@@ -20,6 +21,17 @@ public static class GameRuleEngineFactory
                     description: dto.EndOfGameMessage));
                 ruleEngine.Initialize();
                 return ruleEngine;
+            }
+            case GameTitle.TicTacToe:
+            {
+                var ruleEngine = new TicTacToeRuleEngine();
+                ruleEngine.Setup(new TicTacToeConfiguration(
+                    requiredNumberOfPlayers: dto.NumberOfPlayers,
+                    numberOfRounds: dto.NumberOfRounds,
+                    requiredNumberOfWins: dto.RequiredNumberOfWins,
+                    description: dto.EndOfGameMessage));
+                ruleEngine.Initialize();
+                return ruleEngine; 
             }
             default:
             {

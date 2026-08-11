@@ -42,6 +42,9 @@
       <None Update="Base\BddDefinitionsBase.feature">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="BDDTests\TicTacToe\TicTacToeGame.feature">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

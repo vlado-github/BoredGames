@@ -2,6 +2,7 @@
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
+using BoredGames.Server.Domain.Games.Events;
 using BoredGames.Server.GameServer.Commands;
 using BoredGames.Server.GameServer.Grains.Base;
 using BoredGames.Server.GameServer.ViewModels;
@@ -11,26 +12,25 @@ namespace BoredGames.Server.GameServer.Grains;
 
 public class GameGrain : Grain, IGameGrain
 {
-    private IList<PlayerDto> _players;
     private GameState _gameState;
     private IGameRuleEngine _gameRuleEngine;
+    private GameStateTracker _gameStateTracker;
 
     public override Task OnActivateAsync(CancellationToken token)
     {
-        _players = new List<PlayerDto>();
-        _gameState = new GameState
-        {
-            GameId = this.GetPrimaryKey(),
-            GameStatus = GameStatus.AwaitingPlayers
-        };
+        _gameState = new GameState(this.GetPrimaryKey(), GameStatus.AwaitingPlayers);
+        _gameStateTracker =  new GameStateTracker();
         _gameRuleEngine = GameRuleEngineFactory.GetInstance(GameDto.Default);
+        _gameStateTracker.Subscribe(_gameRuleEngine);
         return base.OnActivateAsync(token);
     }
 
     public async Task Setup(CreateGameCommand command)
     {
         var dto = command.Adapt<GameDto>();
+        _gameStateTracker =  new GameStateTracker();
         _gameRuleEngine = GameRuleEngineFactory.GetInstance(dto);
+        _gameStateTracker.Subscribe(_gameRuleEngine);
         
         var roundResult = _gameRuleEngine.GetCurrentRoundResult();
         _gameState.RoundNumber = roundResult.RoundNumber;
@@ -39,22 +39,21 @@ public class GameGrain : Grain, IGameGrain
 
     public async Task AddPlayerToGame(AddPlayerCommand command)
     {
-        if (_players.Count == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
+        if (_gameState.PlayersNumber == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
             return;
         }
         
         var dto = command.Adapt<PlayerDto>();
-        if (!_players.Select(x => x.Id).Contains(dto.Id))
+        if (!_gameState.Players.Select(x => x.Id).Contains(dto.Id))
         {
-            _players.Add(dto);
-            _gameState.PlayersNumber = _players.Count;
+            _gameState.Players.Add(dto);
         }
 
         if (_gameState.GameStatus is GameStatus.AwaitingPlayers 
-            && _players.Count == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
+            && _gameState.PlayersNumber == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
-            _gameState.GameStatus = GameStatus.InPlay;
+            _gameState.ChangeGameStatus(GameStatus.InPlay, _gameStateTracker);
         }
     }
 
@@ -71,11 +70,11 @@ public class GameGrain : Grain, IGameGrain
         var score = _gameRuleEngine.GetScore();
         if (allRoundsFinished || score.IsRequiredNumberOfWinsMet())
         {
-            _gameState.GameStatus = GameStatus.Finished;
+            _gameState.ChangeGameStatus(GameStatus.Finished, _gameStateTracker);
         }
         else
         {
-            _gameState.GameStatus = GameStatus.InPlay;
+            _gameState.ChangeGameStatus(GameStatus.InPlay, _gameStateTracker);
         }
 
         var newGameState = _gameState.Adapt<GameStateViewModel>();

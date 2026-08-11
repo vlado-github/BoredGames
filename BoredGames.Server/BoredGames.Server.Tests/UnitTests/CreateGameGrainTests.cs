@@ -21,17 +21,24 @@ public class CreateGameGrainTests : IAsyncLifetime
         await _cluster.DisposeAsync();
     }
 
-    [Fact]
-    public async Task CreateGame()
+    [Theory]
+    [InlineData(GameTitle.ClashOfHands)]
+    [InlineData(GameTitle.TicTacToe)]
+    public async Task CreateGame(GameTitle gameTitle)
     {
+        // Arrange
         var playerGrain = _cluster.Client.GetGrain<IPlayerGrain>(Guid.NewGuid());
+        
+        // Act
         var result = await playerGrain.CreateGame(new CreateGameCommand()
         {
-            Title = GameTitle.ClashOfHands,
+            Title = gameTitle,
             NumberOfPlayers = 2,
             NumberOfRounds = 1,
             RequiredNumberOfWins = 1
         });
+        
+        // Assert
         Assert.NotNull(result);
         Assert.True(result.GameId != Guid.Empty);
     }
