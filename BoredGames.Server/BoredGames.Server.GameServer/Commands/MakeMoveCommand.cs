@@ -12,7 +12,7 @@ public class MakeMoveCommand : CommandBase
     [Id(2)]
     public string? PlayerNickName { get; set; }
     [Id(3)]
-    public int Row { get; set; }
+    public int SelectedTileRow { get; set; }
     [Id(4)]
-    public int Column { get; set; }
+    public int SelectedTileColumn { get; set; }
 }

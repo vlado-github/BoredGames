@@ -8,6 +8,6 @@ public interface IGameSetupBuilder<T> where T : GameConfigurationBase
 {
     IGameSetupBuilder<T> AddConfiguration(T gameConfiguration);
     IGameSetupBuilder<T> AddResultResolver(Func<MoveDto, RoundResult> resolver);
-    IGameSetupBuilder<T> AddGameStateHandler(Action<GameState> handler);
+    IGameSetupBuilder<T> AddGameStateHandler(Action<ReadOnlyGameState> handler);
     GameSetup<T> Build();
 }

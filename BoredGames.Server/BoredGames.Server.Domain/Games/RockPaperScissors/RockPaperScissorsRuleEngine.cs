@@ -4,6 +4,7 @@ using BoredGames.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BoredGames.Server.Domain.Games.RockPaperScissors;
 
@@ -12,7 +13,12 @@ public class RockPaperScissorsRuleEngine : SimultaneousGameRuleEngine<RockPaperS
     public static readonly string RockAction = "rock";
     public static readonly string PaperAction = "paper";
     public static readonly string ScissorsAction = "scissors";
-    
+
+    public RockPaperScissorsRuleEngine(ILogger<SimultaneousGameRuleEngine<RockPaperScissorsConfiguration>> logger) 
+        : base(logger)
+    {
+    }
+
     public override void Setup(RockPaperScissorsConfiguration? configuration)
     {
         _gameSetupBuilder
@@ -29,7 +35,14 @@ public class RockPaperScissorsRuleEngine : SimultaneousGameRuleEngine<RockPaperS
         }    
         return base.Handle(dto);
     }
-    
+
+    public override RoundResult GetCurrentRoundResult()
+    {
+        return new RoundResult(
+            roundStatus: _rounds.Current.GetStatus(),
+            roundNumber: _rounds.Current.Number);
+    }
+
     private RoundResult ResolveResultAction(MoveDto moveDto)
     {
         foreach (var move in _rounds.Current.GetMoves())

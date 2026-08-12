@@ -17,7 +17,7 @@ public class Turns
         _turns.Add(new Turn(_playersTurnOrder[0], _players.Single(x => x.Id == _playersTurnOrder[0]).NickName));
     }
 
-    public ITurn Current => _turns.Single(x => x.IsCurrent);
+    public Turn Current => _turns.Single(x => x.IsCurrent);
     
     public Turn ShowNext(ITurn currentTurn) 
     {

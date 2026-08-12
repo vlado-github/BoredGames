@@ -46,8 +46,8 @@ public class TicTacToeGame : BddDefinitionsBase
         {
             ActionType = actionType,
             PlayerId = new Guid(playerId),
-            Row = row,
-            Column = column
+            SelectedTileRow = row,
+            SelectedTileColumn = column
         });
     }
     
@@ -59,8 +59,8 @@ public class TicTacToeGame : BddDefinitionsBase
         {
             ActionType = actionType,
             PlayerId = new Guid(playerId),
-            Row = row,
-            Column = column
+            SelectedTileRow = row,
+            SelectedTileColumn = column
         });
     }
     

@@ -8,7 +8,7 @@ public class GameSetupBuilder<T> : IGameSetupBuilder<T> where T : GameConfigurat
 {
     private T _gameConfiguration;
     private Func<MoveDto, RoundResult> _resultResolverAction;
-    private Action<GameState> _gameStateHandlerAction;
+    private Action<ReadOnlyGameState> _gameStateHandlerAction;
     
     public IGameSetupBuilder<T> AddConfiguration(T gameConfiguration)
     {
@@ -22,7 +22,7 @@ public class GameSetupBuilder<T> : IGameSetupBuilder<T> where T : GameConfigurat
         return this;
     }
 
-    public IGameSetupBuilder<T> AddGameStateHandler(Action<GameState> handler)
+    public IGameSetupBuilder<T> AddGameStateHandler(Action<ReadOnlyGameState> handler)
     {
         _gameStateHandlerAction = handler;
         return this;

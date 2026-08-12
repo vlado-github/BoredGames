@@ -3,6 +3,7 @@ using BoredGames.Common.Enums;
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BoredGames.Server.Domain.Games.TicTacToe;
 
@@ -21,12 +22,25 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
         [(0, 0), (1, 1), (2, 2)],
         [(0, 2), (1, 1), (2, 0)],
     ];
-    
+
+    public TicTacToeRuleEngine(ILogger<TurnBaseGameRuleEngine<TicTacToeConfiguration>> logger) : base(logger)
+    {
+    }
+
     public override void Setup(TicTacToeConfiguration? configuration)
     {
         _gameSetupBuilder
             .AddConfiguration(configuration ?? TicTacToeConfiguration.Default)
             .AddResultResolver(ResolveResultAction);
+    }
+    
+    public override RoundResult GetCurrentRoundResult()
+    {
+        return new RoundResult(
+            roundStatus: _rounds.Current.GetStatus(),
+            roundNumber: _rounds.Current.Number,
+            currentPlayerTurn: Turns?.Current.PlayerId,
+            nextPlayerTurn: Turns?.ShowNext(Turns.Current).PlayerId);
     }
     
     private RoundResult ResolveResultAction(MoveDto moveDto)
@@ -81,9 +95,9 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
         
         var positions = remainingActions
             .Where(x => x.ActionType == action.ActionType)
-            .Select(x => (row: x.Row, column: x.Column))
+            .Select(x => (row: x.SelectedTile.Row, column: x.SelectedTile.Column))
             .ToList();
-        positions.Add((row: action.Row, column: action.Column));
+        positions.Add((row: action.SelectedTile.Row, column: action.SelectedTile.Column));
         foreach (var winningPattern in WinningPatterns)
         {
             bool isSubset = !winningPattern.Except(positions).Any();

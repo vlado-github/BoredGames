@@ -2,7 +2,7 @@
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
-using BoredGames.Server.Domain.Games.Events;
+using BoredGames.Server.Domain.Games.PubSub;
 using BoredGames.Server.GameServer.Commands;
 using BoredGames.Server.GameServer.Grains.Base;
 using BoredGames.Server.GameServer.ViewModels;
@@ -59,10 +59,18 @@ public class GameGrain : Grain, IGameGrain
 
     public async Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
     {
-        var dto = command.Adapt<MoveDto>();
+        var dto = new MoveDto()
+        {
+            PlayerId = command.PlayerId,
+            PlayerNickName = command.PlayerNickName,
+            ActionType = command.ActionType,
+            SelectedTile = new TilePosition(command.SelectedTileRow, command.SelectedTileColumn)
+        };
         var result = _gameRuleEngine.Handle(dto);
         _gameState.RoundNumber = result.RoundNumber;
         _gameState.RoundStatus = result.RoundStatus;
+        _gameState.CurrentPlayerTurn = result.CurrentPlayerTurn;
+        _gameState.NextPlayerTurn = result.NextPlayerTurn;
         
         // Game ends if all rounds are completed or 
         // required number of wins in match is met.

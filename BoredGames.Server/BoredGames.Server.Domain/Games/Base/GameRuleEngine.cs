@@ -1,5 +1,6 @@
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace BoredGames.Server.Domain.Games.Base;
@@ -15,10 +16,12 @@ public abstract class GameRuleEngine<T> :
     protected GameSetup<T> _gameSetup;
     
     private IDisposable _unsubscriber;
-    private GameState _gameState; //todo: make readonly
+    private ReadOnlyGameState _gameState;
+    private readonly ILogger<GameRuleEngine<T>> _logger;
 
-    protected GameRuleEngine()
+    protected GameRuleEngine(ILogger<GameRuleEngine<T>> logger)
     {
+        _logger = logger;
         _gameSetupBuilder = new GameSetupBuilder<T>();
     }
     
@@ -31,19 +34,14 @@ public abstract class GameRuleEngine<T> :
     }
     
     public abstract void Setup(T gameConfiguration);
+
+    public abstract RoundResult GetCurrentRoundResult();
     
     public abstract RoundResult Handle(MoveDto dto);
     
     public GameConfigurationBase GetDefinition()
     {
         return _settings;
-    }
-    
-    public RoundResult GetCurrentRoundResult()
-    {
-        return new RoundResult(
-            roundStatus: _rounds.Current.GetStatus(),
-            roundNumber: _rounds.Current.Number);
     }
 
     public bool AreAllRoundsFinished()
@@ -61,31 +59,26 @@ public abstract class GameRuleEngine<T> :
         return _gameScore.GetWinners();
     }
 
-    public virtual void Subscribe(IObservable<GameState> provider)
-    {
-        _unsubscriber = provider.Subscribe(this);
-    }
-
     public virtual void OnCompleted()
     {
-        Console.WriteLine("The GameState Tracker has completed transmitting data.");
+        _logger.LogInformation("The GameState Tracker has completed transmitting data.");
         Unsubscribe();
     }
 
     public virtual void OnError(Exception e)
     {
-        Console.WriteLine("The game state cannot be determined.");
+        _logger.LogError("The game state cannot be determined.");
     }
 
     public virtual void OnNext(GameState value)
     {
-        _gameState = value;
+        _gameState = value.AsReadOnly();
         if (_gameSetup.GameStateHandlerAction != null)
         {
-            _gameSetup.GameStateHandlerAction(value);
+            _gameSetup.GameStateHandlerAction(_gameState);
         }
 
-        Console.WriteLine("The current game state is {0}", JsonConvert.SerializeObject(_gameState));
+        _logger.LogDebug("The current game state is {0}", JsonConvert.SerializeObject(_gameState));
     }
 
     protected virtual void Unsubscribe()

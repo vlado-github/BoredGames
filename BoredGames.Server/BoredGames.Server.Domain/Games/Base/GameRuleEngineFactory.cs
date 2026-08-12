@@ -2,18 +2,22 @@ using BoredGames.Common.Enums;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.RockPaperScissors;
 using BoredGames.Server.Domain.Games.TicTacToe;
+using Microsoft.Extensions.Logging;
 
 namespace BoredGames.Server.Domain.Games.Base;
 
 public static class GameRuleEngineFactory
 {
+    private static readonly ILoggerFactory LoggerFactory = new LoggerFactory();
+    
     public static IGameRuleEngine GetInstance(GameDto dto)
     {
         switch (dto.Title)
         {
             case GameTitle.ClashOfHands:
             {
-                var ruleEngine = new RockPaperScissorsRuleEngine();
+                var ruleEngine = new RockPaperScissorsRuleEngine(
+                    new Logger<SimultaneousGameRuleEngine<RockPaperScissorsConfiguration>>(LoggerFactory));
                 ruleEngine.Setup(new RockPaperScissorsConfiguration(
                     requiredNumberOfPlayers: dto.NumberOfPlayers,
                     numberOfRounds: dto.NumberOfRounds,
@@ -24,7 +28,8 @@ public static class GameRuleEngineFactory
             }
             case GameTitle.TicTacToe:
             {
-                var ruleEngine = new TicTacToeRuleEngine();
+                var ruleEngine = new TicTacToeRuleEngine(
+                    new Logger<TurnBaseGameRuleEngine<TicTacToeConfiguration>>(LoggerFactory));
                 ruleEngine.Setup(new TicTacToeConfiguration(
                     requiredNumberOfPlayers: dto.NumberOfPlayers,
                     numberOfRounds: dto.NumberOfRounds,

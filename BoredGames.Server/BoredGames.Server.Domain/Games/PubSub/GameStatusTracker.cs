@@ -1,6 +1,6 @@
 using BoredGames.Server.Domain.Games.Entities;
 
-namespace BoredGames.Server.Domain.Games.Events;
+namespace BoredGames.Server.Domain.Games.PubSub;
 
 public class GameStateTracker : IObservable<GameState>
 {

@@ -1,6 +1,6 @@
 using BoredGames.Common.Enums;
 using BoredGames.Server.Domain.Games.Dtos;
-using BoredGames.Server.Domain.Games.Events;
+using BoredGames.Server.Domain.Games.PubSub;
 
 namespace BoredGames.Server.Domain.Games.Entities;
 
@@ -25,5 +25,10 @@ public class GameState
     {
         GameStatus = gameStatus;
         gameStateTracker.TrackGameState(this);
+    }
+
+    public ReadOnlyGameState AsReadOnly()
+    {
+        return new ReadOnlyGameState(GameId, GameStatus, RoundStatus, RoundNumber, Players, CurrentPlayerTurn, NextPlayerTurn);
     }
 }
