@@ -86,6 +86,13 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
             nextPlayerTurn: Turns?.ShowNext(Turns.Current).PlayerId);
     }
 
+    /// <summary>
+    /// Filters out all previous actions that match last move and compares them 
+    /// against winning patterns.
+    /// </summary>
+    /// <param name="action"></param>
+    /// <param name="remainingActions"></param>
+    /// <returns></returns>
     private GameResult CheckRule(MoveDto action, IList<MoveDto> remainingActions)
     {
         if (remainingActions.Count == 0)

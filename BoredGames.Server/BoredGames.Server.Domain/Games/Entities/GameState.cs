@@ -27,6 +27,14 @@ public class GameState
         gameStateTracker.TrackGameState(this);
     }
 
+    public void SyncRoundResult(RoundResult result)
+    {
+        RoundNumber = result.RoundNumber;
+        RoundStatus = result.RoundStatus;
+        CurrentPlayerTurn = result.CurrentPlayerTurn;
+        NextPlayerTurn = result.NextPlayerTurn;
+    }
+
     public ReadOnlyGameState AsReadOnly()
     {
         return new ReadOnlyGameState(GameId, GameStatus, RoundStatus, RoundNumber, Players, CurrentPlayerTurn, NextPlayerTurn);

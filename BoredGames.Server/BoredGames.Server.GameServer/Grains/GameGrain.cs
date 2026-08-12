@@ -33,8 +33,7 @@ public class GameGrain : Grain, IGameGrain
         _gameStateTracker.Subscribe(_gameRuleEngine);
         
         var roundResult = _gameRuleEngine.GetCurrentRoundResult();
-        _gameState.RoundNumber = roundResult.RoundNumber;
-        _gameState.RoundStatus = roundResult.RoundStatus;
+        _gameState.SyncRoundResult(roundResult);
     }
 
     public async Task AddPlayerToGame(AddPlayerCommand command)
@@ -67,10 +66,7 @@ public class GameGrain : Grain, IGameGrain
             SelectedTile = new TilePosition(command.SelectedTileRow, command.SelectedTileColumn)
         };
         var result = _gameRuleEngine.Handle(dto);
-        _gameState.RoundNumber = result.RoundNumber;
-        _gameState.RoundStatus = result.RoundStatus;
-        _gameState.CurrentPlayerTurn = result.CurrentPlayerTurn;
-        _gameState.NextPlayerTurn = result.NextPlayerTurn;
+        _gameState.SyncRoundResult(result);
         
         // Game ends if all rounds are completed or 
         // required number of wins in match is met.
