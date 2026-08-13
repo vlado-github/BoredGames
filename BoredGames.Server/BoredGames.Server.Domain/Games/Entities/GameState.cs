@@ -17,9 +17,10 @@ public class GameState
     public RoundStatus RoundStatus { get; set; }
     public int RoundNumber { get; set; }
     public Guid? CurrentPlayerTurn { get; set; } = null;
-    public Guid? NextPlayerTurn {  get; set; } = null;
+    public Guid[]? PlayersTurnOrder {  get; set; } = null;
     public int PlayersNumber => Players.Count;
     public IList<PlayerDto> Players { get; } = new List<PlayerDto>();
+    public List<MoveDto> Moves { get; } = new List<MoveDto>();
     
     public void ChangeGameStatus(GameStatus gameStatus, GameStateTracker gameStateTracker)
     {
@@ -29,14 +30,21 @@ public class GameState
 
     public void SyncRoundResult(RoundResult result)
     {
+        AddMoves(result.Moves);
         RoundNumber = result.RoundNumber;
         RoundStatus = result.RoundStatus;
         CurrentPlayerTurn = result.CurrentPlayerTurn;
-        NextPlayerTurn = result.NextPlayerTurn;
+        PlayersTurnOrder = result.PlayersTurnOrder;
     }
 
     public ReadOnlyGameState AsReadOnly()
     {
-        return new ReadOnlyGameState(GameId, GameStatus, RoundStatus, RoundNumber, Players, CurrentPlayerTurn, NextPlayerTurn);
+        return new ReadOnlyGameState(GameId, GameStatus, RoundStatus, RoundNumber, Players, CurrentPlayerTurn, PlayersTurnOrder);
+    }
+
+    private void AddMoves(IList<MoveDto> roundMoved)
+    {
+        var additionalMoves = roundMoved.Except(Moves);
+        Moves.AddRange(additionalMoves);
     }
 }

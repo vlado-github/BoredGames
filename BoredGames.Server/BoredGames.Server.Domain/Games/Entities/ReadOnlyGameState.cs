@@ -12,7 +12,7 @@ public class ReadOnlyGameState
         int roundNumber, 
         IList<PlayerDto> players,
         Guid? currentPlayerTurn = null,
-        Guid? nextPlayerTurn = null)
+        Guid[]? playersTurnOrder = null)
     {
         GameId = gameId;
         GameStatus = gameStatus;
@@ -20,7 +20,7 @@ public class ReadOnlyGameState
         RoundNumber = roundNumber;
         Players = players;
         CurrentPlayerTurn = currentPlayerTurn;
-        NextPlayerTurn = nextPlayerTurn;
+        PlayersTurnOrder = playersTurnOrder;
     }
     
     public Guid GameId { get; private set; }
@@ -28,7 +28,7 @@ public class ReadOnlyGameState
     public RoundStatus RoundStatus { get; private set; }
     public int RoundNumber { get; private set; }
     public Guid? CurrentPlayerTurn { get; private set; } = null;
-    public Guid? NextPlayerTurn {  get; private set; } = null;
+    public Guid[]? PlayersTurnOrder {  get; private set; } = null;
     public int PlayersNumber => Players.Count;
     public IList<PlayerDto> Players { get; }
 }

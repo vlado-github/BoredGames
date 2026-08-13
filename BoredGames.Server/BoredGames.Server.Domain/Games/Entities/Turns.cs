@@ -19,6 +19,8 @@ public class Turns
 
     public Turn Current => _turns.Single(x => x.IsCurrent);
     
+    public Guid[] PlayersTurnOrder => _playersTurnOrder;
+    
     public Turn ShowNext(ITurn currentTurn) 
     {
         var currentIndex = _playersTurnOrder.IndexOf(currentTurn.PlayerId);

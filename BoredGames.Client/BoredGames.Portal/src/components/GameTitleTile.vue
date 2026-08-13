@@ -7,6 +7,7 @@ export default {
   props: {
     titleId: Number,
     titleName: String,
+    titleAlias: String,
     iconUrl: String,
   },
 
@@ -16,7 +17,7 @@ export default {
 
   methods: {
     play() {
-      router.push({ name: 'game', query: { gameTitle: this.titleName} })
+      router.push({ name: 'game', query: { gameTitle: this.titleAlias} })
     }
   }
 }

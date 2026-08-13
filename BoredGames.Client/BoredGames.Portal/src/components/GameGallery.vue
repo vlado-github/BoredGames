@@ -36,6 +36,7 @@ export default {
           :key="title.id"
           :titleId="title.id"
           :titleName="title.name"
+          :titleAlias="title.alias"
           :iconUrl="title.thumbnailImageUrl"
         />
       </div>

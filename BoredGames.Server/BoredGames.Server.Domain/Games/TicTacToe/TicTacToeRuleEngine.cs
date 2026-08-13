@@ -40,7 +40,8 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
             roundStatus: _rounds.Current.GetStatus(),
             roundNumber: _rounds.Current.Number,
             currentPlayerTurn: Turns?.Current.PlayerId,
-            nextPlayerTurn: Turns?.ShowNext(Turns.Current).PlayerId);
+            playersTurnOrder: Turns?.PlayersTurnOrder,
+            moves: _rounds.Current.GetMoves());
     }
     
     private RoundResult ResolveResultAction(MoveDto moveDto)
@@ -54,7 +55,8 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
                 roundStatus: _rounds.Current.GetStatus(),
                 roundNumber: _rounds.Current.Number,
                 currentPlayerTurn: Turns?.Current.PlayerId,
-                nextPlayerTurn: Turns?.ShowNext(Turns.Current).PlayerId); 
+                playersTurnOrder: Turns?.PlayersTurnOrder,
+                moves: _rounds.Current.GetMoves()); 
         }
         var player = new Player(moveDto.PlayerId, moveDto.PlayerNickName);
         if (result == GameResult.Win)
@@ -95,7 +97,8 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
             roundStatus: _rounds.Current.GetStatus(),
             roundNumber: _rounds.Current.Number,
             currentPlayerTurn: Turns?.Current.PlayerId,
-            nextPlayerTurn: Turns?.ShowNext(Turns.Current).PlayerId);
+            playersTurnOrder: Turns?.PlayersTurnOrder,
+            moves: _rounds.Current.GetMoves());
     }
 
     /// <summary>

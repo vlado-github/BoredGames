@@ -1,3 +1,4 @@
+using BoredGames.API.Consts;
 using BoredGames.API.Extensions;
 using BoredGames.API.Hubs;
 using BoredGames.API.Models;
@@ -34,18 +35,7 @@ namespace BoredGames.API.Controllers
         [HttpGet("titles")]
         public GameTitlesViewModel GetTitles()
         {
-            var result = new GameTitlesViewModel();
-            foreach(GameTitle title in Enum.GetValues(typeof(GameTitle)))
-            {
-                result.Titles.Add(new GameTitleViewModel()
-                {
-                    Id = (int) title,
-                    Name = title.ToString(),
-                    ThumbnailImageUrl = $"{_appBaseUrl}/assets/clashofhands-logo.png",
-                });
-            }
-
-            return result;
+            return new GameTitlesViewModel { Titles = GameTitles.All };
         }
         
         [HttpPost("create")]

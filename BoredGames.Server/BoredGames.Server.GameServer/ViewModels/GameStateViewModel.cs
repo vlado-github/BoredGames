@@ -21,4 +21,6 @@ public class GameStateViewModel
     public Guid? CurrentPlayerTurn { get; set; }
     [Id(7)] 
     public Guid? NextPlayerTurn { get; set; }
+    [Id(8)]
+    public IList<MoveViewModel> Moves { get; set; } = new List<MoveViewModel>();
 }
