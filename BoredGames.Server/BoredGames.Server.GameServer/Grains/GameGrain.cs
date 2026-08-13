@@ -25,7 +25,7 @@ public class GameGrain : Grain, IGameGrain
         return base.OnActivateAsync(token);
     }
 
-    public async Task Setup(CreateGameCommand command)
+    public void Setup(CreateGameCommand command)
     {
         var dto = command.Adapt<GameDto>();
         _gameStateTracker =  new GameStateTracker();
@@ -36,7 +36,7 @@ public class GameGrain : Grain, IGameGrain
         _gameState.SyncRoundResult(roundResult);
     }
 
-    public async Task AddPlayerToGame(AddPlayerCommand command)
+    public void AddPlayerToGame(AddPlayerCommand command)
     {
         if (_gameState.PlayersNumber == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
@@ -56,7 +56,7 @@ public class GameGrain : Grain, IGameGrain
         }
     }
 
-    public async Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
+    public Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
     {
         var dto = new MoveDto()
         {
@@ -89,7 +89,7 @@ public class GameGrain : Grain, IGameGrain
             PlayerScores = score.PlayerStatistics.Adapt<List<PlayerScoreViewModel>>()
         };
 
-        return newGameState;
+        return Task.FromResult(newGameState);
     }
 
     public Task<GameScoreViewModel> GetScore()
