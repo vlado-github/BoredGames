@@ -53,25 +53,25 @@ public class RockPaperScissorsRuleEngine : SimultaneousGameRuleEngine<RockPaperS
         {
             _gameScore.AddWin(player, _rounds.Current.Number, moveDto.ActionType);
             
-            var otherPlayerMove = remainingCommands.First(x => x.PlayerId != moveDto.PlayerId);
+            var otherPlayerMove = remainingCommands.Last(x => x.PlayerId != moveDto.PlayerId);
             var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
-            _gameScore.AddLoss(otherPlayer, _rounds.Current.Number, moveDto.ActionType);
+            _gameScore.AddLoss(otherPlayer, _rounds.Current.Number, otherPlayerMove.ActionType);
         }
         else if (result == GameResult.Loss)
         {
             _gameScore.AddLoss(player, _rounds.Current.Number, moveDto.ActionType);
             
-            var otherPlayerMove = remainingCommands.First(x => x.PlayerId != moveDto.PlayerId);
+            var otherPlayerMove = remainingCommands.Last(x => x.PlayerId != moveDto.PlayerId);
             var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
-            _gameScore.AddWin(otherPlayer, _rounds.Current.Number, moveDto.ActionType);
+            _gameScore.AddWin(otherPlayer, _rounds.Current.Number, otherPlayerMove.ActionType);
         }
         else
         {
             _gameScore.AddDraw(player, _rounds.Current.Number, moveDto.ActionType);
             
-            var otherPlayerMove = remainingCommands.First(x => x.PlayerId != moveDto.PlayerId);
+            var otherPlayerMove = remainingCommands.Last(x => x.PlayerId != moveDto.PlayerId);
             var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
-            _gameScore.AddDraw(otherPlayer, _rounds.Current.Number, moveDto.ActionType);
+            _gameScore.AddDraw(otherPlayer, _rounds.Current.Number, otherPlayerMove.ActionType);
         }
         
         _rounds.Current.Complete();
