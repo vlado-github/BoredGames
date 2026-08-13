@@ -45,24 +45,33 @@ public class RockPaperScissorsRuleEngine : SimultaneousGameRuleEngine<RockPaperS
 
     private RoundResult ResolveResultAction(MoveDto moveDto)
     {
-        foreach (var move in _rounds.Current.GetMoves())
+        var remainingCommands = new List<MoveDto>(_rounds.Current.GetMoves());
+        remainingCommands.Remove(moveDto);
+        var result = CheckRule(moveDto.ActionType, remainingCommands);
+        var player = new Player(moveDto.PlayerId, moveDto.PlayerNickName);
+        if (result == GameResult.Win)
         {
-            var remainingCommands = new List<MoveDto>(_rounds.Current.GetMoves());
-            remainingCommands.Remove(move);
-            var result = CheckRule(move.ActionType, remainingCommands);
-            var player = new Player(move.PlayerId, move.PlayerNickName);
-            if (result == GameResult.Win)
-            {
-                _gameScore.AddWin(player, _rounds.Current.Number, move.ActionType);
-            }
-            else if (result == GameResult.Loss)
-            {
-                _gameScore.AddLoss(player, _rounds.Current.Number, move.ActionType);
-            }
-            else
-            {
-                _gameScore.AddDraw(player, _rounds.Current.Number, move.ActionType);
-            }
+            _gameScore.AddWin(player, _rounds.Current.Number, moveDto.ActionType);
+            
+            var otherPlayerMove = remainingCommands.First(x => x.PlayerId != moveDto.PlayerId);
+            var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
+            _gameScore.AddLoss(otherPlayer, _rounds.Current.Number, moveDto.ActionType);
+        }
+        else if (result == GameResult.Loss)
+        {
+            _gameScore.AddLoss(player, _rounds.Current.Number, moveDto.ActionType);
+            
+            var otherPlayerMove = remainingCommands.First(x => x.PlayerId != moveDto.PlayerId);
+            var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
+            _gameScore.AddWin(otherPlayer, _rounds.Current.Number, moveDto.ActionType);
+        }
+        else
+        {
+            _gameScore.AddDraw(player, _rounds.Current.Number, moveDto.ActionType);
+            
+            var otherPlayerMove = remainingCommands.First(x => x.PlayerId != moveDto.PlayerId);
+            var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
+            _gameScore.AddDraw(otherPlayer, _rounds.Current.Number, moveDto.ActionType);
         }
         
         _rounds.Current.Complete();

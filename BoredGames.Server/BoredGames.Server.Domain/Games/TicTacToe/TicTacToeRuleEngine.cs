@@ -60,14 +60,26 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
         if (result == GameResult.Win)
         {
             _gameScore.AddWin(player, _rounds.Current.Number, moveDto.ActionType);
+            
+            var otherPlayerMove = remainingCommands.First(x => x.PlayerId != moveDto.PlayerId);
+            var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
+            _gameScore.AddLoss(otherPlayer, _rounds.Current.Number, moveDto.ActionType);
         }
         else if (result == GameResult.Loss)
         {
             _gameScore.AddLoss(player, _rounds.Current.Number, moveDto.ActionType);
+            
+            var otherPlayerMove = remainingCommands.First(x => x.PlayerId != moveDto.PlayerId);
+            var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
+            _gameScore.AddWin(otherPlayer, _rounds.Current.Number, moveDto.ActionType);
         }
         else
         {
             _gameScore.AddDraw(player, _rounds.Current.Number, moveDto.ActionType);
+            
+            var otherPlayerMove = remainingCommands.First(x => x.PlayerId != moveDto.PlayerId);
+            var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
+            _gameScore.AddLoss(otherPlayer, _rounds.Current.Number, moveDto.ActionType);
         }
         
         _rounds.Current.Complete();
