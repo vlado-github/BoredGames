@@ -15,5 +15,6 @@ namespace Assets.Scripts.BoredGames.API
         public string CurrentPlayerTurn;
         public string[] PlayersTurnOrder;
         public List<Move> Moves;
+        public List<Player> Players;
     }
 }

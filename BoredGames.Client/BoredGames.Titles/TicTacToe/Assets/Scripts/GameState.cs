@@ -36,6 +36,7 @@ namespace Assets.Scripts.GamePlay
         public bool IsPreviousRoundCompleted => GameState.Instance.Score.HasRoundResult(PreviousRoundNumber);
         public IList<int> RoundResultDisplayCompleted { get; private set; } = new List<int>();
         public IList<Move> Moves = new List<Move>();
+        public IList<Player> Players = new List<Player>();
 
         public GameScore Score { get; set; }
 

@@ -42,11 +42,11 @@ namespace Assets.Scripts.BoredGames.API
             // Handler callback
             signalR.On("OnPlayerJoined", (string payload) =>
             {
-                //Log($"OnPlayerJoined: {payload}");
             }); 
 
             signalR.On("OnGameStateReceived", (string payload) =>
             {
+                Log($"OnGameStateReceived: {payload}");
                 var data = JsonUtility.FromJson<GameStateMessage>(payload);
                 GameState.Instance.PreviousRoundNumber = GameState.Instance.CurrentRoundNumber;
                 GameState.Instance.Status = data.GameStatus;
@@ -55,6 +55,10 @@ namespace Assets.Scripts.BoredGames.API
                 GameState.Instance.Score = data.Score;
                 GameState.Instance.CurrentPlayerTurn = data.CurrentPlayerTurn;
                 GameState.Instance.PlayersTurnOrder = data.PlayersTurnOrder;
+                GameState.Instance.Moves = data.Moves;
+                GameState.Instance.Players = data.Players;
+                
+                Log($"Data players: {data.Players}");
 
                 if (GameState.Instance.Score != null && GameState.Instance.Score.HasRoundResult(GameState.Instance.PreviousRoundNumber))
                 {
@@ -105,7 +109,7 @@ namespace Assets.Scripts.BoredGames.API
 
         private static void Log(string message)
         {
-            //Debug.Log($"[socket]: {message}");
+            Debug.Log($"[socket]: {message}");
         }
 
         private static void LogError(string message)

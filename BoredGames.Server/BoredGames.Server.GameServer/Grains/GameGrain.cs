@@ -43,8 +43,12 @@ public class GameGrain : Grain, IGameGrain
             return;
         }
         
-        var dto = command.Adapt<PlayerDto>();
-        if (!_gameState.Players.Select(x => x.Id).Contains(dto.Id))
+        var dto = new PlayerDto()
+        {
+            Id = command.Id,
+            NickName = command.NickName,
+        };
+        if (_gameState.Players.All(x => x.Id != dto.Id))
         {
             _gameState.Players.Add(dto);
         }
@@ -117,7 +121,32 @@ public class GameGrain : Grain, IGameGrain
 
     public async Task<GameStateViewModel> GetState()
     {
-        var gameState = _gameState.Adapt<GameStateViewModel>();
+        var gameState = new GameStateViewModel()
+        {
+            GameId = _gameState.GameId,
+            GameStatus = _gameState.GameStatus,
+            RoundStatus =  _gameState.RoundStatus,
+            RoundNumber =  _gameState.RoundNumber,
+            PlayersNumber =  _gameState.PlayersNumber,
+            PlayersTurnOrder =  _gameState.PlayersTurnOrder,
+            CurrentPlayerTurn =  _gameState.CurrentPlayerTurn,
+            Players = _gameState.Players.Select(x => new PlayerViewModel()
+            {
+                Id = x.Id,
+                NickName = x.NickName
+            }).ToList(),
+            Moves = _gameState.Moves.Select(x => new MoveViewModel()
+            {
+                ActionType = x.ActionType,
+                PlayerId = x.PlayerId,
+                PlayerNickName = x.PlayerNickName,
+                SelectedTile = new TilePositionViewModel()
+                {
+                    Column = x.SelectedTile.Column,
+                    Row = x.SelectedTile.Row
+                }
+            }).ToList()
+        };
         gameState.Score = await GetScore();
         return gameState;
     }

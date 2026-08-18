@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,14 +19,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] Canvas _playerNameCanvas;
     [SerializeField] Canvas _gameOverCanvas;
     [SerializeField] Canvas _tilesCanvas;
+    [SerializeField] Canvas _playerCanvas;
+    [SerializeField] Canvas _opponentCanvas;
+    [SerializeField] GameObject _waitOpponentSpinner;
+    [SerializeField] private GameObject _playerTurnIndicator;
+    [SerializeField] private GameObject _opponentTurnIndicator;
 
     [SerializeField] NotificationFader _notificationManager;  
 
     bool gameOnNotificationDisplayed = false;
+    bool gamePlayerTurnNotificationDisplayed = false;
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance !=null && Instance != this)
         {
             Destroy(gameObject);
         }
@@ -108,6 +115,8 @@ public class GameManager : MonoBehaviour
 
     public void CheckGameStatus()
     {
+        Debug.Log($">>> CheckGameStatus {GameState.Instance.Status} <<<");
+        Debug.Log($">>> Players {string.Join(",",GameState.Instance.Players.Select(x => x.NickName))} <<<");
         if (!GameState.Instance.IsGameCreated || !GameState.Instance.IsPlayerSet)
         {
             return;
@@ -120,6 +129,9 @@ public class GameManager : MonoBehaviour
                     _waitingForPlayerCanvas.gameObject.SetActive(true);
                     _scoreCanvas.gameObject.SetActive(false);
                     _tilesCanvas.gameObject.SetActive(true);
+                    _playerCanvas.gameObject.SetActive(true);
+                    _opponentCanvas.gameObject.SetActive(false);
+                    _waitOpponentSpinner.GameObject().SetActive(true);
                     
                     break;
                 }
@@ -131,10 +143,41 @@ public class GameManager : MonoBehaviour
                         gameOnNotificationDisplayed = true;
                     }
 
-                    _waitingForPlayerCanvas.gameObject.SetActive(false);
+                    Destroy(_waitingForPlayerCanvas.gameObject);
                     _scoreCanvas.gameObject.SetActive(true);
                     _playerNameCanvas.gameObject.SetActive(false);
                     _tilesCanvas.gameObject.SetActive(true);
+                    _playerCanvas.gameObject.SetActive(true);
+                    _waitOpponentSpinner.GameObject().SetActive(false);
+                    _opponentCanvas.gameObject.SetActive(true);
+                    
+                    Debug.Log($">>> current player turn {GameState.Instance.CurrentPlayerTurn} <<<");
+                    Debug.Log($">>> player turns {string.Join(",",GameState.Instance.PlayersTurnOrder)} <<<");
+
+                    if (GameState.Instance.CurrentPlayerTurn == GameState.Instance.PlayerId)
+                    {
+                        _playerTurnIndicator.gameObject.SetActive(true);
+                        _opponentTurnIndicator.gameObject.SetActive(false);
+                        if (!gamePlayerTurnNotificationDisplayed)
+                        {
+                            ShowNotification("Your turn!", Color.green, 0.5f);
+                            gamePlayerTurnNotificationDisplayed = true;
+                        }
+                    }
+                    else
+                    {
+                        var player = GameState.Instance.Players.FirstOrDefault(x => x.Id == GameState.Instance.CurrentPlayerTurn);
+                        if (player != null)
+                        {
+                            _opponentTurnIndicator.gameObject.SetActive(true);
+                            _playerTurnIndicator.gameObject.SetActive(false);
+                            if (!gamePlayerTurnNotificationDisplayed)
+                            {
+                                ShowNotification($"{player.NickName}'s turn", Color.orange, 0.5f);
+                                gamePlayerTurnNotificationDisplayed = true;
+                            }
+                        }
+                    }
 
                     break;
                 }

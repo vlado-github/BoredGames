@@ -135,3 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardMouseHandler
   _row: 0
   _column: 0
+  button: {fileID: 0}
+  image: {fileID: 0}
+  exSprite: {fileID: 3787085044280237322, guid: 87882d5e258f51d51bbc3004e49118d6, type: 3}
+  oxSprite: {fileID: -4707354476360141049, guid: ecdc16c1871744ee2857040bde14e65d, type: 3}

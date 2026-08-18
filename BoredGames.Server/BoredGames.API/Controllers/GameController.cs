@@ -63,7 +63,7 @@ namespace BoredGames.API.Controllers
             var gameState = await player.JoinGame(new JoinGameCommand()
             {
                 GameId = request.GameId,
-                PlayerNickName = playerDetails.NickName
+                PlayerNickName = playerDetails.NickName,
             });
             await _hubContext.Clients
                 .Group(gameState.GameId.ToString())
