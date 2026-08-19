@@ -2,7 +2,7 @@
 <div align="center">
 💖 <b>Found BoredGames interesting?</b>
 
-⭐ Please consider giving us a star to support the project! ⭐
+⭐ Please consider giving us a star to support the project!
 </div>
 
    <p>
@@ -10,7 +10,7 @@
    </p>
 
    <h1>BoredGames</h1>
-   <h3>Web platform for hosting custom web-based games and games' backends.</h3>
+   <h3>Web platform for hosting custom web-based games</h3>
    
    [![GitHub Release](https://img.shields.io/badge/release-v1.3.1-blue)](https://github.com/vlado-github/BoredGames/releases)
 
@@ -48,7 +48,7 @@
 
 ### 📧 Player Profiles
 - **Anonymous:** play without registration by using ephemeral session
-- **Registered:** create account to keep your scores and library of your favorite games
+- **Registered:** create account to keep your scores, connect with your friends and make a library of your favorite games
 
 ### 📱 Mobile-Friendly
 - **Cross Platform:** runs in any browser natively
