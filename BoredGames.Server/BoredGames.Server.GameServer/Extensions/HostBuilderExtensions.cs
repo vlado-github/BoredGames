@@ -25,7 +25,9 @@ public static class HostBuilderExtensions
         {
             builder.UseOrleans((siloBuilder) =>
             {
-                siloBuilder.UseLocalhostClustering();
+                siloBuilder
+                    .AddMemoryGrainStorage("Default")
+                    .UseLocalhostClustering();
             });
         }
         else
@@ -35,6 +37,11 @@ public static class HostBuilderExtensions
             {
                 var redisConnectionString = builder.Configuration["REDIS_HOST"] ?? "redis";
                 siloBuilder
+                    .AddRedisGrainStorage("Default", options =>
+                    { 
+                        var configuration = ConfigurationOptions.Parse(redisConnectionString!);
+                        options.ConfigurationOptions = configuration;
+                    })
                     .UseRedisClustering(options =>
                     {
                         options.ConfigurationOptions = ConfigurationOptions.Parse(redisConnectionString!);

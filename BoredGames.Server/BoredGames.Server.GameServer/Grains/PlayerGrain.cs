@@ -18,13 +18,13 @@ public class PlayerGrain : Grain, IPlayerGrain
     {
         var gameId = Guid.NewGuid();
         var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId);
-        gameGrain.Setup(command);
+        await gameGrain.Setup(command);
         var addPlayerCommand = new AddPlayerCommand
         {
             Id = this.GetPrimaryKey(),
             NickName = _nickName
         };
-        gameGrain.AddPlayerToGame(addPlayerCommand);
+        await gameGrain.AddPlayerToGame(addPlayerCommand);
         
         var gameDefinition = await gameGrain.GetDefinition();
         return gameDefinition.Adapt<GameDefinitionViewModel>();
@@ -39,7 +39,7 @@ public class PlayerGrain : Grain, IPlayerGrain
             Id = this.GetPrimaryKey(),
             NickName = _nickName
         };
-        gameGrain.AddPlayerToGame(addPlayerCommand);
+        await gameGrain.AddPlayerToGame(addPlayerCommand);
         return await gameGrain.GetState();
     }
 

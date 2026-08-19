@@ -137,13 +137,16 @@ public class GameManager : MonoBehaviour
                 }
             case GameStatus.InPlay:
                 {
+                    Debug.Log($">>> current player turn {GameState.Instance.CurrentPlayerTurn} <<<");
+                    Debug.Log($">>> player turns {string.Join(",",GameState.Instance.PlayersTurnOrder)} <<<");
+
                     if (!gameOnNotificationDisplayed)
                     {
                         ShowNotification("game on!", Color.green, 0.5f);
                         gameOnNotificationDisplayed = true;
                     }
 
-                    Destroy(_waitingForPlayerCanvas.gameObject);
+                    _waitingForPlayerCanvas.gameObject.SetActive(false);
                     _scoreCanvas.gameObject.SetActive(true);
                     _playerNameCanvas.gameObject.SetActive(false);
                     _tilesCanvas.gameObject.SetActive(true);
@@ -151,9 +154,6 @@ public class GameManager : MonoBehaviour
                     _waitOpponentSpinner.GameObject().SetActive(false);
                     _opponentCanvas.gameObject.SetActive(true);
                     
-                    Debug.Log($">>> current player turn {GameState.Instance.CurrentPlayerTurn} <<<");
-                    Debug.Log($">>> player turns {string.Join(",",GameState.Instance.PlayersTurnOrder)} <<<");
-
                     if (GameState.Instance.CurrentPlayerTurn == GameState.Instance.PlayerId)
                     {
                         _playerTurnIndicator.gameObject.SetActive(true);

@@ -12,6 +12,8 @@ public class CreateGameGrainTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         var builder = new InProcessTestClusterBuilder();
+        builder.ConfigureSilo((options, siloBuilder) =>
+            siloBuilder.AddMemoryGrainStorage("Default"));
         _cluster = builder.Build();
         await _cluster.DeployAsync();
     }

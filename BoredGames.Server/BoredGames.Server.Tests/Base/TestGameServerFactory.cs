@@ -10,6 +10,8 @@ public class TestGameServerFactory : IAsyncLifetime
     public async Task InitializeAsync()
     {
         var builder = new InProcessTestClusterBuilder();
+        builder.ConfigureSilo((options, siloBuilder) =>
+            siloBuilder.AddMemoryGrainStorage("Default"));
         Cluster = builder.Build();
         await Cluster.DeployAsync();
     }

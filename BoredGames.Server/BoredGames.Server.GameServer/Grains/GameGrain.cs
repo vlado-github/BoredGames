@@ -12,33 +12,41 @@ namespace BoredGames.Server.GameServer.Grains;
 
 public class GameGrain : Grain, IGameGrain
 {
-    private GameState _gameState;
+    private readonly IPersistentState<GameState> _gameState;
     private IGameRuleEngine _gameRuleEngine;
     private GameStateTracker _gameStateTracker;
 
-    public override Task OnActivateAsync(CancellationToken token)
+    public GameGrain(
+        [PersistentState("gameState", "Default")] IPersistentState<GameState> gameState)
     {
-        _gameState = new GameState(this.GetPrimaryKey(), GameStatus.AwaitingPlayers);
-        _gameStateTracker =  new GameStateTracker();
+        _gameState = gameState;
+        _gameStateTracker = new GameStateTracker();
         _gameRuleEngine = GameRuleEngineFactory.GetInstance(GameDto.Default);
         _gameStateTracker.Subscribe(_gameRuleEngine);
-        return base.OnActivateAsync(token);
     }
 
-    public void Setup(CreateGameCommand command)
+    public override async Task OnActivateAsync(CancellationToken token)
+    {
+        _gameState.State.GameId = this.GetPrimaryKey();
+        await _gameState.WriteStateAsync(token);
+        await base.OnActivateAsync(token);
+    }
+
+    public async Task Setup(CreateGameCommand command)
     {
         var dto = command.Adapt<GameDto>();
-        _gameStateTracker =  new GameStateTracker();
+        _gameStateTracker = new GameStateTracker();
         _gameRuleEngine = GameRuleEngineFactory.GetInstance(dto);
         _gameStateTracker.Subscribe(_gameRuleEngine);
         
         var roundResult = _gameRuleEngine.GetCurrentRoundResult();
-        _gameState.SyncRoundResult(roundResult);
+        _gameState.State.SyncRoundResult(roundResult);
+        await _gameState.WriteStateAsync();
     }
 
-    public void AddPlayerToGame(AddPlayerCommand command)
+    public async Task AddPlayerToGame(AddPlayerCommand command)
     {
-        if (_gameState.PlayersNumber == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
+        if (_gameState.State.PlayersNumber == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
             return;
         }
@@ -48,19 +56,23 @@ public class GameGrain : Grain, IGameGrain
             Id = command.Id,
             NickName = command.NickName,
         };
-        if (_gameState.Players.All(x => x.Id != dto.Id))
+        if (_gameState.State.Players.All(x => x.Id != dto.Id))
         {
-            _gameState.Players.Add(dto);
+            _gameState.State.Players.Add(dto);
         }
 
-        if (_gameState.GameStatus is GameStatus.AwaitingPlayers 
-            && _gameState.PlayersNumber == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
+        if (_gameState.State.GameStatus is GameStatus.AwaitingPlayers 
+            && _gameState.State.PlayersNumber == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
-            _gameState.ChangeGameStatus(GameStatus.InPlay, _gameStateTracker);
+            _gameState.State.ChangeGameStatus(GameStatus.InPlay, _gameStateTracker);
+            var roundResult = _gameRuleEngine.GetCurrentRoundResult();
+            _gameState.State.SyncRoundResult(roundResult);
         }
+        
+        await _gameState.WriteStateAsync();
     }
 
-    public Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
+    public async Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
     {
         var dto = new MoveDto()
         {
@@ -70,7 +82,7 @@ public class GameGrain : Grain, IGameGrain
             SelectedTile = new TilePosition(command.SelectedTileRow, command.SelectedTileColumn)
         };
         var result = _gameRuleEngine.Handle(dto);
-        _gameState.SyncRoundResult(result);
+        _gameState.State.SyncRoundResult(result);
         
         // Game ends if all rounds are completed or 
         // required number of wins in match is met.
@@ -78,22 +90,24 @@ public class GameGrain : Grain, IGameGrain
         var score = _gameRuleEngine.GetScore();
         if (allRoundsFinished || score.IsRequiredNumberOfWinsMet())
         {
-            _gameState.ChangeGameStatus(GameStatus.Finished, _gameStateTracker);
+            _gameState.State.ChangeGameStatus(GameStatus.Finished, _gameStateTracker);
         }
         else
         {
-            _gameState.ChangeGameStatus(GameStatus.InPlay, _gameStateTracker);
+            _gameState.State.ChangeGameStatus(GameStatus.InPlay, _gameStateTracker);
         }
 
-        var newGameState = _gameState.Adapt<GameStateViewModel>();
+        var newGameState = await GetState();
         newGameState.Score = new GameScoreViewModel()
         {
             LastRound = score.LastRoundNumber,
             RequiredNumberOfWins = score.RequiredNumberOfWins,
             PlayerScores = score.PlayerStatistics.Adapt<List<PlayerScoreViewModel>>()
         };
+        
+        await _gameState.WriteStateAsync();
 
-        return Task.FromResult(newGameState);
+        return newGameState;
     }
 
     public Task<GameScoreViewModel> GetScore()
@@ -123,19 +137,19 @@ public class GameGrain : Grain, IGameGrain
     {
         var gameState = new GameStateViewModel()
         {
-            GameId = _gameState.GameId,
-            GameStatus = _gameState.GameStatus,
-            RoundStatus =  _gameState.RoundStatus,
-            RoundNumber =  _gameState.RoundNumber,
-            PlayersNumber =  _gameState.PlayersNumber,
-            PlayersTurnOrder =  _gameState.PlayersTurnOrder,
-            CurrentPlayerTurn =  _gameState.CurrentPlayerTurn,
-            Players = _gameState.Players.Select(x => new PlayerViewModel()
+            GameId = _gameState.State.GameId,
+            GameStatus = _gameState.State.GameStatus,
+            RoundStatus =  _gameState.State.RoundStatus,
+            RoundNumber =  _gameState.State.RoundNumber,
+            PlayersNumber =  _gameState.State.PlayersNumber,
+            PlayersTurnOrder =  _gameState.State.PlayersTurnOrder,
+            CurrentPlayerTurn =  _gameState.State.CurrentPlayerTurn,
+            Players = _gameState.State.Players.Select(x => new PlayerViewModel()
             {
                 Id = x.Id,
                 NickName = x.NickName
             }).ToList(),
-            Moves = _gameState.Moves.Select(x => new MoveViewModel()
+            Moves = _gameState.State.Moves.Select(x => new MoveViewModel()
             {
                 ActionType = x.ActionType,
                 PlayerId = x.PlayerId,
