@@ -57,8 +57,6 @@ namespace Assets.Scripts.BoredGames.API
                 GameState.Instance.PlayersTurnOrder = data.PlayersTurnOrder;
                 GameState.Instance.Moves = data.Moves;
                 GameState.Instance.Players = data.Players;
-                
-                Log($"Data players: {data.Players}");
 
                 if (GameState.Instance.Score != null && GameState.Instance.Score.HasRoundResult(GameState.Instance.PreviousRoundNumber))
                 {

@@ -1,11 +1,10 @@
 using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
 using System;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardMouseHandler : MonoBehaviour
+public class TileMouseHandler : MonoBehaviour
 {
     [SerializeField] int _row;
     [SerializeField] int _column;
@@ -13,7 +12,6 @@ public class CardMouseHandler : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private Sprite exSprite;
     [SerializeField] private Sprite oxSprite;
-    
  
     private string value = string.Empty;
 
@@ -34,14 +32,20 @@ public class CardMouseHandler : MonoBehaviour
         try
         {
             var actionType = GameState.Instance.GetActionType();
-            Debug.Log(">>> OnMouseDown: " + _row.ToString() +", "+ _column.ToString() + ", action:" + actionType);
+            Debug.Log(">>> OnMouseDown: " + _row +", "+ _column + ", action:" + actionType);
             BoredGamesSocketClient.Instance.MakeMove(new MakeMoveMessage
             {
                 ActionType = actionType,
                 GameId = GameState.Instance.GameId,
                 PlayerId = GameState.Instance.PlayerId,
+                SelectedTile = new TilePosition
+                {
+                    Row = _row,
+                    Column = _column
+                }
             });
             value = actionType; 
+            Debug.Log(">>> OnMouseDown: " + value);
             if (actionType.Equals("x", StringComparison.OrdinalIgnoreCase))
             {
                 image.sprite = exSprite;
@@ -54,8 +58,8 @@ public class CardMouseHandler : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogException(ex);
-            return;
         }
+        Debug.Log(">>> OnMouseDown: completed");
     }
 
     // void OnMouseEnter()

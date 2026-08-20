@@ -1,14 +1,10 @@
 using Assets.Scripts;
-using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _opponentTurnIndicator;
 
     [SerializeField] NotificationFader _notificationManager;  
+    [SerializeField] TilesHandler _tilesHandler;
 
     bool gameOnNotificationDisplayed = false;
     bool gamePlayerTurnNotificationDisplayed = false;
@@ -137,8 +134,16 @@ public class GameManager : MonoBehaviour
                 }
             case GameStatus.InPlay:
                 {
+                    Debug.Log($">>> my player id {GameState.Instance.PlayerId} <<<");
                     Debug.Log($">>> current player turn {GameState.Instance.CurrentPlayerTurn} <<<");
                     Debug.Log($">>> player turns {string.Join(",",GameState.Instance.PlayersTurnOrder)} <<<");
+                    
+                    _tilesHandler.Rerender();
+
+                    if (GameState.Instance.IsPreviousRoundCompleted)
+                    {
+                        _tilesHandler.Reset();
+                    }
 
                     if (!gameOnNotificationDisplayed)
                     {
@@ -154,8 +159,9 @@ public class GameManager : MonoBehaviour
                     _waitOpponentSpinner.GameObject().SetActive(false);
                     _opponentCanvas.gameObject.SetActive(true);
                     
-                    if (GameState.Instance.CurrentPlayerTurn == GameState.Instance.PlayerId)
+                    if (GameState.Instance.CurrentPlayerTurn.Equals(GameState.Instance.PlayerId, StringComparison.OrdinalIgnoreCase))
                     {
+                        Debug.Log($">>> my turn <<<");
                         _playerTurnIndicator.gameObject.SetActive(true);
                         _opponentTurnIndicator.gameObject.SetActive(false);
                         if (!gamePlayerTurnNotificationDisplayed)
@@ -166,11 +172,13 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log($">>> opponent's turn <<<");
+                        _opponentTurnIndicator.gameObject.SetActive(true);
+                        _playerTurnIndicator.gameObject.SetActive(false);
+                        
                         var player = GameState.Instance.Players.FirstOrDefault(x => x.Id == GameState.Instance.CurrentPlayerTurn);
                         if (player != null)
                         {
-                            _opponentTurnIndicator.gameObject.SetActive(true);
-                            _playerTurnIndicator.gameObject.SetActive(false);
                             if (!gamePlayerTurnNotificationDisplayed)
                             {
                                 ShowNotification($"{player.NickName}'s turn", Color.orange, 0.5f);

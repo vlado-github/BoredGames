@@ -84,6 +84,7 @@ public class RockPaperScissorsRuleEngine : SimultaneousGameRuleEngine<RockPaperS
         _rounds.Next();
         
         return new RoundResult(
+            isPreviousRoundCompleted: true,
             roundStatus: _rounds.Current.GetStatus(),
             roundNumber: _rounds.Current.Number);
     }

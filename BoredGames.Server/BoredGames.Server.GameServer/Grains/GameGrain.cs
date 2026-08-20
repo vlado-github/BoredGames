@@ -83,6 +83,11 @@ public class GameGrain : Grain, IGameGrain
         };
         var result = _gameRuleEngine.Handle(dto);
         _gameState.State.SyncRoundResult(result);
+
+        if (result.IsPreviousRoundCompleted)
+        {
+            _gameState.State.Moves = new List<MoveDto>();
+        }
         
         // Game ends if all rounds are completed or 
         // required number of wins in match is met.

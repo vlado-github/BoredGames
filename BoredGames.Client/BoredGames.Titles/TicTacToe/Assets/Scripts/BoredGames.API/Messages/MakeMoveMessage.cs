@@ -8,5 +8,6 @@ namespace Assets.Scripts.BoredGames.API
         public string GameId;
         public string PlayerId;
         public string ActionType;
+        public TilePosition SelectedTile;
     }
 }

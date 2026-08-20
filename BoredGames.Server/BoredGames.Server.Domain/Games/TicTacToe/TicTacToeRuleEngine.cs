@@ -94,6 +94,7 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
         _rounds.Next();
         
         return new RoundResult(
+            isPreviousRoundCompleted: true,
             roundStatus: _rounds.Current.GetStatus(),
             roundNumber: _rounds.Current.Number,
             currentPlayerTurn: Turns?.Current.PlayerId,
