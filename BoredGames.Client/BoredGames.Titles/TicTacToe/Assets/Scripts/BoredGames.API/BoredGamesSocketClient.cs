@@ -61,12 +61,10 @@ namespace Assets.Scripts.BoredGames.API
                 if (GameState.Instance.Score != null 
                     && GameState.Instance.Score.HasRoundResult(GameState.Instance.PreviousRoundNumber))
                 {
-                    Log($"HandleRoundResultDisplay PreviousRoundNumber {GameState.Instance.PreviousRoundNumber} {GameState.Instance.Score.HasRoundResult(GameState.Instance.PreviousRoundNumber)}");
                     GameManager.Instance.HandleRoundResultDisplay();
                 }
                 else
                 {
-                    Log("CheckGameStatus");
                     GameManager.Instance.CheckGameStatus();
                 }
             });
