@@ -108,8 +108,8 @@ public class GameManager : MonoBehaviour
 
     public void CheckGameStatus()
     {
-        Debug.Log($">>> CheckGameStatus {GameState.Instance.Status} <<<");
-        Debug.Log($">>> Players {string.Join(",",GameState.Instance.Players.Select(x => x.NickName))} <<<");
+        // Debug.Log($">>> CheckGameStatus {GameState.Instance.Status} <<<");
+        // Debug.Log($">>> Players {string.Join(",",GameState.Instance.Players.Select(x => x.NickName))} <<<");
         if (!GameState.Instance.IsGameCreated || !GameState.Instance.IsPlayerSet)
         {
             return;
@@ -130,16 +130,7 @@ public class GameManager : MonoBehaviour
                 }
             case GameStatus.InPlay:
                 {
-                    Debug.Log($">>> my player id {GameState.Instance.PlayerId} <<<");
-                    Debug.Log($">>> current player turn {GameState.Instance.CurrentPlayerTurn} <<<");
-                    Debug.Log($">>> player turns {string.Join(",",GameState.Instance.PlayersTurnOrder)} <<<");
-                    
                     _tilesHandler.Rerender();
-
-                    // if (GameState.Instance.IsPreviousRoundCompleted)
-                    // {
-                    //     _tilesHandler.Reset();
-                    // }
 
                     if (!gameOnNotificationDisplayed)
                     {
@@ -157,7 +148,6 @@ public class GameManager : MonoBehaviour
                     
                     if (GameState.Instance.CurrentPlayerTurn.Equals(GameState.Instance.PlayerId, StringComparison.OrdinalIgnoreCase))
                     {
-                        Debug.Log($">>> my turn <<<");
                         _playerTurnIndicator.gameObject.SetActive(true);
                         _opponentTurnIndicator.gameObject.SetActive(false);
                         if (!gamePlayerTurnNotificationDisplayed)
@@ -168,7 +158,6 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log($">>> opponent's turn <<<");
                         _opponentTurnIndicator.gameObject.SetActive(true);
                         _playerTurnIndicator.gameObject.SetActive(false);
                         
@@ -187,8 +176,6 @@ public class GameManager : MonoBehaviour
                 }
             case GameStatus.Finished:
                 {
-                    //Debug.Log($">>> gameplay {GameState.Instance.Status} <<<");
-
                     _waitingForPlayerCanvas.gameObject.SetActive(false);
                     _scoreCanvas.gameObject.SetActive(true);
                     _playerNameCanvas.gameObject.SetActive(false);

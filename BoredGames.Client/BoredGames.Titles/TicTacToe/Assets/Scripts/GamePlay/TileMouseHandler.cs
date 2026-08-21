@@ -33,7 +33,6 @@ public class TileMouseHandler : MonoBehaviour
         try
         {
             var actionType = GameState.Instance.GetActionType();
-            Debug.Log(">>> OnMouseDown: " + _row +", "+ _column + ", action:" + actionType);
             BoredGamesSocketClient.Instance.MakeMove(new MakeMoveMessage
             {
                 ActionType = actionType,
@@ -46,7 +45,6 @@ public class TileMouseHandler : MonoBehaviour
                 }
             });
             value = actionType;
-            Debug.Log(">>> OnMouseDown: " + value);
             if (actionType.Equals("x", StringComparison.OrdinalIgnoreCase))
             {
                 image.sprite = exSprite;
@@ -60,28 +58,5 @@ public class TileMouseHandler : MonoBehaviour
         {
             Debug.LogException(ex);
         }
-        Debug.Log(">>> OnMouseDown: completed");
     }
-
-    // void OnMouseEnter()
-    // {
-    //     Debug.Log(">>> OnMouseEnter");
-    //     if (!GameState.Instance.IsPlayerTurn() 
-    //         || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay
-    //         || !string.IsNullOrEmpty(value))
-    //     {
-    //         return;
-    //     }
-    // }
-
-    // void OnMouseExit()
-    // {
-    //     Debug.Log(">>> OnMouseExit");
-    //     if (!GameState.Instance.IsPlayerTurn() 
-    //         || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay
-    //         || !string.IsNullOrEmpty(value))
-    //     {
-    //         return;
-    //     }
-    // }
 }
