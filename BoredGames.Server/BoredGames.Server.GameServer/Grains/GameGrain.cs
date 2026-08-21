@@ -2,6 +2,7 @@
 using BoredGames.Server.Domain.Games.Base;
 using BoredGames.Server.Domain.Games.Dtos;
 using BoredGames.Server.Domain.Games.Entities;
+using BoredGames.Server.Domain.Games.PubSub;
 using BoredGames.Server.GameServer.Commands;
 using BoredGames.Server.GameServer.Grains.Base;
 using BoredGames.Server.GameServer.ViewModels;
@@ -11,59 +12,88 @@ namespace BoredGames.Server.GameServer.Grains;
 
 public class GameGrain : Grain, IGameGrain
 {
-    private IList<PlayerDto> _players;
-    private GameState _gameState;
+    private readonly IPersistentState<GameState> _gameState;
     private IGameRuleEngine _gameRuleEngine;
+    private GameStateTracker _gameStateTracker;
 
-    public override Task OnActivateAsync(CancellationToken token)
+    public GameGrain(
+        [PersistentState("gameState", "Default")] IPersistentState<GameState> gameState)
     {
-        _players = new List<PlayerDto>();
-        _gameState = new GameState
-        {
-            GameId = this.GetPrimaryKey(),
-            GameStatus = GameStatus.AwaitingPlayers
-        };
+        _gameState = gameState;
+        _gameStateTracker = new GameStateTracker();
         _gameRuleEngine = GameRuleEngineFactory.GetInstance(GameDto.Default);
-        return base.OnActivateAsync(token);
+        _gameStateTracker.Subscribe(_gameRuleEngine);
+    }
+
+    public override async Task OnActivateAsync(CancellationToken token)
+    {
+        _gameState.State.GameId = this.GetPrimaryKey();
+        await _gameState.WriteStateAsync(token);
+        await base.OnActivateAsync(token);
     }
 
     public async Task Setup(CreateGameCommand command)
     {
         var dto = command.Adapt<GameDto>();
-        _gameRuleEngine = GameRuleEngineFactory.GetInstance(dto);
+        _gameStateTracker = new GameStateTracker();
+        _gameRuleEngine = GameRuleEngineFactory.GetInstance(dto, OnRoundCompleted);
+        _gameStateTracker.Subscribe(_gameRuleEngine);
         
         var roundResult = _gameRuleEngine.GetCurrentRoundResult();
-        _gameState.RoundNumber = roundResult.RoundNumber;
-        _gameState.RoundStatus = roundResult.RoundStatus;
+        _gameState.State.SyncRoundResult(roundResult);
+        await _gameState.WriteStateAsync();
     }
 
     public async Task AddPlayerToGame(AddPlayerCommand command)
     {
-        if (_players.Count == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
+        if (_gameState.State.PlayersNumber == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
             return;
         }
         
-        var dto = command.Adapt<PlayerDto>();
-        if (!_players.Select(x => x.Id).Contains(dto.Id))
+        var dto = new PlayerDto()
         {
-            _players.Add(dto);
-            _gameState.PlayersNumber = _players.Count;
+            Id = command.Id,
+            NickName = command.NickName,
+        };
+        if (_gameState.State.Players.All(x => x.Id != dto.Id))
+        {
+            _gameState.State.Players.Add(dto);
         }
 
-        if (_gameState.GameStatus is GameStatus.AwaitingPlayers 
-            && _players.Count == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
+        if (_gameState.State.GameStatus is GameStatus.AwaitingPlayers 
+            && _gameState.State.PlayersNumber == _gameRuleEngine.GetDefinition().RequiredNumberOfPlayers)
         {
-            _gameState.GameStatus = GameStatus.InPlay;
+            _gameState.State.ChangeGameStatus(GameStatus.InPlay, _gameStateTracker);
+            var roundResult = _gameRuleEngine.GetCurrentRoundResult();
+            _gameState.State.SyncRoundResult(roundResult);
         }
+        
+        await _gameState.WriteStateAsync();
     }
 
     public async Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
     {
-        var dto = command.Adapt<MoveDto>();
+        TilePosition? selectedTile = null;
+        if (command.SelectedTileRow.HasValue && command.SelectedTileColumn.HasValue)
+        {
+            selectedTile = new TilePosition(command.SelectedTileRow.Value, command.SelectedTileColumn.Value);
+        }
+        var dto = new MoveDto()
+        {
+            PlayerId = command.PlayerId,
+            PlayerNickName = command.PlayerNickName,
+            ActionType = command.ActionType,
+            SelectedTile = selectedTile
+        };
+
         var result = _gameRuleEngine.Handle(dto);
-        _gameState.RoundNumber = result.RoundNumber;
-        _gameState.RoundStatus = result.RoundStatus;
+        _gameState.State.SyncRoundResult(result);
+
+        if (result.IsPreviousRoundCompleted)
+        {
+            _gameState.State.Moves = new List<MoveDto>();
+        }
         
         // Game ends if all rounds are completed or 
         // required number of wins in match is met.
@@ -71,20 +101,22 @@ public class GameGrain : Grain, IGameGrain
         var score = _gameRuleEngine.GetScore();
         if (allRoundsFinished || score.IsRequiredNumberOfWinsMet())
         {
-            _gameState.GameStatus = GameStatus.Finished;
+            _gameState.State.ChangeGameStatus(GameStatus.Finished, _gameStateTracker);
         }
         else
         {
-            _gameState.GameStatus = GameStatus.InPlay;
+            _gameState.State.ChangeGameStatus(GameStatus.InPlay, _gameStateTracker);
         }
 
-        var newGameState = _gameState.Adapt<GameStateViewModel>();
+        var newGameState = await GetState();
         newGameState.Score = new GameScoreViewModel()
         {
             LastRound = score.LastRoundNumber,
             RequiredNumberOfWins = score.RequiredNumberOfWins,
             PlayerScores = score.PlayerStatistics.Adapt<List<PlayerScoreViewModel>>()
         };
+        
+        await _gameState.WriteStateAsync();
 
         return newGameState;
     }
@@ -114,8 +146,39 @@ public class GameGrain : Grain, IGameGrain
 
     public async Task<GameStateViewModel> GetState()
     {
-        var gameState = _gameState.Adapt<GameStateViewModel>();
+        var gameState = new GameStateViewModel()
+        {
+            GameId = _gameState.State.GameId,
+            GameStatus = _gameState.State.GameStatus,
+            RoundStatus =  _gameState.State.RoundStatus,
+            RoundNumber =  _gameState.State.RoundNumber,
+            PlayersNumber =  _gameState.State.PlayersNumber,
+            PlayersTurnOrder =  _gameState.State.PlayersTurnOrder,
+            CurrentPlayerTurn =  _gameState.State.CurrentPlayerTurn,
+            Players = _gameState.State.Players.Select(x => new PlayerViewModel()
+            {
+                Id = x.Id,
+                NickName = x.NickName
+            }).ToList(),
+            Moves = _gameState.State.Moves.Select(x => new MoveViewModel()
+            {
+                ActionType = x.ActionType,
+                PlayerId = x.PlayerId,
+                PlayerNickName = x.PlayerNickName,
+                SelectedTile = new TilePositionViewModel()
+                {
+                    Column = x.SelectedTile?.Column ?? 0,
+                    Row = x.SelectedTile?.Row ?? 0
+                }
+            }).ToList()
+        };
         gameState.Score = await GetScore();
         return gameState;
+    }
+
+    private void OnRoundCompleted()
+    {
+        _gameState.State.CurrentPlayerTurn = _gameState.State.PlayersTurnOrder?.FirstOrDefault();
+        _gameState.State.Moves = new List<MoveDto>();
     }
 }

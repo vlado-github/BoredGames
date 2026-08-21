@@ -30,24 +30,22 @@ export default {
 
 <template>
     <div class="gallery">
-      <div class="placement">
-        <GameTitleTile
-          v-for="title in titles"
-          :key="title.id"
-          :titleId="title.id"
-          :titleName="title.name"
-          :iconUrl="title.thumbnailImageUrl"
-        />
-      </div>
+      <GameTitleTile
+        v-for="title in titles"
+        :key="title.id"
+        :titleId="title.id"
+        :titleName="title.name"
+        :titleAlias="title.alias"
+        :iconUrl="title.thumbnailImageUrl"
+      />
     </div>
 </template>
 
 <style>
   .gallery {
-    display: table;
+    display: grid;
     width: 100%;
-  }
-  .placement {
-    text-align: center;
+    row-gap: 50px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%/3, max(64px, 100%/3)), 1fr));
   }
 </style>

@@ -17,4 +17,13 @@ public class GameStateViewModel
     public int PlayersNumber { get; set; }
     [Id(5)]
     public GameScoreViewModel Score { get; set; } = new ();
+    [Id(6)] 
+    public Guid? CurrentPlayerTurn { get; set; }
+    [Id(7)]
+    public Guid[]? PlayersTurnOrder { get; set; }
+    [Id(8)]
+    public IList<MoveViewModel> Moves { get; set; } = new List<MoveViewModel>();
+    [Id(9)]
+    public IList<PlayerViewModel> Players { get; set; } = new List<PlayerViewModel>();
+    
 }

@@ -7,6 +7,7 @@ export default {
   props: {
     titleId: Number,
     titleName: String,
+    titleAlias: String,
     iconUrl: String,
   },
 
@@ -16,7 +17,7 @@ export default {
 
   methods: {
     play() {
-      router.push({ name: 'game', query: { gameTitle: this.titleName} })
+      router.push({ name: 'game', query: { gameTitle: this.titleAlias} })
     }
   }
 }
@@ -24,7 +25,7 @@ export default {
 
 <template>
   <div class="title">
-    <div>
+    <div class="game-tile-container">
         <img @click="play" :id="titleId" width="250" height="250" :src="iconUrl" :alt="titleName"/>
         <span class="caption">{{ titleName }}</span>
     </div>
@@ -43,5 +44,10 @@ export default {
   .caption {
     display: block;
     color: whitesmoke;
-}
+  }
+  .game-tile-container:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+    filter: brightness(1.2);
+  }
 </style>

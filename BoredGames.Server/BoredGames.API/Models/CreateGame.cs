@@ -9,7 +9,7 @@ public class CreateGame
     public int NumberOfPlayers { get; set; } = 2;
     public int RequiredNumberOfConsecutiveWins { get; set; }
     public int NumberOfRounds { get; set; } = 100;
-    public string? Description { get; set; }
+    public string? EndOfGameMessage { get; set; }
 }
 
 public class CreateGameValidator : AbstractValidator<CreateGame>

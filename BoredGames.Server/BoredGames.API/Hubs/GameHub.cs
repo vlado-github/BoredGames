@@ -33,6 +33,7 @@ public class GameHub : Hub
         }
         var game = _grainFactory.GetGrain<IGameGrain>(gameIdAsGuid);
         var gameState = await game.GetState();
+        _logger.LogInformation($"Players {gameState.Players.Count}: {string.Join(",", gameState.Players.Select(x => x.NickName))}");
         await Clients
             .Group(gameId)
             .SendAsync("OnGameStateReceived", JsonConvert.SerializeObject(gameState));
@@ -71,7 +72,9 @@ public class GameHub : Hub
         {
             ActionType = makeMove.ActionType,
             PlayerId = playerIdAsGuid,
-            PlayerNickName = playerDetails.NickName
+            PlayerNickName = playerDetails.NickName,
+            SelectedTileRow = makeMove.SelectedTile?.Row,
+            SelectedTileColumn = makeMove.SelectedTile?.Column
         });
             
         await Clients

@@ -11,4 +11,8 @@ public class MakeMoveCommand : CommandBase
     public string ActionType { get; set; }
     [Id(2)]
     public string? PlayerNickName { get; set; }
+    [Id(3)]
+    public int? SelectedTileRow { get; set; }
+    [Id(4)]
+    public int? SelectedTileColumn { get; set; }
 }

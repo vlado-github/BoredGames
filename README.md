@@ -10,7 +10,7 @@
    </p>
 
    <h1>BoredGames</h1>
-   <h3>Web platform for hosting custom web-based games</h3>
+   <h3>Single-player and multi-player web games.</h3>
    
    [![GitHub Release](https://img.shields.io/badge/release-v1.4.0-blue)](https://github.com/vlado-github/BoredGames/releases)
 
@@ -39,7 +39,7 @@
 
 <a href="https://boredgames.lol">BoredGames</a> offers tools for your game:
 
-### 🔧 Hosting
+### 🔧 Hosting (WIP)
 - **WebGL/Wasm/JS:** upload a game draft which is then reviewed and hosted for **free**
 
 ### 🏆 Scoring and multiplayer API

@@ -1,3 +1,4 @@
+using BoredGames.API.Consts;
 using BoredGames.API.Extensions;
 using BoredGames.API.Hubs;
 using BoredGames.API.Models;
@@ -20,7 +21,7 @@ namespace BoredGames.API.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGrainFactory _grainFactory;
-        private readonly string _appBaseUrl;
+        private readonly string? _appBaseUrl;
         private readonly IHubContext<GameHub> _hubContext;
         
         public GameController(IGrainFactory grainFactory, IHubContext<GameHub> hubContext)
@@ -34,19 +35,7 @@ namespace BoredGames.API.Controllers
         [HttpGet("titles")]
         public GameTitlesViewModel GetTitles()
         {
-            var result = new GameTitlesViewModel();
-            foreach(GameTitle title in Enum.GetValues(typeof(GameTitle)) )
-            {
-                result.Titles.Add(new GameTitleViewModel()
-                {
-                    Id = (int) title,
-                    Name = title.ToString(),
-                    ThumbnailImageUrl = $"{_appBaseUrl}/assets/clashofhands-logo.png",
-                    FormSchema = GameFormSchemaFactory.GetInstance(title).ToJson()
-                });
-            }
-
-            return result;
+            return new GameTitlesViewModel { Titles = GameTitles.All };
         }
         
         [HttpPost("create")]
@@ -60,7 +49,7 @@ namespace BoredGames.API.Controllers
                 NumberOfPlayers = request.NumberOfPlayers,
                 RequiredNumberOfWins = request.RequiredNumberOfConsecutiveWins,
                 NumberOfRounds = request.NumberOfRounds,
-                Description = request.Description,
+                EndOfGameMessage = request.EndOfGameMessage,
             });
             return gameDefinition;
         }
@@ -74,7 +63,7 @@ namespace BoredGames.API.Controllers
             var gameState = await player.JoinGame(new JoinGameCommand()
             {
                 GameId = request.GameId,
-                PlayerNickName = playerDetails.NickName
+                PlayerNickName = playerDetails.NickName,
             });
             await _hubContext.Clients
                 .Group(gameState.GameId.ToString())

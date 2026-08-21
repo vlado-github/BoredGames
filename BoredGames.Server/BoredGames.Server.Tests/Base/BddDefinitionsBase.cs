@@ -1,23 +1,25 @@
 
+using Orleans.TestingHost;
 using Xunit.Gherkin.Quick;
 
 namespace BoredGames.Server.Tests.Base;
 
 [FeatureFile("./Base/BddDefinitionsBase.feature")]
-public class BddDefinitionsBase : Feature, IDisposable
+public class BddDefinitionsBase : Feature, IAsyncLifetime
 {
-    protected readonly TestAppHostFactory AppHostInstance;
-    protected readonly TestGameServerFactory GameServerInstance;
-
-    protected BddDefinitionsBase()
+    protected InProcessTestCluster Cluster = null!;
+    
+    public async Task InitializeAsync()
     {
-        GameServerInstance = new TestGameServerFactory();
-        AppHostInstance = new TestAppHostFactory();
+        var builder = new InProcessTestClusterBuilder();
+        builder.ConfigureSilo((options, siloBuilder) =>
+            siloBuilder.AddMemoryGrainStorage("Default"));
+        Cluster = builder.Build();
+        await Cluster.DeployAsync();
     }
 
-    public void Dispose()
+    public async Task DisposeAsync()
     {
-        GameServerInstance.Dispose();
-        AppHostInstance.Dispose();
+        await Cluster.DisposeAsync();
     }
 }

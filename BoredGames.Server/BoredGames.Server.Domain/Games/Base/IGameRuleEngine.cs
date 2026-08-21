@@ -3,7 +3,7 @@ using BoredGames.Server.Domain.Games.Entities;
 
 namespace BoredGames.Server.Domain.Games.Base;
 
-public interface IGameRuleEngine
+public interface IGameRuleEngine : IObserver<GameState>
 {
     RoundResult Handle(MoveDto dto);
     IList<Player> GetWinners();

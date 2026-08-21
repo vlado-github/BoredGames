@@ -10,5 +10,9 @@ public class GameTitleViewModel
     [Id(2)]
     public string ThumbnailImageUrl { get; set; }
     [Id(3)]
-    public string FormSchema { get; set; }
+    public string Alias { get; set; }
+    [Id(4)]
+    public string Description { get; set; }
+    [Id(5)]
+    public string[] Tags { get; set; }
 }
