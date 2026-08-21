@@ -1,4 +1,6 @@
-﻿namespace BoredGames.Common.Enums;
+﻿using System;
+
+namespace BoredGames.Common.Enums;
 
 [Serializable]
 public enum GameStatus

@@ -1,3 +1,4 @@
+using System;
 using Bogus;
 
 namespace BoredGames.Server.Domain.Games.Entities;

@@ -1,3 +1,5 @@
+using System;
+
 namespace BoredGames.Common.Exceptions;
 
 public class InvalidActionException : Exception

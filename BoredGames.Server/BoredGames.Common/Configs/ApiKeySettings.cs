@@ -1,3 +1,4 @@
+using System;
 using BoredGames.Common.Consts;
 
 namespace BoredGames.Common.Configs;

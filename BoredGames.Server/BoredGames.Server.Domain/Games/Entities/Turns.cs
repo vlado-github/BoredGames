@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using BoredGames.Server.Domain.Games.Dtos;
 
 namespace BoredGames.Server.Domain.Games.Entities;

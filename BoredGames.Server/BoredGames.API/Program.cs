@@ -8,7 +8,11 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Keycloak.AuthServices.Authentication;
 using Keycloak.AuthServices.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 

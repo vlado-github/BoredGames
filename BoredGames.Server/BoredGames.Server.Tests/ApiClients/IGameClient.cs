@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using BoredGames.API.Models;
 using BoredGames.Server.GameServer.ViewModels;
 using Microsoft.AspNetCore.Mvc;

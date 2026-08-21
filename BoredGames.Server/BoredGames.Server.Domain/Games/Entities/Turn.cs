@@ -1,3 +1,4 @@
+using System;
 using BoredGames.Server.Domain.Games.Dtos;
 
 namespace BoredGames.Server.Domain.Games.Entities;

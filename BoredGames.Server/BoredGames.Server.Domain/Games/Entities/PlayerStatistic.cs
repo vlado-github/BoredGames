@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace BoredGames.Server.Domain.Games.Entities;
 
 public class PlayerStatistic

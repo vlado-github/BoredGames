@@ -1,8 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using BoredGames.API.Middlewares.CustomResponses;
 using BoredGames.Common.Exceptions;
 using BoredGames.Common.Utils;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace BoredGames.API.Middlewares;
 

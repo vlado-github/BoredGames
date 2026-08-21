@@ -1,3 +1,5 @@
+using System;
+
 namespace BoredGames.Server.Domain.Games.Entities;
 
 public class GameDefinition

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BoredGames.Common.Enums;
 using BoredGames.Common.Exceptions;
 using BoredGames.Server.Domain.Games.Dtos;

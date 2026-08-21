@@ -1,3 +1,4 @@
+using System;
 using BoredGames.Common.Configs;
 using Microsoft.AspNetCore.Mvc.Filters;
 

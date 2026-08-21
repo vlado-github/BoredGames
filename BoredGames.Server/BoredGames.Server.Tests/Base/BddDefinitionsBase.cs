@@ -1,4 +1,6 @@
 
+using System.Threading.Tasks;
+using Orleans.Hosting;
 using Orleans.TestingHost;
 using Xunit.Gherkin.Quick;
 

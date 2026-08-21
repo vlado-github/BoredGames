@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace BoredGames.Server.Domain.Games.Entities;
 
 public class GameScore

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Orleans;
+
 namespace BoredGames.Server.GameServer.ViewModels;
 
 [GenerateSerializer]

@@ -1,4 +1,6 @@
-﻿using BoredGames.Common.Configs;
+﻿using System;
+using System.Threading.Tasks;
+using BoredGames.Common.Configs;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BoredGames.API.Filters;

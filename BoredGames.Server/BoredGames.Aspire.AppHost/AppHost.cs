@@ -1,3 +1,6 @@
+using System;
+using Aspire.Hosting;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 var aspnetEnvVar =  Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
