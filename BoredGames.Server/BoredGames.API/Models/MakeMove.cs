@@ -8,7 +8,7 @@ public class MakeMove
     public string GameId { get; set; }
     public string PlayerId { get; set; }
     public string ActionType { get; set; }
-    public TilePosition SelectedTile { get; set; }
+    public TilePosition? SelectedTile { get; set; } = null;
 }
 
 public class MakeMoveValidator : AbstractValidator<MakeMove>

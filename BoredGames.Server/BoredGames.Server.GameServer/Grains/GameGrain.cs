@@ -74,13 +74,19 @@ public class GameGrain : Grain, IGameGrain
 
     public async Task<GameStateViewModel> MakeMove(MakeMoveCommand command)
     {
+        TilePosition? selectedTile = null;
+        if (command.SelectedTileRow.HasValue && command.SelectedTileColumn.HasValue)
+        {
+            selectedTile = new TilePosition(command.SelectedTileRow.Value, command.SelectedTileColumn.Value);
+        }
         var dto = new MoveDto()
         {
             PlayerId = command.PlayerId,
             PlayerNickName = command.PlayerNickName,
             ActionType = command.ActionType,
-            SelectedTile = new TilePosition(command.SelectedTileRow, command.SelectedTileColumn)
+            SelectedTile = selectedTile
         };
+
         var result = _gameRuleEngine.Handle(dto);
         _gameState.State.SyncRoundResult(result);
 
@@ -161,8 +167,8 @@ public class GameGrain : Grain, IGameGrain
                 PlayerNickName = x.PlayerNickName,
                 SelectedTile = new TilePositionViewModel()
                 {
-                    Column = x.SelectedTile.Column,
-                    Row = x.SelectedTile.Row
+                    Column = x.SelectedTile?.Column ?? 0,
+                    Row = x.SelectedTile?.Row ?? 0
                 }
             }).ToList()
         };
@@ -172,7 +178,6 @@ public class GameGrain : Grain, IGameGrain
 
     private void OnRoundCompleted()
     {
-        //_gameState.State.PlayersTurnOrder = _gameState.State.PlayersTurnOrder?.Reverse().ToArray();
         _gameState.State.CurrentPlayerTurn = _gameState.State.PlayersTurnOrder?.FirstOrDefault();
         _gameState.State.Moves = new List<MoveDto>();
     }
