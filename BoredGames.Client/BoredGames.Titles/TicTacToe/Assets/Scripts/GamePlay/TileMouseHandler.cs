@@ -1,6 +1,7 @@
 using Assets.Scripts.BoredGames.API;
 using Assets.Scripts.GamePlay;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,7 @@ public class TileMouseHandler : MonoBehaviour
     [SerializeField] private Sprite exSprite;
     [SerializeField] private Sprite oxSprite;
  
-    private string value = string.Empty;
+    private string value;
 
     void Start()
     {
@@ -24,7 +25,7 @@ public class TileMouseHandler : MonoBehaviour
     {
         if (!GameState.Instance.IsPlayerTurn() 
             || GameState.Instance.Status != Assets.Scripts.GameStatus.InPlay
-            || !string.IsNullOrEmpty(value))
+            || GameState.Instance.Moves.Any(x => x.SelectedTile.Column == _column && x.SelectedTile.Row == _row))
         {
             return;
         }
@@ -44,7 +45,7 @@ public class TileMouseHandler : MonoBehaviour
                     Column = _column
                 }
             });
-            value = actionType; 
+            value = actionType;
             Debug.Log(">>> OnMouseDown: " + value);
             if (actionType.Equals("x", StringComparison.OrdinalIgnoreCase))
             {

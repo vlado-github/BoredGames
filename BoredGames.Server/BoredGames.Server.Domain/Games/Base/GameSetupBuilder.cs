@@ -9,6 +9,7 @@ public class GameSetupBuilder<T> : IGameSetupBuilder<T> where T : GameConfigurat
     private T _gameConfiguration;
     private Func<MoveDto, RoundResult> _resultResolverAction;
     private Action<ReadOnlyGameState> _gameStateHandlerAction;
+    private Action _roundCompletedHandlerAction;
     
     public IGameSetupBuilder<T> AddConfiguration(T gameConfiguration)
     {
@@ -25,6 +26,12 @@ public class GameSetupBuilder<T> : IGameSetupBuilder<T> where T : GameConfigurat
     public IGameSetupBuilder<T> AddGameStateHandler(Action<ReadOnlyGameState> handler)
     {
         _gameStateHandlerAction = handler;
+        return this;
+    }
+
+    public IGameSetupBuilder<T> AddRoundCompletedHandler(Action handler)
+    {
+        _roundCompletedHandlerAction = handler;
         return this;
     }
 

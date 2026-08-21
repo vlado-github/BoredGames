@@ -102,11 +102,7 @@ public class GameManager : MonoBehaviour
                     }
             }
 
-            StartCoroutine(Delay(1, () =>
-            {
-                //Reset display for next round
-                CheckGameStatus();
-            }));
+            StartCoroutine(Delay(1, CheckGameStatus));
         }
     }
 
@@ -140,10 +136,10 @@ public class GameManager : MonoBehaviour
                     
                     _tilesHandler.Rerender();
 
-                    if (GameState.Instance.IsPreviousRoundCompleted)
-                    {
-                        _tilesHandler.Reset();
-                    }
+                    // if (GameState.Instance.IsPreviousRoundCompleted)
+                    // {
+                    //     _tilesHandler.Reset();
+                    // }
 
                     if (!gameOnNotificationDisplayed)
                     {

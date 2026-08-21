@@ -12,7 +12,7 @@ namespace Assets.Scripts.BoredGames.API
     public class BoredGamesAPIClient
     {
         private static BoredGamesAPIClient _instance = null;
-        private static ApiTokenResponse cachedToken; 
+        private static ApiTokenResponse _cachedToken; 
 
         public static BoredGamesAPIClient Instance
         {
@@ -21,7 +21,7 @@ namespace Assets.Scripts.BoredGames.API
                 if (_instance == null)
                 {
                     _instance = new BoredGamesAPIClient();
-                    cachedToken = new ApiTokenResponse();
+                    _cachedToken = new ApiTokenResponse();
                 }
                 return _instance;
             }
@@ -47,7 +47,7 @@ namespace Assets.Scripts.BoredGames.API
                     string jsonResp = request.downloadHandler.text;
                     var response = JsonUtility.FromJson<ApiTokenResponse>(jsonResp);
                     response.ExpiresAt = DateTime.UtcNow.AddSeconds(response.expires_in - 30);
-                    cachedToken = response;
+                    _cachedToken = response;
                     onSuccess(response);
                 }
             }
@@ -78,9 +78,9 @@ namespace Assets.Scripts.BoredGames.API
         public IEnumerator GetTitles(Action<TitlesResponse> onSuccess)
         {
             ApiTokenResponse token = null;
-            if (cachedToken.IsValid())
+            if (_cachedToken.IsValid())
             {
-                token = cachedToken;
+                token = _cachedToken;
             }
             else
             {
@@ -98,9 +98,9 @@ namespace Assets.Scripts.BoredGames.API
         public IEnumerator GetWinners(Action<WinnersResponse> onSuccess)
         {
             ApiTokenResponse token = null;
-            if (cachedToken.IsValid())
+            if (_cachedToken.IsValid())
             {
-                token = cachedToken;
+                token = _cachedToken;
             }
             else
             {
@@ -118,9 +118,9 @@ namespace Assets.Scripts.BoredGames.API
         public IEnumerator CreateGame(Action<CreateGameResponse> onSuccess)
         {
             ApiTokenResponse token = null;
-            if (cachedToken.IsValid())
+            if (_cachedToken.IsValid())
             {
-                token = cachedToken;
+                token = _cachedToken;
             }
             else
             {
@@ -146,9 +146,9 @@ namespace Assets.Scripts.BoredGames.API
         public IEnumerator JoinGame(Action<GameStateResponse> onSuccess)
         {
             ApiTokenResponse token = null;
-            if (cachedToken.IsValid())
+            if (_cachedToken.IsValid())
             {
-                token = cachedToken;
+                token = _cachedToken;
             }
             else
             {
@@ -193,9 +193,9 @@ namespace Assets.Scripts.BoredGames.API
         public IEnumerator GetGameState(Action<GameStateResponse> onSuccess)
         {
             ApiTokenResponse token = null;
-            if (cachedToken.IsValid())
+            if (_cachedToken.IsValid())
             {
-                token = cachedToken;
+                token = _cachedToken;
             }
             else
             {
@@ -213,9 +213,9 @@ namespace Assets.Scripts.BoredGames.API
         public IEnumerator CreatePlayerSession(Action<PlayerDetailsResponse> onSuccess)
         {
             ApiTokenResponse token = null;
-            if (cachedToken.IsValid())
+            if (_cachedToken.IsValid())
             {
-                token = cachedToken;
+                token = _cachedToken;
             }
             else
             {
@@ -237,9 +237,9 @@ namespace Assets.Scripts.BoredGames.API
         public IEnumerator UpdatePlayerSessionDetails(Action<PlayerDetailsResponse> onSuccess)
         {
             ApiTokenResponse token = null;
-            if (cachedToken.IsValid())
+            if (_cachedToken.IsValid())
             {
-                token = cachedToken;
+                token = _cachedToken;
             }
             else
             {
@@ -261,9 +261,9 @@ namespace Assets.Scripts.BoredGames.API
         public IEnumerator GetPlayerSessionDetails(Action<PlayerDetailsResponse> onSuccess)
         {
             ApiTokenResponse token = null;
-            if (cachedToken.IsValid())
+            if (_cachedToken.IsValid())
             {
-                token = cachedToken;
+                token = _cachedToken;
             }
             else
             {

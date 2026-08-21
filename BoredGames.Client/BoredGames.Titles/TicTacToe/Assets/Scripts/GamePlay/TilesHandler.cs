@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Assets.Scripts.GamePlay;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,6 +32,11 @@ public class TilesHandler : MonoBehaviour
         {
             return;
         }
+
+        if (!GameState.Instance.Moves.Any())
+        {
+            Reset();
+        }
         foreach (var move in GameState.Instance.Moves)
         {
             var index = ToIndex(move.SelectedTile.Row, move.SelectedTile.Column);
@@ -45,7 +51,7 @@ public class TilesHandler : MonoBehaviour
         }
     }
 
-    public void Reset()
+    private void Reset()
     {
         try
         {

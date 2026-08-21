@@ -36,7 +36,7 @@ public class GameGrain : Grain, IGameGrain
     {
         var dto = command.Adapt<GameDto>();
         _gameStateTracker = new GameStateTracker();
-        _gameRuleEngine = GameRuleEngineFactory.GetInstance(dto);
+        _gameRuleEngine = GameRuleEngineFactory.GetInstance(dto, OnRoundCompleted);
         _gameStateTracker.Subscribe(_gameRuleEngine);
         
         var roundResult = _gameRuleEngine.GetCurrentRoundResult();
@@ -168,5 +168,12 @@ public class GameGrain : Grain, IGameGrain
         };
         gameState.Score = await GetScore();
         return gameState;
+    }
+
+    private void OnRoundCompleted()
+    {
+        //_gameState.State.PlayersTurnOrder = _gameState.State.PlayersTurnOrder?.Reverse().ToArray();
+        _gameState.State.CurrentPlayerTurn = _gameState.State.PlayersTurnOrder?.FirstOrDefault();
+        _gameState.State.Moves = new List<MoveDto>();
     }
 }

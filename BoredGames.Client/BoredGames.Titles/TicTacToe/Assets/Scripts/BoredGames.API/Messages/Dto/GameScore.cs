@@ -56,7 +56,8 @@ namespace Assets.Scripts.BoredGames.API
             return result;
         }
 
-        public bool HasRoundResult(int roundNumber) => GetRoundResult(roundNumber).Count == GameConfiguration.Instance.NumberOfPlayers;
+        public bool HasRoundResult(int roundNumber) => 
+            GetRoundResult(roundNumber).Count(x => x.RoundResult.Result != null) == GameConfiguration.Instance.NumberOfPlayers;
     }
 
     [System.Serializable]

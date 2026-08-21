@@ -27,11 +27,15 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
     {
     }
 
-    public override void Setup(TicTacToeConfiguration? configuration)
+    public override void Setup(TicTacToeConfiguration? configuration, Action? onRoundCompleted = null)
     {
         _gameSetupBuilder
             .AddConfiguration(configuration ?? TicTacToeConfiguration.Default)
             .AddResultResolver(ResolveResultAction);
+        if (onRoundCompleted != null)
+        {
+            _gameSetupBuilder.AddRoundCompletedHandler(onRoundCompleted);
+        }
     }
     
     public override RoundResult GetCurrentRoundResult()
@@ -83,8 +87,8 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
             var otherPlayer = new Player(otherPlayerMove.PlayerId, otherPlayerMove.PlayerNickName);
             _gameScore.AddDraw(otherPlayer, _rounds.Current.Number, otherPlayerMove.ActionType);
         }
-        
-        _rounds.Current.Complete();
+
+        CompleteRound();
 
         if (_rounds.AreFinished() && !_gameScore.IsRequiredNumberOfWinsMet())
         {
@@ -100,6 +104,13 @@ public class TicTacToeRuleEngine : TurnBaseGameRuleEngine<TicTacToeConfiguration
             currentPlayerTurn: Turns?.Current.PlayerId,
             playersTurnOrder: Turns?.PlayersTurnOrder,
             moves: _rounds.Current.GetMoves());
+    }
+
+    private void CompleteRound()
+    {
+        _rounds.Current.Complete();
+        Turns?.ReverseTurnOrder();
+        _gameSetup.RoundCompletedHandlerAction?.Invoke();
     }
 
     /// <summary>

@@ -19,11 +19,15 @@ public class RockPaperScissorsRuleEngine : SimultaneousGameRuleEngine<RockPaperS
     {
     }
 
-    public override void Setup(RockPaperScissorsConfiguration? configuration)
+    public override void Setup(RockPaperScissorsConfiguration? configuration, Action? onRoundCompleted = null)
     {
         _gameSetupBuilder
             .AddConfiguration(configuration ?? RockPaperScissorsConfiguration.Default)
             .AddResultResolver(ResolveResultAction);
+        if (onRoundCompleted != null)
+        {
+            _gameSetupBuilder.AddRoundCompletedHandler(onRoundCompleted);
+        }
     }
 
     public override RoundResult Handle(MoveDto dto)

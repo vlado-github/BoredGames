@@ -5,9 +5,10 @@ namespace BoredGames.Server.Domain.Games.Entities;
 public class Turns
 {
     private readonly IList<Turn> _turns;
-    private readonly Guid[] _playersTurnOrder;
     private readonly IList<Player> _players;
     private static readonly Random RandomGenerator = new Random();
+    
+    private Guid[] _playersTurnOrder;
 
     public Turns(IList<Player> players)
     {
@@ -40,7 +41,11 @@ public class Turns
         var currentTurn = Current;
         ResetCurrent();
         _turns.Add(ShowNext(currentTurn));
-        
+    }
+
+    public void ReverseTurnOrder()
+    {
+        _playersTurnOrder = _playersTurnOrder.Reverse().ToArray();
     }
 
     private void ResetCurrent()

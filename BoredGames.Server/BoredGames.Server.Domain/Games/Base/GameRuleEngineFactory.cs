@@ -10,7 +10,7 @@ public static class GameRuleEngineFactory
 {
     private static readonly ILoggerFactory LoggerFactory = new LoggerFactory();
     
-    public static IGameRuleEngine GetInstance(GameDto dto)
+    public static IGameRuleEngine GetInstance(GameDto dto, Action? onRoundCompleted = null)
     {
         switch (dto.Title)
         {
@@ -30,11 +30,13 @@ public static class GameRuleEngineFactory
             {
                 var ruleEngine = new TicTacToeRuleEngine(
                     new Logger<TurnBaseGameRuleEngine<TicTacToeConfiguration>>(LoggerFactory));
-                ruleEngine.Setup(new TicTacToeConfiguration(
-                    requiredNumberOfPlayers: dto.NumberOfPlayers,
-                    numberOfRounds: dto.NumberOfRounds,
-                    requiredNumberOfWins: dto.RequiredNumberOfWins,
-                    description: dto.EndOfGameMessage));
+                ruleEngine.Setup(
+                    configuration: new TicTacToeConfiguration(
+                        requiredNumberOfPlayers: dto.NumberOfPlayers,
+                        numberOfRounds: dto.NumberOfRounds,
+                        requiredNumberOfWins: dto.RequiredNumberOfWins,
+                        description: dto.EndOfGameMessage),
+                    onRoundCompleted: onRoundCompleted);
                 ruleEngine.Initialize();
                 return ruleEngine; 
             }

@@ -33,7 +33,7 @@ public abstract class GameRuleEngine<T> :
         _gameScore = new GameScore(_settings.NumberOfRounds, _settings.RequiredNumberOfWins);
     }
     
-    public abstract void Setup(T gameConfiguration);
+    public abstract void Setup(T gameConfiguration, Action? onRoundCompleted = null);
 
     public abstract RoundResult GetCurrentRoundResult();
     

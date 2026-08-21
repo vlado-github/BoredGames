@@ -58,12 +58,15 @@ namespace Assets.Scripts.BoredGames.API
                 GameState.Instance.Moves = data.Moves;
                 GameState.Instance.Players = data.Players;
 
-                if (GameState.Instance.Score != null && GameState.Instance.Score.HasRoundResult(GameState.Instance.PreviousRoundNumber))
+                if (GameState.Instance.Score != null 
+                    && GameState.Instance.Score.HasRoundResult(GameState.Instance.PreviousRoundNumber))
                 {
+                    Log($"HandleRoundResultDisplay PreviousRoundNumber {GameState.Instance.PreviousRoundNumber} {GameState.Instance.Score.HasRoundResult(GameState.Instance.PreviousRoundNumber)}");
                     GameManager.Instance.HandleRoundResultDisplay();
                 }
                 else
                 {
+                    Log("CheckGameStatus");
                     GameManager.Instance.CheckGameStatus();
                 }
             });

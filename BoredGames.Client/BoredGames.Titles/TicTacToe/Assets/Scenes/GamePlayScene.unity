@@ -2245,7 +2245,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 6
   m_TargetDisplay: 0
 --- !u!224 &364993062
 RectTransform:
@@ -4192,6 +4192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa4c4f092d8dd1f9cb94f40980e8cf31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spinner
+  _speed: 5
 --- !u!212 &688504289
 SpriteRenderer:
   serializedVersion: 2
