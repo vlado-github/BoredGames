@@ -13,6 +13,11 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Update="appsettings.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -27,6 +32,11 @@
       <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="10.2.1" />
       <PackageReference Include="Microsoft.Orleans.Persistence.Redis" Version="10.2.1" />
       <PackageReference Include="Microsoft.Orleans.Server" Version="10.2.1" />
+      <PackageReference Include="Sentry.Serilog" Version="6.6.0" />
+      <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+      <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
+      <PackageReference Include="Serilog.Enrichers.Sensitive" Version="2.1.0" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     </ItemGroup>
 
     <ItemGroup>

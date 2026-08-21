@@ -1,5 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-
 using BoredGames.Server.GameServer.Extensions;
 using Microsoft.Extensions.Hosting;
 
