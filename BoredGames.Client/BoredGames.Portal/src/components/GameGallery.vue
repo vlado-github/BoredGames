@@ -46,6 +46,6 @@ export default {
     display: grid;
     width: 100%;
     row-gap: 50px;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%/3, max(64px, 100%/3)), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
   }
 </style>
